@@ -12,7 +12,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="240dp"
-            android:background="@color/colorPrimary">
+            android:background="@drawable/back_gra">
 
             <ImageView
                 android:id="@+id/iv_main_act_poster_img"
@@ -55,12 +55,13 @@
 
 
                 <TextView
+                    android:textSize="14dp"
                     android:id="@+id/tv_main_act_movie_info"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/rl_main_act_title"
                     android:layout_marginTop="16dp"
-                    android:text="2014.07.23 개봉 \n 액션 / 137 분"
+                    android:text="2014.07.23 개봉 \n액션 / 137 분"
                     android:textColor="@color/colorWhite" />
 
                 <RelativeLayout
@@ -83,6 +84,7 @@
                         android:layout_marginStart="8dp"
                         android:layout_toRightOf="@id/iv_main_act_thumb_up"
                         android:text="15"
+                        android:textSize="16dp"
                         android:textColor="@color/colorWhite"
                         android:textStyle="bold" />
 
@@ -102,6 +104,7 @@
                         android:layout_marginStart="8dp"
                         android:layout_toRightOf="@id/iv_main_act_thumb_down"
                         android:text="1"
+                        android:textSize="16dp"
                         android:textColor="@color/colorWhite"
                         android:textStyle="bold" />
 
@@ -131,6 +134,8 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:textSize="16dp"
+                        android:textColor="#373737"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
@@ -138,6 +143,8 @@
                         android:text="예매율" />
 
                     <TextView
+                        android:textSize="14dp"
+                        android:textColor="#373737"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
@@ -165,6 +172,8 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:textSize="16dp"
+                        android:textColor="#373737"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
@@ -189,6 +198,8 @@
                             android:stepSize="0.5" />
 
                         <TextView
+                            android:textSize="14dp"
+                            android:textColor="#373737"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
@@ -216,6 +227,8 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:textSize="16dp"
+                        android:textColor="#373737"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
@@ -223,6 +236,8 @@
                         android:text="누적관객수" />
 
                     <TextView
+                        android:textSize="14dp"
+                        android:textColor="#373737"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
@@ -253,8 +268,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text=" 스파이더맨: 파 프롬 홈은 지난 2017년 약 725만 명의 국내 관객들을 사로잡았던 영화 스파이더맨: 홈커밍 이후 2년 만에 돌아온 스파이더맨의 솔로 무비로, 개봉 전부터 폭발적인 관심을 얻고 있다. 올 상반기 전 세계 극장가에는 새로운 히어로의 등장을 알린 캡틴 마블 을 시작으로 연일 흥행 기록을 경신했던 어벤져스: 엔드게임까지 마블 시네마틱 유니버스(MCU)의 작품들로 유난히 뜨거웠던 가운데, 스파이더맨: 파 프롬 홈이 이러한 2019년 MCU 라인업의 화려한 피날레를 예고한 것.\n
-            \n먼저, 554만 명의 관객을 동원하며 올해 MCU의 포문을 성공적으로 연 캡틴 마블 은 기존 MCU 영화들보다 앞선 시기를 배경으로 쉴드 국장  닉 퓨리 의 과거와 어벤져스 결성 계기 등 이전까지는 밝혀지지 않았던 흥미로운 이야기를 선보이며 마블 최강 히어로 캡틴 마블 의 합류를 알렸다. 이어 누적 관객 수 1,388만 명을 기록한  어벤져스: 엔드게임 은 지금까지의 시리즈를 집대성하듯 새로운 히어로 캡틴 마블 을 비롯한 역대 MCU 작품 속 모든 히어로들이 총출동, 어벤져스 어셈블 을 완성하며 전 세계 극장가에 뜨거운 전율을 선사했다. 특히, 그동안 어벤져스의 주역으로 활약해온 원년 멤버들의 대형 변화를 확정하며 마블 히어로의 세대교체에 대한 궁금증을 증폭시킨 바 있다." />
+                android:textColor="#373737"
+                android:textSize="14dp"
+                android:lineSpacingExtra="5dp"
+                android:text="군도, 백성을 구하라!
+                \n양반과 탐관오리들의 착취가 극에 달했던 조선 철종 13년. 힘 없는 백성의 편이 되어 세상을 바로잡고자 하는 의적떼인 군도(群盜), 지리산 추설이 있었다.
+
+\n\n쌍칼 도치 vs 백성의 적 조윤
+\n잦은 자연재해, 기근과 관의 횡포까지 겹쳐 백성들의 삶이 날로 피폐해져 가는 사이, 나주 대부호의 서자로 조선 최고의 무관 출신인 조윤은 극악한 수법으로 양민들을 수탈, 삼남지방 최고의 대부호로 성장한다. 한편 소, 돼지를 잡아 근근이 살아가던 천한 백정 돌무치는 죽어도 잊지 못할 끔찍한 일을 당한 뒤 군도에 합류. 지리산 추설의 신 거성(新 巨星) 도치로 거듭난다.
+
+\n\n뭉치면 백성, 흩어지면 도적!
+\n망할 세상을 뒤집기 위해, 백성이 주인인 새 세상을 향해 도치를 필두로 한 군도는 백성의 적, 조윤과 한 판 승부를 시작하는데..."  />
         </LinearLayout>
         //줄거리
 
@@ -282,12 +306,15 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:textSize="14dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="감독"
                     android:textColor="@color/colorBlack" />
 
                 <TextView
+                    android:textColor="#373737"
+                    android:textSize="14dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -300,12 +327,15 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:textSize="14dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="출연"
                     android:textColor="@color/colorBlack" />
 
                 <TextView
+                    android:textSize="14dp"
+                    android:textColor="#373737"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -370,6 +400,7 @@
                     android:background="@color/colorWhite"
                     >
                     <TextView
+                        android:textSize="14dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
