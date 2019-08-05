@@ -4,7 +4,11 @@
     <data>
         <variable
             name="activity"
-            type="com.song2.boostcourse.MainActivity" />
+            type="com.song2.boostcourse.ui.MainActivity" />
+
+        <variable
+            name="movieInfo"
+            type="com.song2.boostcourse.data.MovieInfo" />
     </data>
 
     <ScrollView
@@ -64,10 +68,10 @@
 
                     <TextView
                         android:id="@+id/tv_main_act_movie_info"
-                        android:layout_width="match_parent"
+                        android:layout_width="227dp"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/rl_main_act_title"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginTop="17dp"
                         android:text="@string/open_date"
                         android:textColor="@color/colorWhite"
                         android:textSize="14sp" />
@@ -80,9 +84,9 @@
 
                         <ImageView
                             android:id="@+id/iv_main_act_thumb_up"
-                            android:onClick="@{activity::clickThumpUpBtn}"
                             android:layout_width="24dp"
                             android:layout_height="24dp"
+                            android:onClick="@{activity::clickThumpUpBtn}"
                             android:background="@drawable/thumb_up_selector" />
 
                         <TextView
@@ -92,7 +96,7 @@
                             android:layout_centerVertical="true"
                             android:layout_marginStart="8dp"
                             android:layout_toEndOf="@id/iv_main_act_thumb_up"
-                            android:text="@string/cnt_thumb_up"
+                            android:text="@{String.valueOf(movieInfo.thumbUp)}"
                             android:textColor="@color/colorWhite"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -102,6 +106,7 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:layout_marginStart="48dp"
+                            android:onClick="@{activity::clickThumpDownBtn}"
                             android:layout_toEndOf="@+id/iv_main_act_thumb_up"
                             android:background="@drawable/thumb_down_selector" />
 
@@ -112,8 +117,8 @@
                             android:layout_centerVertical="true"
                             android:layout_marginStart="8dp"
                             android:layout_toEndOf="@id/iv_main_act_thumb_down"
-                            android:text="@string/cnt_thumb_down"
                             android:textColor="@color/colorWhite"
+                            android:text="@{String.valueOf(movieInfo.thumbDown)}"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -346,9 +351,10 @@
             </LinearLayout>
             //감독출연
 
-            <RelativeLayout
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:background="@color/colorWhite"
                 android:padding="10dp">
@@ -388,11 +394,16 @@
 
                 </RelativeLayout>
 
+                <ListView
+                    android:id="@+id/listView_main_act_review_list"
+                    android:layout_marginVertical="20dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"></ListView>
+
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
-                    android:layout_alignParentBottom="true"
                     android:layout_marginVertical="12dp"
                     android:background="@drawable/more_edge">
 
@@ -412,7 +423,7 @@
 
                 </RelativeLayout>
 
-            </RelativeLayout>
+            </LinearLayout>
             //한줄평
 
             <LinearLayout
