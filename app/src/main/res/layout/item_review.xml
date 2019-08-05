@@ -13,6 +13,14 @@
         app:civ_border_color="@color/colorBlack"
         android:src="@drawable/user1" />
 
+    <ImageView
+        android:visibility="gone"
+        android:id="@+id/iv_review_item_profile_img"
+        android:layout_marginTop="20dp"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginHorizontal="20dp"
+        android:src="@drawable/user1" />
 
     <LinearLayout
         android:layout_marginVertical="20dp"
@@ -36,7 +44,7 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/iv_review_item_date"
+                android:id="@+id/tv_review_item_date"
                 android:text="10분전"
                 android:textSize="12sp"
                 android:layout_width="wrap_content"
@@ -55,7 +63,7 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/iv_review_item_contents"
+            android:id="@+id/tv_review_item_contents"
             android:layout_marginVertical="12dp"
             android:textColor="@color/colorBlack"
             android:text="적당히 재밌다. 오랜만에 잠 안오는 영화 봤네요."
