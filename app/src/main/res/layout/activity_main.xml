@@ -2,7 +2,6 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
-
         <variable
             name="activity"
             type="com.song2.boostcourse.ui.MainActivity" />
@@ -373,6 +372,7 @@
                         android:textStyle="bold" />
 
                     <LinearLayout
+                        android:onClick="@{activity::clickWriteBtn}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true">
@@ -414,6 +414,7 @@
                         android:background="@color/colorWhite">
 
                         <TextView
+                            android:onClick="@{activity::clickMoreBtn}"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"

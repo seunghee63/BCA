@@ -72,6 +72,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void clickWriteBtn(View view){
+        Toast.makeText(this, "WriteBtn", Toast.LENGTH_SHORT).show();
+    }
+
+    public void clickMoreBtn(View view){
+        Toast.makeText(this, "MoreBtn", Toast.LENGTH_SHORT).show();
+    }
+
     public void settingDataSet(ListView reviewList){
 
         ArrayList<ReviewData> data = new ArrayList<>();
