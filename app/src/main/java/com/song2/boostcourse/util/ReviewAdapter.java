@@ -1,8 +1,8 @@
 package com.song2.boostcourse.util;
 
 import android.content.Context;
-import android.databinding.DataBindingUtil;
 import android.util.Log;
+import android.databinding.DataBindingUtil;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,7 +50,7 @@ public class ReviewAdapter extends BaseAdapter {
 
         ItemReviewBinding binding;
 
-        //item lyout을 객체로 받아
+        //item lyout을 객체로 받아옴
         inflater = LayoutInflater.from(viewGroup.getContext());
         binding = DataBindingUtil.getBinding(view);
 
@@ -58,7 +58,9 @@ public class ReviewAdapter extends BaseAdapter {
             binding = DataBindingUtil.inflate(inflater, R.layout.item_review, viewGroup, false);
         }
 
-/*      //non using dataBinding
+/*
+        //non using dataBinding
+
         Context context = viewGroup.getContext();
 
         if (view == null) {
