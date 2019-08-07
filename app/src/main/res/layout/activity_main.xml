@@ -403,6 +403,7 @@
 
 
                 <RelativeLayout
+                    android:onClick="@{activity::clickMoreBtn}"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:layout_marginVertical="12dp"
@@ -414,7 +415,6 @@
                         android:background="@color/colorWhite">
 
                         <TextView
-                            android:onClick="@{activity::clickMoreBtn}"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"

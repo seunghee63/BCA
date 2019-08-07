@@ -27,8 +27,9 @@ public class MainActivity extends AppCompatActivity {
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         binding.setActivity(this);
-        binding.setMovieInfo(new MovieInfo(15,2));
+        binding.setMovieInfo(new MovieInfo(15,2)); //xml에 객체를 만들어 줌
 
+        //리스트 뷰 데이터 삽입
         ListView listViewMainActReviewList = binding.listViewMainActReviewList;
 
         settingDataSet(listViewMainActReviewList);
@@ -44,11 +45,15 @@ public class MainActivity extends AppCompatActivity {
             binding.ivMainActThumbUp.setSelected(true);
             binding.ivMainActThumbDown.setSelected(false);
 
+            //xml에서 생성된 객체 접근
             binding.getMovieInfo().onClickThumbUp(true);
             binding.getMovieInfo().onClickThumbDown(false);
 
         } else {
+
+            //버튼을 누를 경우, state 를 현재상태의 반대 상태로 바꾸어줌
             binding.ivMainActThumbUp.setSelected(!binding.ivMainActThumbUp.isSelected());
+            //선택 된 경우에는 -1, 클릭된 경우에는 +1
             binding.getMovieInfo().onClickThumbUp(binding.ivMainActThumbUp.isSelected());
         }
     }
@@ -105,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
         data.add(twoData);
         data.add(oneData);
 
+        //어뎁터 - 리스트 뷰 연결
         final ReviewAdapter reviewAdapter = new ReviewAdapter(data);
         reviewList.setAdapter(reviewAdapter);
     }

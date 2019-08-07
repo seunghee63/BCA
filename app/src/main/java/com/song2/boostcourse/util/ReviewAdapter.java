@@ -48,6 +48,7 @@ public class ReviewAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View view, ViewGroup viewGroup) {
 
+        //데이터바인딩
         ItemReviewBinding binding;
 
         //item lyout을 객체로 받아옴
@@ -55,9 +56,12 @@ public class ReviewAdapter extends BaseAdapter {
         binding = DataBindingUtil.getBinding(view);
 
         if(binding == null){
+
+            //inflate
             binding = DataBindingUtil.inflate(inflater, R.layout.item_review, viewGroup, false);
         }
 
+        //데이터바인딩을 적용하지 않았을 때의 코드입니다.
 /*
         //non using dataBinding
 
@@ -69,12 +73,11 @@ public class ReviewAdapter extends BaseAdapter {
             {
                 inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             }
-
         }
 
         view = inflater.inflate(R.layout.item_review, viewGroup, false);
 
-
+        //inflate
         TextView user_id =  view.findViewById(R.id.tv_review_item_user_id);
         TextView review_date = view.findViewById(R.id.tv_review_item_date);
         TextView comment = view.findViewById(R.id.tv_review_item_contents);
@@ -82,14 +85,16 @@ public class ReviewAdapter extends BaseAdapter {
         RatingBar rating = view.findViewById(R.id.rating_bar_review_item_review_rate);
         CircleImageView profile_img = view.findViewById(R.id.cv_review_item_profile_img);
 
+        //객체에 대이터 대입
         rating.setRating(ReviewList.get(position).rate);
         user_id.setText(ReviewList.get(position).user_id);
         review_date.setText(ReviewList.get(position).date);
         comment.setText(ReviewList.get(position).comment);
         like_cnt.setText(ReviewList.get(position).like);
-        //Glide.with(view).load(ReviewList.get(position).profile_img).into(profile_img);*/
+        //Glide.with(view).load(ReviewList.get(position).profile_img).into(profile_img);
 
-        //return  view;
+        //return  view; */
+
 
         binding.setReviewData((ReviewData)getItem(position));
         binding.executePendingBindings();
