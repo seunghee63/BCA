@@ -78,20 +78,20 @@ public class ReviewAdapter extends BaseAdapter {
         view = inflater.inflate(R.layout.item_review, viewGroup, false);
 
         //inflate
-        TextView user_id =  view.findViewById(R.id.tv_review_item_user_id);
+        TextView userId =  view.findViewById(R.id.tv_review_item_user_id);
         TextView review_date = view.findViewById(R.id.tv_review_item_date);
         TextView comment = view.findViewById(R.id.tv_review_item_contents);
         TextView like_cnt = view.findViewById(R.id.tv_review_item_like_cnt);
         RatingBar rating = view.findViewById(R.id.rating_bar_review_item_review_rate);
-        CircleImageView profile_img = view.findViewById(R.id.cv_review_item_profile_img);
+        CircleImageView profileImg = view.findViewById(R.id.cv_review_item_profile_img);
 
         //객체에 대이터 대입
         rating.setRating(ReviewList.get(position).rate);
-        user_id.setText(ReviewList.get(position).user_id);
+        userId.setText(ReviewList.get(position).userId);
         review_date.setText(ReviewList.get(position).date);
         comment.setText(ReviewList.get(position).comment);
         like_cnt.setText(ReviewList.get(position).like);
-        //Glide.with(view).load(ReviewList.get(position).profile_img).into(profile_img);
+        //Glide.with(view).load(ReviewList.get(position).profileImg).into(profileImg);
 
         //return  view; */
 

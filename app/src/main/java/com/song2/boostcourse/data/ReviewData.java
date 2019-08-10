@@ -1,27 +1,27 @@
 package com.song2.boostcourse.data;
 
 public class ReviewData {
-    public String profile_img;
-    public String user_id;
+    public String profileImg;
+    public String userId;
     public String date;
     public String comment;
     public float rate;
     public String like;
 
-    public String getProfile_img() {
-        return profile_img;
+    public String getProfileImg() {
+        return profileImg;
     }
 
-    public void setProfile_img(String profile_img) {
-        this.profile_img = profile_img;
+    public void setProfileImg(String profileImg) {
+        this.profileImg = profileImg;
     }
 
-    public String getUser_id() {
-        return user_id;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setUser_id(String user_id) {
-        this.user_id = user_id;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getDate() {
@@ -59,8 +59,8 @@ public class ReviewData {
     @Override
     public String toString() {
         return "ReviewData{" +
-                "profile_img='" + profile_img + '\'' +
-                ", user_id='" + user_id + '\'' +
+                "profileImg='" + profileImg + '\'' +
+                ", userId='" + userId + '\'' +
                 ", date='" + date + '\'' +
                 ", rate=" + rate +
                 ", comment='" + comment + '\'' +

@@ -1,13 +1,13 @@
-package com.song2.boostcourse.data;
+package com.song2.boostcourse.ui;
 
 import android.databinding.ObservableInt;
 
-public class MovieInfo {
+public class ThumbUpDown {
 
     public ObservableInt thumbUp = new ObservableInt();
     public ObservableInt thumbDown = new ObservableInt();
 
-    public MovieInfo(int thumbUpCnt, int thumbDownCnt){
+    public ThumbUpDown(int thumbUpCnt, int thumbDownCnt){
 
         thumbUp.set(thumbUpCnt);
         thumbDown.set(thumbDownCnt);

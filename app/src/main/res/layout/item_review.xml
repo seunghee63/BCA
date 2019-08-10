@@ -33,7 +33,7 @@
                 android:id="@+id/tv_review_item_user_id"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{reviewData.user_id}"
+                android:text="@{reviewData.userId}"
                 android:textColor="@color/colorBlack"
                 android:textSize="8sp"
                 android:textStyle="bold" />

@@ -7,8 +7,8 @@
             type="com.song2.boostcourse.ui.MainActivity" />
 
         <variable
-            name="movieInfo"
-            type="com.song2.boostcourse.data.MovieInfo" />
+            name="thumbUpDown"
+            type="com.song2.boostcourse.ui.ThumbUpDown" />
     </data>
 
     <ScrollView
@@ -96,7 +96,7 @@
                             android:layout_centerVertical="true"
                             android:layout_marginStart="8dp"
                             android:layout_toEndOf="@id/iv_main_act_thumb_up"
-                            android:text="@{String.valueOf(movieInfo.thumbUp)}"
+                            android:text="@{String.valueOf(thumbUpDown.thumbUp)}"
                             android:textColor="@color/colorWhite"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -118,7 +118,7 @@
                             android:layout_marginStart="8dp"
                             android:layout_toEndOf="@id/iv_main_act_thumb_down"
                             android:textColor="@color/colorWhite"
-                            android:text="@{String.valueOf(movieInfo.thumbDown)}"
+                            android:text="@{String.valueOf(thumbUpDown.thumbDown)}"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
