@@ -2,6 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
+
         <variable
             name="activity"
             type="com.song2.boostcourse.ui.MainActivity" />
@@ -59,36 +60,39 @@
 
                         <ImageView
                             android:id="@+id/iv_main_act_rating_12"
-                            android:visibility="gone"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
                             android:layout_toEndOf="@+id/tv_main_act_title"
-                            android:src="@drawable/ic_12" />
+                            android:src="@drawable/ic_12"
+                            android:visibility="gone" />
+
                         <ImageView
                             android:id="@+id/iv_main_act_rating_15"
-                            android:visibility="visible"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
                             android:layout_toEndOf="@+id/tv_main_act_title"
-                            android:src="@drawable/ic_15" />
+                            android:src="@drawable/ic_15"
+                            android:visibility="visible" />
+
                         <ImageView
                             android:id="@+id/iv_main_act_rating_19"
-                            android:visibility="gone"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
                             android:layout_toEndOf="@+id/tv_main_act_title"
-                            android:src="@drawable/ic_19" />
+                            android:src="@drawable/ic_19"
+                            android:visibility="gone" />
+
                         <ImageView
                             android:id="@+id/iv_main_act_rating_all"
-                            android:visibility="gone"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
                             android:layout_toEndOf="@+id/tv_main_act_title"
-                            android:src="@drawable/ic_all" />
+                            android:src="@drawable/ic_all"
+                            android:visibility="gone" />
                     </RelativeLayout>
 
 
@@ -112,8 +116,8 @@
                             android:id="@+id/iv_main_act_thumb_up"
                             android:layout_width="24dp"
                             android:layout_height="24dp"
-                            android:onClick="@{activity::clickThumpUpBtn}"
-                            android:background="@drawable/thumb_up_selector" />
+                            android:background="@drawable/thumb_up_selector"
+                            android:onClick="@{activity::clickThumpUpBtn}" />
 
                         <TextView
                             android:id="@+id/tv_main_act_thumb_up_cnt"
@@ -132,9 +136,9 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:layout_marginStart="48dp"
-                            android:onClick="@{activity::clickThumpDownBtn}"
                             android:layout_toEndOf="@+id/iv_main_act_thumb_up"
-                            android:background="@drawable/thumb_down_selector" />
+                            android:background="@drawable/thumb_down_selector"
+                            android:onClick="@{activity::clickThumpDownBtn}" />
 
                         <TextView
                             android:id="@+id/tv_main_act_thumb_down_cnt"
@@ -143,8 +147,8 @@
                             android:layout_centerVertical="true"
                             android:layout_marginStart="8dp"
                             android:layout_toEndOf="@id/iv_main_act_thumb_down"
-                            android:textColor="@color/colorWhite"
                             android:text="@{String.valueOf(thumbUpDown.thumbDown)}"
+                            android:textColor="@color/colorWhite"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -382,11 +386,11 @@
             //감독출연
 
             <LinearLayout
-                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:background="@color/colorWhite"
+                android:orientation="vertical"
                 android:padding="10dp">
 
                 <RelativeLayout
@@ -402,10 +406,10 @@
                         android:textStyle="bold" />
 
                     <LinearLayout
-                        android:onClick="@{activity::clickWriteBtn}"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true">
+                        android:layout_alignParentRight="true"
+                        android:onClick="@{activity::clickWriteBtn}">
 
                         <ImageView
                             android:layout_width="24dp"
@@ -425,33 +429,28 @@
 
                 </RelativeLayout>
 
-                <ListView
+                <com.song2.boostcourse.ui.MyListView
                     android:id="@+id/listView_main_act_review_list"
-                    android:layout_marginVertical="20dp"
                     android:layout_width="match_parent"
-                    android:layout_height="400dp"></ListView>
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="20dp"
+                    android:stackFromBottom="true"></com.song2.boostcourse.ui.MyListView>
 
 
                 <RelativeLayout
-                    android:onClick="@{activity::clickMoreBtn}"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:layout_marginVertical="12dp"
-                    android:background="@drawable/more_edge">
+                    android:background="@drawable/write_review"
+                    android:onClick="@{activity::clickMoreBtn}">
 
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@color/colorWhite">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
-                            android:text="@string/review_more_text"
-                            android:textColor="#311b92"
-                            android:textSize="14sp" />
-                    </RelativeLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:text="@string/review_more_text"
+                        android:textColor="#311b92"
+                        android:textSize="14sp" />
 
                 </RelativeLayout>
 

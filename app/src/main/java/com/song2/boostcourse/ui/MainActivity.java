@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
     int REQUEST_CODE_UPLOAD_REAVIEW_ACTIVITY = 7777;
     ActivityMainBinding binding;
+    ArrayList<ReviewData> dataList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +35,9 @@ public class MainActivity extends AppCompatActivity {
 
         initialStrSetting();
 
-        settingDataSet();
+        setExampleData();
+        setListView();
+
     }
 
     public void clickThumpUpBtn(View view) {
@@ -92,47 +95,41 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(this, "MoreBtn", Toast.LENGTH_SHORT).show();
     }
 
-    //댓글 listView Data
-    public void settingDataSet(){
 
+    //댓글 listView
+    public void setListView(){
         ListView reviewList = binding.listViewMainActReviewList;
 
-        ArrayList<ReviewData> data = new ArrayList<>();
-
-        ReviewData oneData = new ReviewData();
-        ReviewData twoData = new ReviewData();
-
-        oneData.profileImg = "tmpImg";
-        oneData.userId = "song2";
-        oneData.date = "3시간전";
-        oneData.comment = "이렇게 흥미로운 영화는 오랜만이에요!";
-        oneData.rate = 4;
-        oneData.like = "좋아요  "+3;
-
-        twoData.profileImg = "https://www.google.com/url?sa=i&source=images&cd=&ved=2ahUKEwinndibrezjAhXaa94KHR8iAtkQjRx6BAgBEAU&url=http%3A%2F%2Fsocksplus.net%2Fproduct%2Fdetail.html%3Fproduct_no%3D13507&psig=AOvVaw2DZWjPEfCHSHcxbpnpF6CM&ust=1565115898969108";
-        twoData.userId = "수면양말";
-        twoData.date = "어제";
-        twoData.comment = "지루해 죽는줄;;;";
-        twoData.rate = 0;
-        twoData.like = "좋아요  "+0;
-
-        data.add(oneData);
-        data.add(twoData);
-        data.add(oneData);
-
         //어뎁터 - 리스트 뷰 연결
-        final ReviewAdapter reviewAdapter = new ReviewAdapter(data);
+        final ReviewAdapter reviewAdapter = new ReviewAdapter(dataList);
         reviewList.setAdapter(reviewAdapter);
     }
 
-    public void setListView(){
+    void setExampleData(){
+        dataList.add(addReviewData("https://www.google.com/url?sa=i&source=images&cd=&ved=2ahUKEwinndibrezjAhXaa94KHR8iAtkQjRx6BAgBEAU&url=http%3A%2F%2Fsocksplus.net%2Fproduct%2Fdetail.html%3Fproduct_no%3D13507&psig=AOvVaw2DZWjPEfCHSHcxbpnpF6CM&ust=1565115898969108", "리뷰어", "어제", "아 재미없어...", 2.0f, 0));
+        dataList.add(addReviewData("tmpImg", "song2", "3시간전", "이렇게 흥미로운 영화는 오랜만이에요!", 4.5f, 3));
+        dataList.add(addReviewData("https://www.google.com/url?sa=i&source=images&cd=&ved=2ahUKEwinndibrezjAhXaa94KHR8iAtkQjRx6BAgBEAU&url=http%3A%2F%2Fsocksplus.net%2Fproduct%2Fdetail.html%3Fproduct_no%3D13507&psig=AOvVaw2DZWjPEfCHSHcxbpnpF6CM&ust=1565115898969108", "수면양말", "1시간전", "무난 했어요", 3.5f, 0));
+    }
 
+    //댓글 Data
+    //통신 적용 전 까지, 임시 데이터 관리를 위해 사용 할 함수
+    public ReviewData addReviewData(String img, String userId, String date, String comment, float rate, int like){
+
+        ReviewData newData = new ReviewData();
+
+        newData.profileImg = img;
+        newData.userId = userId;
+        newData.date = date;
+        newData.comment = comment;
+        newData.rate = rate;
+        newData.like = "좋아요   " + like;
+
+        return newData;
     }
 
     //string 관리
     public void initialStrSetting(){
-
-        //추후에 api 연결 할 데이터들
+        //추후에 통신을 통해 받아 올 데이터들
         binding.tvMainActTitle.setText("군도");
         binding.tvMainActMovieInfo.setText("2014.07.23 개봉 \n액션 / 137 분");
         binding.tvMainActMovieRateNRank.setText("5위 1.8%");
@@ -154,7 +151,14 @@ public class MainActivity extends AppCompatActivity {
 
         if(requestCode == REQUEST_CODE_UPLOAD_REAVIEW_ACTIVITY){
             if(resultCode == Activity.RESULT_OK){
-                //
+
+                //Toast.makeText(this, data.getStringExtra("ReviewContents"), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, data.getFloatExtra("ReviewContents", ), Toast.LENGTH_SHORT).show();
+
+                //data 널 값 예외처리 해 주기
+                dataList.add(addReviewData("tmpImg", "song2", "방금전", data.getStringExtra("ReviewContents"), data.getFloatExtra("ReviewContents",5.0f), 0));
+
+                setListView();
             }
         }
     }

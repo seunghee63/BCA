@@ -1,6 +1,5 @@
 package com.song2.boostcourse.util;
 
-
 import android.databinding.DataBindingUtil;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,10 +57,11 @@ public class ReviewAdapter extends BaseAdapter {
         binding = DataBindingUtil.getBinding(view);
 
         if(binding == null){
-
             //inflate
             binding = DataBindingUtil.inflate(inflater, R.layout.item_review, viewGroup, false);
         }
+
+        notifyDataSetChanged();
 
         binding.setReviewData((ReviewData)getItem(position));
         binding.executePendingBindings();

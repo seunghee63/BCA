@@ -36,7 +36,7 @@ public class ReviewData {
         return rate;
     }
 
-    public void setRate(int rate) {
+    public void setRate(float rate) {
         this.rate = rate;
     }
 

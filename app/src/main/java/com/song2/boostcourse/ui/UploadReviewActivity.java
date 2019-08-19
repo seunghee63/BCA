@@ -31,8 +31,12 @@ public class UploadReviewActivity extends AppCompatActivity {
 
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
 
-        intent.putExtra("ReviewContents","재밌군");
-        intent.putExtra("RatingStarCnt",0);
+        String contents = binding.etUploadActWriteReview.getText().toString();
+        float ratingValue =binding.rbUploadActRatingBar.getRating();
+
+        intent.putExtra("ReviewContents",contents);
+        intent.putExtra("RatingStarCnt",ratingValue);
+
         setResult(Activity.RESULT_OK,intent);
 
         finish();
