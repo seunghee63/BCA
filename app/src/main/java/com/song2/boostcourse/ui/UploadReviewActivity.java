@@ -30,6 +30,7 @@ public class UploadReviewActivity extends AppCompatActivity {
         Toast.makeText(this, "저장", Toast.LENGTH_SHORT).show();
 
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+
         intent.putExtra("ReviewContents","재밌군");
         intent.putExtra("RatingStarCnt",0);
         setResult(Activity.RESULT_OK,intent);

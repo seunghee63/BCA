@@ -1,28 +1,43 @@
 <resources>
     <string name="app_name">씨네마천국</string>
 
-    <string name="movie_name">군도</string>
-    <string name="open_date">2014.07.23 개봉 \n액션 / 137 분</string>
+    <string name="movie_name">영화제목</string>
+    <string name="open_date">0000.00.00 개봉 \n장르 / 000 분</string>
 
-    <string name="cnt_thumb_up">15</string>
-    <string name="cnt_thumb_down">1</string>
+    <string name="cnt_thumb_up">0</string>
+    <string name="cnt_thumb_down">0</string>
 
-    <string name="rate">5위 1.8%</string>
-    <string name="grade">8.2</string>
-    <string name="audience_cnt">839,399명</string>
+    <string name="rate_text">예매율</string>
+    <string name="rate">0위 0.0%</string>
 
+    <string name="grade_text">평점</string>
+    <string name="grade">0.0</string>
 
-    <string name="summary">    군도, 백성을 구하라!
-    \n양반과 탐관오리들의 착취가 극에 달했던 조선 철종 13년. 힘 없는 백성의 편이 되어 세상을 바로잡고자 하는 의적떼인 군도(群盜), 지리산 추설이 있었다.
+    <string name="audience_cnt_text">누적관객수</string>
+    <string name="audience_cnt">000,000명</string>
 
-    \n\n쌍칼 도치 vs 백성의 적 조윤
-    \n잦은 자연재해, 기근과 관의 횡포까지 겹쳐 백성들의 삶이 날로 피폐해져 가는 사이, 나주 대부호의 서자로 조선 최고의 무관 출신인 조윤은 극악한 수법으로 양민들을 수탈, 삼남지방 최고의 대부호로 성장한다. 한편 소, 돼지를 잡아 근근이 살아가던 천한 백정 돌무치는 죽어도 잊지 못할 끔찍한 일을 당한 뒤 군도에 합류. 지리산 추설의 신 거성(新 巨星) 도치로 거듭난다.
+    <string name="summary_text">줄거리</string>
+    <string name="summary">줄거리 입니다.
+    \n줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다.
 
-    \n\n뭉치면 백성, 흩어지면 도적!
-    \n망할 세상을 뒤집기 위해, 백성이 주인인 새 세상을 향해 도치를 필두로 한 군도는 백성의 적, 조윤과 한 판 승부를 시작하는데...</string>
+    \n\n줄거리입니다.
+    \n줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다.
 
+    \n\n줄거리입니다.
+    \n줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다....</string>
 
+    <string name="director_n_actor_text">감독/출연</string>
+
+    <string name="director_text">감독</string>
     <string name="director">윤종빈</string>
-    <string name="actor">하정우(도치),강동원(조윤)</string>
+
+    <string name="actor_text">출연</string>
+    <string name="actor">배우1이름(배역1이름),배우2이름(배역2이름)</string>
+
+    <string name="review_text">한줄평</string>
+    <string name="review_write_text">작성하기</string>
+    <string name="review_more_text">모두 보기</string>
+
+    <string name="book_text">예매하기</string>
 
 </resources>

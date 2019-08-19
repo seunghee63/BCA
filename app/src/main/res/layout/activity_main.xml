@@ -154,7 +154,6 @@
 
 
             </RelativeLayout>
-            //영화info
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -178,11 +177,12 @@
                             android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true"
                             android:layout_gravity="center_horizontal"
-                            android:text="예매율"
+                            android:text="@string/rate_text"
                             android:textColor="#373737"
                             android:textSize="16sp" />
 
                         <TextView
+                            android:id="@+id/tv_main_act_movie_rate_n_rank"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
@@ -216,7 +216,7 @@
                             android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true"
                             android:layout_gravity="center"
-                            android:text="평점"
+                            android:text="@string/grade_text"
                             android:textColor="#373737"
                             android:textSize="16sp" />
 
@@ -238,6 +238,7 @@
                                 android:stepSize="0.5" />
 
                             <TextView
+                                android:id="@+id/tv_main_act_grade"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="8dp"
@@ -271,11 +272,12 @@
                             android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true"
                             android:layout_gravity="center_horizontal"
-                            android:text="누적관객수"
+                            android:text="@string/audience_cnt_text"
                             android:textColor="#373737"
                             android:textSize="16sp" />
 
                         <TextView
+                            android:id="@+id/tv_main_act_audience_cnt"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
@@ -286,7 +288,6 @@
                     </LinearLayout>
                 </RelativeLayout>
             </LinearLayout>
-            //
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -299,12 +300,13 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="줄거리"
+                    android:text="@string/summary_text"
                     android:textColor="@color/colorBlack"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/tv_main_act_summary"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
@@ -327,7 +329,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"
-                    android:text="감독/출연"
+                    android:text="@string/director_n_actor_text"
                     android:textColor="@color/colorBlack"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -341,11 +343,12 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="감독"
+                        android:text="@string/director_text"
                         android:textColor="@color/colorBlack"
                         android:textSize="14sp" />
 
                     <TextView
+                        android:id="@+id/tv_main_act_director"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
@@ -362,11 +365,12 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="출연"
+                        android:text="@string/actor_text"
                         android:textColor="@color/colorBlack"
                         android:textSize="14sp" />
 
                     <TextView
+                        android:id="@+id/tv_main_act_actor"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
@@ -392,7 +396,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="한줄평"
+                        android:text="@string/review_text"
                         android:textColor="@color/colorBlack"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -413,7 +417,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_marginStart="4dp"
-                            android:text="작성하기"
+                            android:text="@string/review_write_text"
                             android:textColor="#e65100"
                             android:textSize="14sp"
                             android:textStyle="bold" />
@@ -444,7 +448,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
-                            android:text="모두 보기"
+                            android:text="@string/review_more_text"
                             android:textColor="#311b92"
                             android:textSize="14sp" />
                     </RelativeLayout>
@@ -488,7 +492,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginHorizontal="4dp"
                         android:gravity="center"
-                        android:text="예매하기"
+                        android:text="@string/book_text"
                         android:textColor="@color/colorWhite"
                         android:textSize="22sp" />
 

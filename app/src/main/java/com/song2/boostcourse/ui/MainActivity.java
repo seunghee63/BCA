@@ -1,5 +1,6 @@
 package com.song2.boostcourse.ui;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.support.annotation.Nullable;
@@ -19,7 +20,7 @@ import java.util.ArrayList;
 //영화 상세 페이지 activity
 public class MainActivity extends AppCompatActivity {
 
-    int REQUEST_CODE_SUB_ACTIVITY = 7777;
+    int REQUEST_CODE_UPLOAD_REAVIEW_ACTIVITY = 7777;
     ActivityMainBinding binding;
 
     @Override
@@ -31,10 +32,9 @@ public class MainActivity extends AppCompatActivity {
         binding.setActivity(this);
         binding.setThumbUpDown(new ThumbUpDown(15,2)); //xml 에 객체를 만들어 줌
 
-        //리스트 뷰 데이터 삽입
-        ListView listViewMainActReviewList = binding.listViewMainActReviewList;
+        initialStrSetting();
 
-        settingDataSet(listViewMainActReviewList);
+        settingDataSet();
     }
 
     public void clickThumpUpBtn(View view) {
@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(MainActivity.this, UploadReviewActivity.class);
         intent.putExtra("MovieTitle",binding.tvMainActTitle.getText());
         intent.putExtra("MovieRating","15"); //
-        startActivityForResult(intent,REQUEST_CODE_SUB_ACTIVITY);
+        startActivityForResult(intent,REQUEST_CODE_UPLOAD_REAVIEW_ACTIVITY);
     }
 
     public void clickMoreBtn(View view){
@@ -93,7 +93,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //댓글 listView Data
-    public void settingDataSet(ListView reviewList){
+    public void settingDataSet(){
+
+        ListView reviewList = binding.listViewMainActReviewList;
 
         ArrayList<ReviewData> data = new ArrayList<>();
 
@@ -123,8 +125,37 @@ public class MainActivity extends AppCompatActivity {
         reviewList.setAdapter(reviewAdapter);
     }
 
+    public void setListView(){
+
+    }
+
+    //string 관리
+    public void initialStrSetting(){
+
+        //추후에 api 연결 할 데이터들
+        binding.tvMainActTitle.setText("군도");
+        binding.tvMainActMovieInfo.setText("2014.07.23 개봉 \n액션 / 137 분");
+        binding.tvMainActMovieRateNRank.setText("5위 1.8%");
+        binding.tvMainActGrade.setText("8.2");
+        binding.tvMainActAudienceCnt.setText("839,399명");
+        binding.tvMainActSummary.setText("군도, 백성을 구하라!" +
+                "\n양반과 탐관오리들의 착취가 극에 달했던 조선 철종 13년. 힘 없는 백성의 편이 되어 세상을 바로잡고자 하는 의적떼인 군도(群盜), 지리산 추설이 있었다." +
+                "\n\n쌍칼 도치 vs 백성의 적 조윤" +
+                "\n잦은 자연재해, 기근과 관의 횡포까지 겹쳐 백성들의 삶이 날로 피폐해져 가는 사이, 나주 대부호의 서자로 조선 최고의 무관 출신인 조윤은 극악한 수법으로 양민들을 수탈, 삼남지방 최고의 대부호로 성장한다. 한편 소, 돼지를 잡아 근근이 살아가던 천한 백정 돌무치는 죽어도 잊지 못할 끔찍한 일을 당한 뒤 군도에 합류. 지리산 추설의 신 거성(新 巨星) 도치로 거듭난다." +
+                "\n\n뭉치면 백성, 흩어지면 도적!" +
+                "\n망할 세상을 뒤집기 위해, 백성이 주인인 새 세상을 향해 도치를 필두로 한 군도는 백성의 적, 조윤과 한 판 승부를 시작하는데...");
+        binding.tvMainActDirector.setText("윤종빈");
+        binding.tvMainActActor.setText("하정우(도치), 강동원(조윤)");
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == REQUEST_CODE_UPLOAD_REAVIEW_ACTIVITY){
+            if(resultCode == Activity.RESULT_OK){
+                //
+            }
+        }
     }
 }
