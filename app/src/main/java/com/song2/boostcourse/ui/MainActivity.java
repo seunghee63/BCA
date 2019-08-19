@@ -20,14 +20,14 @@ import java.util.ArrayList;
 //영화 상세 페이지 activity
 public class MainActivity extends AppCompatActivity {
 
-    int REQUEST_CODE_UPLOAD_REAVIEW_ACTIVITY = 7777;
+    int REQUEST_CODE_UPLOAD_REVIEW_ACTIVITY = 7777;
+
     ActivityMainBinding binding;
-    ArrayList<ReviewData> dataList = new ArrayList<>();
+    ArrayList<ReviewData> dataList = new ArrayList<>(); //
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         binding.setActivity(this);
@@ -37,7 +37,24 @@ public class MainActivity extends AppCompatActivity {
 
         setExampleData();
         setListView();
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == REQUEST_CODE_UPLOAD_REVIEW_ACTIVITY){
+            if(resultCode == Activity.RESULT_OK){
+
+                //Toast.makeText(this, data.getStringExtra("ReviewContents"), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, data.getFloatExtra("ReviewContents", ), Toast.LENGTH_SHORT).show();
+
+                //data 널 값 예외처리 해 주기
+                dataList.add(addReviewData("tmpImg", "song2**", "방금 전", data.getStringExtra("ReviewContents"), data.getFloatExtra("ReviewContents",5.0f), 0));
+
+                setListView();
+            }
+        }
     }
 
     public void clickThumpUpBtn(View view) {
@@ -83,36 +100,38 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void clickWriteBtn(View view){
-        Toast.makeText(this, "WriteBtn", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "WriteBtn", Toast.LENGTH_SHORT).show();
 
         Intent intent = new Intent(MainActivity.this, UploadReviewActivity.class);
         intent.putExtra("MovieTitle",binding.tvMainActTitle.getText());
         intent.putExtra("MovieRating","15"); //
-        startActivityForResult(intent,REQUEST_CODE_UPLOAD_REAVIEW_ACTIVITY);
+        startActivityForResult(intent,REQUEST_CODE_UPLOAD_REVIEW_ACTIVITY);
     }
 
     public void clickMoreBtn(View view){
-        Toast.makeText(this, "MoreBtn", Toast.LENGTH_SHORT).show();
-    }
+        //Toast.makeText(this, "MoreBtn", Toast.LENGTH_SHORT).show();
 
+        Intent intent = new Intent(MainActivity.this, MoreReviewActivity.class);
+        intent.putExtra("MovieTitle",binding.tvMainActTitle.getText());
+        startActivity(intent);
+    }
 
     //댓글 listView
     public void setListView(){
         ListView reviewList = binding.listViewMainActReviewList;
 
-        //어뎁터 - 리스트 뷰 연결
+        //adapter - ListView 뷰 연결
         final ReviewAdapter reviewAdapter = new ReviewAdapter(dataList);
         reviewList.setAdapter(reviewAdapter);
     }
 
     void setExampleData(){
-        dataList.add(addReviewData("https://www.google.com/url?sa=i&source=images&cd=&ved=2ahUKEwinndibrezjAhXaa94KHR8iAtkQjRx6BAgBEAU&url=http%3A%2F%2Fsocksplus.net%2Fproduct%2Fdetail.html%3Fproduct_no%3D13507&psig=AOvVaw2DZWjPEfCHSHcxbpnpF6CM&ust=1565115898969108", "리뷰어", "어제", "아 재미없어...", 2.0f, 0));
-        dataList.add(addReviewData("tmpImg", "song2", "3시간전", "이렇게 흥미로운 영화는 오랜만이에요!", 4.5f, 3));
-        dataList.add(addReviewData("https://www.google.com/url?sa=i&source=images&cd=&ved=2ahUKEwinndibrezjAhXaa94KHR8iAtkQjRx6BAgBEAU&url=http%3A%2F%2Fsocksplus.net%2Fproduct%2Fdetail.html%3Fproduct_no%3D13507&psig=AOvVaw2DZWjPEfCHSHcxbpnpF6CM&ust=1565115898969108", "수면양말", "1시간전", "무난 했어요", 3.5f, 0));
+        dataList.add(addReviewData("https://www.google.com/url?sa=i&source=images&cd=&ved=2ahUKEwinndibrezjAhXaa94KHR8iAtkQjRx6BAgBEAU&url=http%3A%2F%2Fsocksplus.net%2Fproduct%2Fdetail.html%3Fproduct_no%3D13507&psig=AOvVaw2DZWjPEfCHSHcxbpnpF6CM&ust=1565115898969108", "aaa**", "어제", "아 재미없어...", 2.0f, 0));
+        dataList.add(addReviewData("tmpImg", "song2**", "3시간 전", "이렇게 흥미로운 영화는 오랜만이에요!", 4.5f, 3));
+        dataList.add(addReviewData("testImg", "abab**", "1시간 전", "무난 했어요", 3.5f, 0));
     }
 
     //댓글 Data
-    //통신 적용 전 까지, 임시 데이터 관리를 위해 사용 할 함수
     public ReviewData addReviewData(String img, String userId, String date, String comment, float rate, int like){
 
         ReviewData newData = new ReviewData();
@@ -127,9 +146,10 @@ public class MainActivity extends AppCompatActivity {
         return newData;
     }
 
-    //string 관리
+    //string 데이터 임시 저장
+    //추후에 통신을 통해 받아 올 데이터들
     public void initialStrSetting(){
-        //추후에 통신을 통해 받아 올 데이터들
+
         binding.tvMainActTitle.setText("군도");
         binding.tvMainActMovieInfo.setText("2014.07.23 개봉 \n액션 / 137 분");
         binding.tvMainActMovieRateNRank.setText("5위 1.8%");
@@ -143,23 +163,7 @@ public class MainActivity extends AppCompatActivity {
                 "\n망할 세상을 뒤집기 위해, 백성이 주인인 새 세상을 향해 도치를 필두로 한 군도는 백성의 적, 조윤과 한 판 승부를 시작하는데...");
         binding.tvMainActDirector.setText("윤종빈");
         binding.tvMainActActor.setText("하정우(도치), 강동원(조윤)");
+
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if(requestCode == REQUEST_CODE_UPLOAD_REAVIEW_ACTIVITY){
-            if(resultCode == Activity.RESULT_OK){
-
-                //Toast.makeText(this, data.getStringExtra("ReviewContents"), Toast.LENGTH_SHORT).show();
-                //Toast.makeText(this, data.getFloatExtra("ReviewContents", ), Toast.LENGTH_SHORT).show();
-
-                //data 널 값 예외처리 해 주기
-                dataList.add(addReviewData("tmpImg", "song2", "방금전", data.getStringExtra("ReviewContents"), data.getFloatExtra("ReviewContents",5.0f), 0));
-
-                setListView();
-            }
-        }
-    }
 }
