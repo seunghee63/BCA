@@ -20,6 +20,24 @@
             android:orientation="vertical"
             android:paddingBottom="20dp">
 
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar_upload"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:background="@color/colorPrimary">
+
+                <TextView
+                    android:id="@+id/tv_toolbar_title_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:text="한줄평 작성"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="22sp" />
+
+            </android.support.v7.widget.Toolbar>
+
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -49,8 +49,9 @@ public class MainActivity extends AppCompatActivity {
                 //Toast.makeText(this, data.getStringExtra("ReviewContents"), Toast.LENGTH_SHORT).show();
                 //Toast.makeText(this, data.getFloatExtra("ReviewContents", ), Toast.LENGTH_SHORT).show();
 
-                //data 널 값 예외처리 해 주기
-                dataList.add(addReviewData("tmpImg", "song2**", "방금 전", data.getStringExtra("ReviewContents"), data.getFloatExtra("ReviewContents",5.0f), 0));
+                //databinding rating값 처리 못함
+                //data.getFloatExtra("ReviewContents",5.0f);
+                dataList.add(addReviewData("tmpImg", "song2**", "방금 전", data.getStringExtra("ReviewContents"), 5.0f, 0));
 
                 setListView();
             }
@@ -105,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(MainActivity.this, UploadReviewActivity.class);
         intent.putExtra("MovieTitle",binding.tvMainActTitle.getText());
         intent.putExtra("MovieRating","15"); //
+        intent.putExtra("whereFrom","main");
         startActivityForResult(intent,REQUEST_CODE_UPLOAD_REVIEW_ACTIVITY);
     }
 

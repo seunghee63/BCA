@@ -10,10 +10,12 @@ import android.widget.Toast;
 
 import com.song2.boostcourse.R;
 import com.song2.boostcourse.databinding.ActivityUploadReviewBinding;
+import com.song2.boostcourse.databinding.ToolbarMainBinding;
 
 public class UploadReviewActivity extends AppCompatActivity {
 
     ActivityUploadReviewBinding binding;
+    ToolbarMainBinding tbBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +23,8 @@ public class UploadReviewActivity extends AppCompatActivity {
 
         binding = DataBindingUtil.setContentView(this,R.layout.activity_upload_review);
         binding.setUploadActivity(this);
+        //setSupportActionBar(binding.);
+        //tbBinding.tvToolbarTitleText.setText("한줄평 작성");
 
         getReviewExtra();
     }
@@ -28,17 +32,32 @@ public class UploadReviewActivity extends AppCompatActivity {
     public void clickSaveBtn(View view){
         Toast.makeText(this, "저장", Toast.LENGTH_SHORT).show();
 
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
 
         String contents = binding.etUploadActWriteReview.getText().toString();
         float ratingValue =binding.rbUploadActRatingBar.getRating();
 
-        intent.putExtra("ReviewContents",contents);
-        intent.putExtra("RatingStarCnt",ratingValue);
+        if(contents.equals("")){
+            Toast.makeText(this, "내용을 입력 해 주세요" + contents, Toast.LENGTH_SHORT).show();
 
-        setResult(Activity.RESULT_OK,intent);
+        }else if (getIntent().getStringExtra("whereFrom").equals("main")) {
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
 
-        finish();
+            intent.putExtra("ReviewContents",contents);
+            intent.putExtra("RatingStarCnt",ratingValue);
+
+            setResult(Activity.RESULT_OK,intent);
+
+            finish();
+        }else {
+            Intent intent = new Intent(getApplicationContext(), MoreReviewActivity.class);
+
+            intent.putExtra("ReviewContents",contents);
+            intent.putExtra("RatingStarCnt",ratingValue);
+
+            setResult(Activity.RESULT_OK,intent);
+
+            finish();
+        }
     }
 
     public void clickQuitBtn(View view){

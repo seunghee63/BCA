@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+        <variable
+            name="moreReviewList"
+            type="com.song2.boostcourse.ui.MoreReviewActivity" />
+    </data>
+
+    <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/toolbar_main"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@color/colorPrimary">
+
+        <ImageView
+            android:id="@+id/iv_toolbar_back_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="12dp"
+            android:src="@drawable/ic_back_white"
+            android:onClick="@{moreReviewList::clickBackBtn}"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tv_toolbar_title_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:text="씨네마천국"
+            android:textColor="@color/colorWhite"
+            android:textSize="22sp" />
+
+    </android.support.v7.widget.Toolbar>
+</layout>
