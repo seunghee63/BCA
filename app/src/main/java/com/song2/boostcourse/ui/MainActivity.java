@@ -1,6 +1,8 @@
 package com.song2.boostcourse.ui;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -17,6 +19,7 @@ import java.util.ArrayList;
 //영화 상세 페이지 activity
 public class MainActivity extends AppCompatActivity {
 
+    int REQUEST_CODE_SUB_ACTIVITY = 7777;
     ActivityMainBinding binding;
 
     @Override
@@ -26,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         binding.setActivity(this);
-        binding.setThumbUpDown(new ThumbUpDown(15,2)); //xml에 객체를 만들어 줌
+        binding.setThumbUpDown(new ThumbUpDown(15,2)); //xml 에 객체를 만들어 줌
 
         //리스트 뷰 데이터 삽입
         ListView listViewMainActReviewList = binding.listViewMainActReviewList;
@@ -78,6 +81,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void clickWriteBtn(View view){
         Toast.makeText(this, "WriteBtn", Toast.LENGTH_SHORT).show();
+
+        Intent intent = new Intent(MainActivity.this, UploadReviewActivity.class);
+        intent.putExtra("MovieTitle",binding.tvMainActTitle.getText());
+        intent.putExtra("MovieRating","15"); //
+        startActivityForResult(intent,REQUEST_CODE_SUB_ACTIVITY);
     }
 
     public void clickMoreBtn(View view){
@@ -113,5 +121,10 @@ public class MainActivity extends AppCompatActivity {
         //어뎁터 - 리스트 뷰 연결
         final ReviewAdapter reviewAdapter = new ReviewAdapter(data);
         reviewList.setAdapter(reviewAdapter);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

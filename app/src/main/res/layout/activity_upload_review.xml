@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="uploadActivity"
+            type="com.song2.boostcourse.ui.UploadReviewActivity" />
+    </data>
+
+    <RelativeLayout
+        tools:context=".ui.UploadReviewActivity"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorWhite"
+            android:orientation="vertical"
+            android:paddingBottom="20dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="20dp">
+
+                <TextView
+                    android:id="@+id/tv_upload_act_movie_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="군도"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/iv_upload_act_movie_rating_12"
+                    android:visibility="gone"
+                    android:layout_toEndOf="@+id/tv_upload_act_movie_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginHorizontal="8dp"
+                    android:src="@drawable/ic_12" />
+                <ImageView
+                    android:id="@+id/iv_upload_act_movie_rating_15"
+                    android:visibility="visible"
+                    android:layout_toEndOf="@+id/tv_upload_act_movie_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginHorizontal="8dp"
+                    android:src="@drawable/ic_15" />
+                <ImageView
+                    android:id="@+id/iv_upload_act_movie_rating_19"
+                    android:visibility="gone"
+                    android:layout_toEndOf="@+id/tv_upload_act_movie_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginHorizontal="8dp"
+                    android:src="@drawable/ic_19" />
+                <ImageView
+                    android:id="@+id/iv_upload_act_movie_rating_all"
+                    android:visibility="gone"
+                    android:layout_toEndOf="@+id/tv_upload_act_movie_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginHorizontal="8dp"
+                    android:src="@drawable/ic_all" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#bdbdbd" />
+
+            <android.support.v7.widget.AppCompatRatingBar
+                android:id="@+id/rb_upload_act_rating_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginVertical="16dp"
+                android:isIndicator="true"
+                android:numStars="5" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="6dp"
+                android:text="평점을 입력해 주세요"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/et_upload_act_write_review"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_margin="12dp"
+                android:background="@drawable/write_review_contents"
+                android:gravity="top"
+                android:hint="100자 이내로 작성 해 주세요."
+                android:maxLength="100"
+                android:padding="16dp"
+                android:textSize="20sp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="12dp"
+                android:layout_marginTop="4dp">
+
+                <TextView
+                    android:id="@+id/tv_upload_act_save"
+                    android:layout_width="80dp"
+                    android:layout_height="50dp"
+                    android:layout_toStartOf="@id/tv_upload_act_quit"
+                    android:background="@drawable/write_review"
+                    android:gravity="center"
+                    android:text="저장"
+                    android:textColor="@color/colorBlack"
+                    android:onClick="@{uploadActivity::clickSaveBtn}"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_upload_act_quit"
+                    android:layout_width="80dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginStart="12dp"
+                    android:background="@drawable/write_review"
+                    android:gravity="center"
+                    android:text="취소"
+                    android:onClick="@{uploadActivity::clickQuitBtn}"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="16sp" />
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+</layout>

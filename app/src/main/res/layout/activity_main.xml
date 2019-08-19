@@ -18,7 +18,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#eeeeee"
+            android:background="@color/colorGray"
             android:orientation="vertical">
 
             <RelativeLayout
@@ -58,11 +58,37 @@
                             android:textStyle="bold" />
 
                         <ImageView
+                            android:id="@+id/iv_main_act_rating_12"
+                            android:visibility="gone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_toEndOf="@+id/tv_main_act_title"
+                            android:src="@drawable/ic_12" />
+                        <ImageView
+                            android:id="@+id/iv_main_act_rating_15"
+                            android:visibility="visible"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
                             android:layout_toEndOf="@+id/tv_main_act_title"
                             android:src="@drawable/ic_15" />
+                        <ImageView
+                            android:id="@+id/iv_main_act_rating_19"
+                            android:visibility="gone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_toEndOf="@+id/tv_main_act_title"
+                            android:src="@drawable/ic_19" />
+                        <ImageView
+                            android:id="@+id/iv_main_act_rating_all"
+                            android:visibility="gone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_toEndOf="@+id/tv_main_act_title"
+                            android:src="@drawable/ic_all" />
                     </RelativeLayout>
 
 
