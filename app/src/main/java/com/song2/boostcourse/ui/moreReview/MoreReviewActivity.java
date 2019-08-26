@@ -1,4 +1,4 @@
-package com.song2.boostcourse.ui;
+package com.song2.boostcourse.ui.moreReview;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -12,6 +12,7 @@ import android.widget.ListView;
 import com.song2.boostcourse.R;
 import com.song2.boostcourse.data.ReviewData;
 import com.song2.boostcourse.databinding.ActivityMoreReviewBinding;
+import com.song2.boostcourse.ui.upload.UploadReviewActivity;
 import com.song2.boostcourse.util.ReviewAdapter;
 
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 public class MoreReviewActivity extends AppCompatActivity {
 
     int REQUEST_CODE_UPLOAD_REVIEW_ACTIVITY = 4444;
+    int REQUEST_CODE_MORE_REVIEW_ACTIVITY = 3333;
 
     ActivityMoreReviewBinding binding;
     ArrayList<ReviewData> reviewDataArrayList = new ArrayList<>();
@@ -48,10 +50,16 @@ public class MoreReviewActivity extends AppCompatActivity {
         if(requestCode == REQUEST_CODE_UPLOAD_REVIEW_ACTIVITY){
             if(resultCode == Activity.RESULT_OK){
 
-                //databinding rating값 처리 못함
-                //data.getFloatExtra("ReviewContents",5.0f);
-                addReviewData("tmpImg", "song2**", "방금 전", data.getStringExtra("ReviewContents"), 5.0f, 0);
+                addReviewData("tmpImg", "song2**", "방금 전", data.getStringExtra("ReviewContents"), data.getFloatExtra("RatingStarCnt",5.0f), 0);
 
+                setListView();
+            }
+        }
+
+        if(requestCode == REQUEST_CODE_MORE_REVIEW_ACTIVITY ){
+            if(resultCode == Activity.RESULT_OK){
+
+                //reviewDataArrayList = getIntent().getParcelableArrayListExtra("dataList");
                 setListView();
             }
         }
@@ -70,6 +78,10 @@ public class MoreReviewActivity extends AppCompatActivity {
 
     public void clickBackBtn(View view){
         finish();
+
+        //
+
+        //Main 으로 데이터 전달
     }
 
     public void setListView(){
@@ -83,8 +95,6 @@ public class MoreReviewActivity extends AppCompatActivity {
     public void setExampleData(){
         addReviewData("https://www.google.com/url?sa=i&source=images&cd=&ved=2ahUKEwinndibrezjAhXaa94KHR8iAtkQjRx6BAgBEAU&url=http%3A%2F%2Fsocksplus.net%2Fproduct%2Fdetail.html%3Fproduct_no%3D13507&psig=AOvVaw2DZWjPEfCHSHcxbpnpF6CM&ust=1565115898969108", "aaa**", "어제", "아 재미없어...", 2.0f, 0);
         addReviewData("tmpImg", "song2**", "3시간 전", "이렇게 흥미로운 영화는 오랜만이에요!", 4.5f, 3);
-        addReviewData("testImg", "abab**", "1시간 전", "무난 했어요", 3.5f, 0);
-        addReviewData("testImg", "abab**", "1시간 전", "무난 했어요", 3.5f, 0);
         addReviewData("testImg", "abab**", "1시간 전", "무난 했어요", 3.5f, 0);
     }
 

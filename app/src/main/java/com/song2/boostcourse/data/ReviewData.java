@@ -1,6 +1,6 @@
 package com.song2.boostcourse.data;
 
-public class ReviewData {
+public class ReviewData{
     public String profileImg;
     public String userId;
     public String date;

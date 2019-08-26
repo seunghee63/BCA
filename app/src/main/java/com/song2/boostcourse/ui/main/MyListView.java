@@ -1,4 +1,4 @@
-package com.song2.boostcourse.ui;
+package com.song2.boostcourse.ui.main;
 
 import android.content.Context;
 import android.util.AttributeSet;

@@ -1,4 +1,4 @@
-package com.song2.boostcourse.ui;
+package com.song2.boostcourse.ui.upload;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -11,6 +11,8 @@ import android.widget.Toast;
 import com.song2.boostcourse.R;
 import com.song2.boostcourse.databinding.ActivityUploadReviewBinding;
 import com.song2.boostcourse.databinding.ToolbarMainBinding;
+import com.song2.boostcourse.ui.moreReview.MoreReviewActivity;
+import com.song2.boostcourse.ui.main.MainActivity;
 
 public class UploadReviewActivity extends AppCompatActivity {
 
@@ -23,8 +25,6 @@ public class UploadReviewActivity extends AppCompatActivity {
 
         binding = DataBindingUtil.setContentView(this,R.layout.activity_upload_review);
         binding.setUploadActivity(this);
-        //setSupportActionBar(binding.);
-        //tbBinding.tvToolbarTitleText.setText("한줄평 작성");
 
         getReviewExtra();
     }

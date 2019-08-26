@@ -1,4 +1,4 @@
-package com.song2.boostcourse.ui;
+package com.song2.boostcourse.ui.main;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -13,6 +13,8 @@ import android.widget.Toast;
 import com.song2.boostcourse.R;
 import com.song2.boostcourse.data.ReviewData;
 import com.song2.boostcourse.databinding.ActivityMainBinding;
+import com.song2.boostcourse.ui.moreReview.MoreReviewActivity;
+import com.song2.boostcourse.ui.upload.UploadReviewActivity;
 import com.song2.boostcourse.util.ReviewAdapter;
 
 import java.util.ArrayList;
@@ -21,6 +23,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     int REQUEST_CODE_UPLOAD_REVIEW_ACTIVITY = 7777;
+    int REQUEST_CODE_MORE_REVIEW_ACTIVITY = 3333;
 
     ActivityMainBinding binding;
     ArrayList<ReviewData> dataList = new ArrayList<>(); //
@@ -46,12 +49,7 @@ public class MainActivity extends AppCompatActivity {
         if(requestCode == REQUEST_CODE_UPLOAD_REVIEW_ACTIVITY){
             if(resultCode == Activity.RESULT_OK){
 
-                //Toast.makeText(this, data.getStringExtra("ReviewContents"), Toast.LENGTH_SHORT).show();
-                //Toast.makeText(this, data.getFloatExtra("ReviewContents", ), Toast.LENGTH_SHORT).show();
-
-                //databinding rating값 처리 못함
-                //data.getFloatExtra("ReviewContents",5.0f);
-                dataList.add(addReviewData("tmpImg", "song2**", "방금 전", data.getStringExtra("ReviewContents"), 5.0f, 0));
+                dataList.add(addReviewData("tmpImg", "song2**", "방금 전", data.getStringExtra("ReviewContents"), data.getFloatExtra("RatingStarCnt",5.0f), 0));
 
                 setListView();
             }
@@ -105,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = new Intent(MainActivity.this, UploadReviewActivity.class);
         intent.putExtra("MovieTitle",binding.tvMainActTitle.getText());
-        intent.putExtra("MovieRating","15"); //
+        intent.putExtra("MovieRating","15");
         intent.putExtra("whereFrom","main");
         startActivityForResult(intent,REQUEST_CODE_UPLOAD_REVIEW_ACTIVITY);
     }
@@ -115,7 +113,11 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = new Intent(MainActivity.this, MoreReviewActivity.class);
         intent.putExtra("MovieTitle",binding.tvMainActTitle.getText());
-        startActivity(intent);
+
+        //기존의 데이터 전송
+        intent.putExtra("reviewDataList",dataList);
+        startActivityForResult(intent,REQUEST_CODE_MORE_REVIEW_ACTIVITY);
+        //        startActivity(intent);
     }
 
     //댓글 listView
@@ -127,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
         reviewList.setAdapter(reviewAdapter);
     }
 
-    void setExampleData(){
+    public void setExampleData(){
         dataList.add(addReviewData("https://www.google.com/url?sa=i&source=images&cd=&ved=2ahUKEwinndibrezjAhXaa94KHR8iAtkQjRx6BAgBEAU&url=http%3A%2F%2Fsocksplus.net%2Fproduct%2Fdetail.html%3Fproduct_no%3D13507&psig=AOvVaw2DZWjPEfCHSHcxbpnpF6CM&ust=1565115898969108", "aaa**", "어제", "아 재미없어...", 2.0f, 0));
         dataList.add(addReviewData("tmpImg", "song2**", "3시간 전", "이렇게 흥미로운 영화는 오랜만이에요!", 4.5f, 3));
         dataList.add(addReviewData("testImg", "abab**", "1시간 전", "무난 했어요", 3.5f, 0));

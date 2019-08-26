@@ -5,7 +5,7 @@
 
         <variable
             name="moreReview"
-            type="com.song2.boostcourse.ui.MoreReviewActivity" />
+            type="com.song2.boostcourse.ui.moreReview.MoreReviewActivity" />
     </data>
 
     <LinearLayout

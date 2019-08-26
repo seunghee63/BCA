@@ -4,7 +4,7 @@
     <data>
         <variable
             name="moreReviewList"
-            type="com.song2.boostcourse.ui.MoreReviewActivity" />
+            type="com.song2.boostcourse.ui.moreReview.MoreReviewActivity" />
     </data>
 
     <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
