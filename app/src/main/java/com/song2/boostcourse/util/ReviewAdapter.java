@@ -6,14 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-import android.content.Context;
-import android.util.Log;
-import android.widget.RatingBar;
-import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
-import de.hdodenhof.circleimageview.CircleImageView;
-
 import com.song2.boostcourse.R;
 import com.song2.boostcourse.data.ReviewData;
 import com.song2.boostcourse.databinding.ItemReviewBinding;

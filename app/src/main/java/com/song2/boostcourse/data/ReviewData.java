@@ -20,7 +20,6 @@ public class ReviewData implements Parcelable {
         this.like = "좋아요   " + like;
     }
 
-
     protected ReviewData(Parcel in) {
         profileImg = in.readString();
         userId = in.readString();
