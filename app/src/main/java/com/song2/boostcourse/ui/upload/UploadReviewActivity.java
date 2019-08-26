@@ -17,7 +17,6 @@ import com.song2.boostcourse.ui.main.MainActivity;
 public class UploadReviewActivity extends AppCompatActivity {
 
     ActivityUploadReviewBinding binding;
-    ToolbarMainBinding tbBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -6,12 +6,15 @@ import android.databinding.DataBindingUtil;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.song2.boostcourse.R;
 import com.song2.boostcourse.data.ReviewData;
 import com.song2.boostcourse.databinding.ActivityMoreReviewBinding;
+import com.song2.boostcourse.ui.main.MainActivity;
 import com.song2.boostcourse.ui.upload.UploadReviewActivity;
 import com.song2.boostcourse.util.ReviewAdapter;
 
@@ -20,7 +23,6 @@ import java.util.ArrayList;
 public class MoreReviewActivity extends AppCompatActivity {
 
     int REQUEST_CODE_UPLOAD_REVIEW_ACTIVITY = 4444;
-    int REQUEST_CODE_MORE_REVIEW_ACTIVITY = 3333;
 
     ActivityMoreReviewBinding binding;
     ArrayList<ReviewData> reviewDataArrayList = new ArrayList<>();
@@ -33,12 +35,16 @@ public class MoreReviewActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_more_review);
         binding.setMoreReview(this);
 
+
+        //main에서 넘어온 데이터 setting
+        String title = getIntent().getStringExtra("MovieTitle");
+        reviewDataArrayList = getIntent().getParcelableArrayListExtra("reviewDataList");
+        Log.e("reviewDataList data = ", String.valueOf(reviewDataArrayList));
+
         //리스트뷰 setting
-        setExampleData();
+        //setExampleData();
         setListView();
 
-        //영화제목 setting
-        String title = getIntent().getStringExtra("MovieTitle");
         binding.tvMoreReviewActMovieTitle.setText(title);
     }
 
@@ -56,13 +62,6 @@ public class MoreReviewActivity extends AppCompatActivity {
             }
         }
 
-        if(requestCode == REQUEST_CODE_MORE_REVIEW_ACTIVITY ){
-            if(resultCode == Activity.RESULT_OK){
-
-                //reviewDataArrayList = getIntent().getParcelableArrayListExtra("dataList");
-                setListView();
-            }
-        }
     }
 
 
@@ -77,11 +76,14 @@ public class MoreReviewActivity extends AppCompatActivity {
     }
 
     public void clickBackBtn(View view){
-        finish();
-
-        //
 
         //Main 으로 데이터 전달
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+
+        setResult(Activity.RESULT_OK,intent);
+        intent.putExtra("reviewDataList",reviewDataArrayList);
+
+        finish();
     }
 
     public void setListView(){
@@ -92,26 +94,11 @@ public class MoreReviewActivity extends AppCompatActivity {
         reviewList.setAdapter(reviewAdapter);
     }
 
-    public void setExampleData(){
-        addReviewData("https://www.google.com/url?sa=i&source=images&cd=&ved=2ahUKEwinndibrezjAhXaa94KHR8iAtkQjRx6BAgBEAU&url=http%3A%2F%2Fsocksplus.net%2Fproduct%2Fdetail.html%3Fproduct_no%3D13507&psig=AOvVaw2DZWjPEfCHSHcxbpnpF6CM&ust=1565115898969108", "aaa**", "어제", "아 재미없어...", 2.0f, 0);
-        addReviewData("tmpImg", "song2**", "3시간 전", "이렇게 흥미로운 영화는 오랜만이에요!", 4.5f, 3);
-        addReviewData("testImg", "abab**", "1시간 전", "무난 했어요", 3.5f, 0);
-    }
-
     //댓글 Data
     public void addReviewData(String img, String userId, String date, String comment, float rate, int like){
 
-        ReviewData newData = new ReviewData();
-
-        newData.profileImg = img;
-        newData.userId = userId;
-        newData.date = date;
-        newData.comment = comment;
-        newData.rate = rate;
-        newData.like = "좋아요   " + like;
-
+        ReviewData newData = new ReviewData(img, userId, date, comment, rate, like);
         reviewDataArrayList.add(newData);
-
     }
 
     //관람등급 이미지 setting - api 연결 후 사용 할 함수

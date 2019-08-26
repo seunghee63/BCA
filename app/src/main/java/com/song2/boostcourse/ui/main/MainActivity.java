@@ -6,6 +6,7 @@ import android.databinding.DataBindingUtil;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -50,6 +51,16 @@ public class MainActivity extends AppCompatActivity {
             if(resultCode == Activity.RESULT_OK){
 
                 dataList.add(addReviewData("tmpImg", "song2**", "방금 전", data.getStringExtra("ReviewContents"), data.getFloatExtra("RatingStarCnt",5.0f), 0));
+
+                setListView();
+            }
+        }
+
+        if(requestCode == REQUEST_CODE_MORE_REVIEW_ACTIVITY){
+            if(resultCode == Activity.RESULT_OK){
+
+                dataList = data.getParcelableArrayListExtra("reviewDataList");
+                Log.e("reviewDataList data = ", String.valueOf(dataList));
 
                 setListView();
             }
@@ -114,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(MainActivity.this, MoreReviewActivity.class);
         intent.putExtra("MovieTitle",binding.tvMainActTitle.getText());
 
-        //기존의 데이터 전송
+        //기존의 댓글 데이터 전송
         intent.putExtra("reviewDataList",dataList);
         startActivityForResult(intent,REQUEST_CODE_MORE_REVIEW_ACTIVITY);
         //        startActivity(intent);
@@ -138,14 +149,7 @@ public class MainActivity extends AppCompatActivity {
     //댓글 Data
     public ReviewData addReviewData(String img, String userId, String date, String comment, float rate, int like){
 
-        ReviewData newData = new ReviewData();
-
-        newData.profileImg = img;
-        newData.userId = userId;
-        newData.date = date;
-        newData.comment = comment;
-        newData.rate = rate;
-        newData.like = "좋아요   " + like;
+        ReviewData newData = new ReviewData(img, userId, date, comment, rate, like);
 
         return newData;
     }

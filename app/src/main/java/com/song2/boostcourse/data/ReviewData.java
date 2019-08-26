@@ -1,12 +1,46 @@
 package com.song2.boostcourse.data;
 
-public class ReviewData{
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class ReviewData implements Parcelable {
     public String profileImg;
     public String userId;
     public String date;
     public String comment;
     public float rate;
     public String like;
+
+    public ReviewData (String img, String userId, String date, String comment, float rate, int like){
+        this.profileImg = img;
+        this.userId = userId;
+        this.date = date;
+        this.comment = comment;
+        this.rate = rate;
+        this.like = "좋아요   " + like;
+    }
+
+
+    protected ReviewData(Parcel in) {
+        profileImg = in.readString();
+        userId = in.readString();
+        date = in.readString();
+        comment = in.readString();
+        rate = in.readFloat();
+        like = in.readString();
+    }
+
+    public static final Creator<ReviewData> CREATOR = new Creator<ReviewData>() {
+        @Override
+        public ReviewData createFromParcel(Parcel in) {
+            return new ReviewData(in);
+        }
+
+        @Override
+        public ReviewData[] newArray(int size) {
+            return new ReviewData[size];
+        }
+    };
 
     public String getProfileImg() {
         return profileImg;
@@ -66,5 +100,20 @@ public class ReviewData{
                 ", comment='" + comment + '\'' +
                 ", like=" + like +
                 '}';
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(profileImg);
+        parcel.writeString(userId);
+        parcel.writeString(date);
+        parcel.writeString(comment);
+        parcel.writeFloat(rate);
+        parcel.writeString(like);
     }
 }
