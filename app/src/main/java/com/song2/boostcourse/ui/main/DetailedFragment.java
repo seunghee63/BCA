@@ -3,48 +3,85 @@ package com.song2.boostcourse.ui.main;
 import android.app.Activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.song2.boostcourse.R;
 import com.song2.boostcourse.data.ReviewData;
-import com.song2.boostcourse.databinding.ActivityMainBinding;
+import com.song2.boostcourse.databinding.FragmentDetailedBinding;
 import com.song2.boostcourse.ui.moreReview.MoreReviewActivity;
 import com.song2.boostcourse.ui.upload.UploadReviewActivity;
 import com.song2.boostcourse.util.ReviewAdapter;
 
 import java.util.ArrayList;
 
-//영화 상세 페이지 activity
-public class MainActivity extends AppCompatActivity {
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class DetailedFragment extends Fragment {
 
     int REQUEST_CODE_UPLOAD_REVIEW_ACTIVITY = 7777;
     int REQUEST_CODE_MORE_REVIEW_ACTIVITY = 3333;
 
-    ActivityMainBinding binding;
-    ArrayList<ReviewData> dataList = new ArrayList<>(); //
+    FragmentDetailedBinding binding;
+
+    ArrayList<ReviewData> dataList = new ArrayList<>();
+
+    public DetailedFragment() {
+        // Required empty public constructor
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
 
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        binding.setActivity(this);
-        binding.setThumbUpDown(new ThumbUpDown(15,2)); //xml 에 객체를 만들어 줌
+        binding = DataBindingUtil.inflate(
+                inflater, R.layout.fragment_detailed, container, false);
+        View view = binding.getRoot();
+        //here data must be an instance of the class MarsDataProvider
+        return view;
+
+/*
+        // Inflate the layout for this fragment
+
+        return inflater.inflate(R.layout.fragment_detailed, container, false);*/
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+
+        binding.setThumbUpDown(new ThumbUpDown(16,2)); //xml 에 객체를 만들어 줌
+
+        //binding.setHandler(this);
 
         initialStrSetting();
 
         setExampleData();
         setListView();
+
+        //clickMoreBtn(view);
+
+        binding.ivMainActThumbUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                clickThumpUpBtn(view);
+
+            }
+        });
+
+        super.onViewCreated(view, savedInstanceState);
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if(requestCode == REQUEST_CODE_UPLOAD_REVIEW_ACTIVITY){
@@ -69,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void clickThumpUpBtn(View view) {
 
-        Toast.makeText(this, "ThumpUp", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "ThumpUp", Toast.LENGTH_SHORT).show();
 
         if (binding.ivMainActThumbDown.isSelected() && !binding.ivMainActThumbUp.isSelected()) {
 
@@ -92,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void clickThumpDownBtn(View view) {
 
-        Toast.makeText(this, "ThumpDown", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "ThumpDown", Toast.LENGTH_SHORT).show();
 
         if (binding.ivMainActThumbUp.isSelected() && !binding.ivMainActThumbDown.isSelected()) {
 
@@ -112,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
     public void clickWriteBtn(View view){
         //Toast.makeText(this, "WriteBtn", Toast.LENGTH_SHORT).show();
 
-        Intent intent = new Intent(MainActivity.this, UploadReviewActivity.class);
+        Intent intent = new Intent(getContext(), UploadReviewActivity.class);
         intent.putExtra("MovieTitle",binding.tvMainActTitle.getText());
         intent.putExtra("MovieRating","15");
         intent.putExtra("whereFrom","main");
@@ -122,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
     public void clickMoreBtn(View view){
         //Toast.makeText(this, "MoreBtn", Toast.LENGTH_SHORT).show();
 
-        Intent intent = new Intent(MainActivity.this, MoreReviewActivity.class);
+        Intent intent = new Intent(getContext(), MoreReviewActivity.class);
         intent.putExtra("MovieTitle",binding.tvMainActTitle.getText());
 
         //기존의 댓글 데이터 전송
@@ -158,6 +195,7 @@ public class MainActivity extends AppCompatActivity {
     //추후에 통신을 통해 받아 올 데이터들
     public void initialStrSetting(){
 
+        //제목, rate, rating
         binding.tvMainActTitle.setText("군도");
         binding.tvMainActMovieInfo.setText("2014.07.23 개봉 \n액션 / 137 분");
         binding.tvMainActMovieRateNRank.setText("5위 1.8%");
@@ -173,5 +211,6 @@ public class MainActivity extends AppCompatActivity {
         binding.tvMainActActor.setText("하정우(도치), 강동원(조윤)");
 
     }
+
 
 }

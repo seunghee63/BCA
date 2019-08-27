@@ -9,12 +9,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.song2.boostcourse.R;
 import com.song2.boostcourse.data.ReviewData;
 import com.song2.boostcourse.databinding.ActivityMoreReviewBinding;
-import com.song2.boostcourse.ui.main.MainActivity;
+import com.song2.boostcourse.ui.main.MovieMainActivity;
 import com.song2.boostcourse.ui.upload.UploadReviewActivity;
 import com.song2.boostcourse.util.ReviewAdapter;
 
@@ -61,7 +60,6 @@ public class MoreReviewActivity extends AppCompatActivity {
                 setListView();
             }
         }
-
     }
 
 
@@ -70,7 +68,7 @@ public class MoreReviewActivity extends AppCompatActivity {
 
         Intent intent = new Intent(getApplicationContext(), UploadReviewActivity.class);
         intent.putExtra("MovieTitle",binding.tvMoreReviewActMovieTitle.getText());
-        intent.putExtra("MovieRating","15"); //
+        intent.putExtra("MovieRating","15");
         intent.putExtra("whereFrom","more");
         startActivityForResult(intent,REQUEST_CODE_UPLOAD_REVIEW_ACTIVITY);
     }
@@ -78,7 +76,7 @@ public class MoreReviewActivity extends AppCompatActivity {
     public void clickBackBtn(View view){
 
         //Main 으로 데이터 전달
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        Intent intent = new Intent(getApplicationContext(), MovieMainActivity.class);
 
         setResult(Activity.RESULT_OK,intent);
         intent.putExtra("reviewDataList",reviewDataArrayList);

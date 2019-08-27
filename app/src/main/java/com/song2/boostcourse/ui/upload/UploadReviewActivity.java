@@ -10,9 +10,8 @@ import android.widget.Toast;
 
 import com.song2.boostcourse.R;
 import com.song2.boostcourse.databinding.ActivityUploadReviewBinding;
-import com.song2.boostcourse.databinding.ToolbarMainBinding;
+import com.song2.boostcourse.ui.main.MovieMainActivity;
 import com.song2.boostcourse.ui.moreReview.MoreReviewActivity;
-import com.song2.boostcourse.ui.main.MainActivity;
 
 public class UploadReviewActivity extends AppCompatActivity {
 
@@ -39,7 +38,7 @@ public class UploadReviewActivity extends AppCompatActivity {
             Toast.makeText(this, "내용을 입력 해 주세요" + contents, Toast.LENGTH_SHORT).show();
 
         }else if (getIntent().getStringExtra("whereFrom").equals("main")) {
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            Intent intent = new Intent(getApplicationContext(), MovieMainActivity.class);
 
             intent.putExtra("ReviewContents",contents);
             intent.putExtra("RatingStarCnt",ratingValue);
