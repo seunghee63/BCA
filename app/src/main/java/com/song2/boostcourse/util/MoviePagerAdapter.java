@@ -3,7 +3,6 @@ package com.song2.boostcourse.util;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.view.View;
 
 import java.util.ArrayList;
 
