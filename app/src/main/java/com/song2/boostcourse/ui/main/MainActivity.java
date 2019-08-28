@@ -3,7 +3,6 @@ package com.song2.boostcourse.ui.main;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.ViewPager;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.MenuItem;
@@ -14,9 +13,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.song2.boostcourse.R;
-import com.song2.boostcourse.util.MoviePagerAdapter;
 
-public class MovieMainActivity extends AppCompatActivity
+public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     DetailedFragment detailedFragment = new DetailedFragment();
@@ -36,52 +34,8 @@ public class MovieMainActivity extends AppCompatActivity
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
 
-        settingViewPager();
+        replaceMovieMainFrag();
 
-    }
-
-    public void settingViewPager() {
-
-        //뷰페이저
-        ViewPager pager;
-
-        pager = findViewById(R.id.pager);
-        pager.setOffscreenPageLimit(6);
-
-        MoviePagerAdapter adapter = new MoviePagerAdapter(getSupportFragmentManager());
-
-        adapter.addItem(setBundle(1));
-        adapter.addItem(setBundle(2));
-        adapter.addItem(setBundle(3));
-        adapter.addItem(setBundle(4));
-        adapter.addItem(setBundle(5));
-        adapter.addItem(setBundle(6));
-
-        pager.setAdapter(adapter);
-
-
-        float d = getResources().getDisplayMetrics().density;
-        int margin = (int)(30 * d);
-        int marginRight = (int)(1 * d);
-
-
-        pager.setClipToPadding(false);
-        pager.setPadding(margin, 0, marginRight, 0);
-
-        pager.setPageMargin(getResources().getDisplayMetrics().widthPixels / -9);
-
-    }
-
-    public MovieItemFragment setBundle(int index){
-
-        MovieItemFragment fragment = new MovieItemFragment();
-
-        Bundle bundle = new Bundle();
-        bundle.putInt("movieIndex", index); // key , value
-
-        fragment.setArguments(bundle);
-
-        return fragment;
     }
 
     @Override
@@ -104,10 +58,10 @@ public class MovieMainActivity extends AppCompatActivity
             replaceMovieMainFrag();
         } else if (id == R.id.nav_api_item) {
         } else if (id == R.id.nav_book_item) {
-
         } else if (id == R.id.nav_setting_item) {
-
         }
+
+        replaceMovieMainFrag();
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -121,13 +75,13 @@ public class MovieMainActivity extends AppCompatActivity
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_movie_main_frag_container, detailedFragment).commit();
-        //fragmentTransaction.add(R.id.fragment_movie_main_frag_container, detailedFragment).commit();
     }
 
     public void replaceMovieMainFrag() {
+        MovieListFragment listFragment = new MovieListFragment();
+
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
-        //fragmentTransaction.replace(R.id.fragment_movie_main_frag_container, detailedFragment).commit();
-        fragmentTransaction.remove(detailedFragment).commit();
+        fragmentTransaction.replace(R.id.fragment_movie_main_frag_container, listFragment).commit();
     }
 }
