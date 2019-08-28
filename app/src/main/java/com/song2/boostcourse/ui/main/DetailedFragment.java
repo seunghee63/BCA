@@ -1,6 +1,7 @@
 package com.song2.boostcourse.ui.main;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -30,6 +31,8 @@ public class DetailedFragment extends Fragment {
     int REQUEST_CODE_UPLOAD_REVIEW_ACTIVITY = 7777;
     int REQUEST_CODE_MORE_REVIEW_ACTIVITY = 3333;
 
+    int movieIndex = 0;
+
     FragmentDetailedBinding binding;
 
     ArrayList<ReviewData> dataList = new ArrayList<>();
@@ -39,45 +42,85 @@ public class DetailedFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        binding = DataBindingUtil.inflate(
-                inflater, R.layout.fragment_detailed, container, false);
-        View view = binding.getRoot();
-        //here data must be an instance of the class MarsDataProvider
-        return view;
+/*        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_detailed, container, false);
+        return binding.getRoot();*/
 
-/*
         // Inflate the layout for this fragment
 
-        return inflater.inflate(R.layout.fragment_detailed, container, false);*/
+        return inflater.inflate(R.layout.fragment_detailed, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
+        binding = DataBindingUtil.bind(view);
         binding.setThumbUpDown(new ThumbUpDown(16,2)); //xml 에 객체를 만들어 줌
-
-        //binding.setHandler(this);
 
         initialStrSetting();
 
         setExampleData();
         setListView();
 
-        //clickMoreBtn(view);
+        clickMethod(view);
 
-        binding.ivMainActThumbUp.setOnClickListener(new View.OnClickListener() {
+        if( getArguments() != null)
+        {
+            movieIndex  = getArguments().getInt("movieIndex"); // 전달한 key 값
+            setImage(movieIndex);
+        }
+
+        //clickMoreBtn(view);
+        //binding.setHandler(this);
+
+        super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+    }
+
+
+    public void clickMethod(View view){
+
+        /*        binding.ivMainActThumbUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                clickThumpUpBtn( view);
+            }
+        });*/
 
-                clickThumpUpBtn(view);
-
+        view.findViewById(R.id.iv_main_act_thumb_up).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                clickThumpUpBtn();
             }
         });
 
-        super.onViewCreated(view, savedInstanceState);
+        view.findViewById(R.id.iv_main_act_thumb_down).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                clickThumpDownBtn();
+            }
+        });
+
+        view.findViewById(R.id.rl_detailed_frag_more_Btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                clickMoreBtn();
+            }
+        });
+
+        view.findViewById(R.id.ll_detailed_frag_write_Btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                clickWriteBtn();
+            }
+        });
+
     }
 
     @Override
@@ -104,7 +147,7 @@ public class DetailedFragment extends Fragment {
         }
     }
 
-    public void clickThumpUpBtn(View view) {
+    public void clickThumpUpBtn() {
 
         //Toast.makeText(this, "ThumpUp", Toast.LENGTH_SHORT).show();
 
@@ -127,7 +170,7 @@ public class DetailedFragment extends Fragment {
         }
     }
 
-    public void clickThumpDownBtn(View view) {
+    public void clickThumpDownBtn() {
 
         //Toast.makeText(this, "ThumpDown", Toast.LENGTH_SHORT).show();
 
@@ -146,7 +189,7 @@ public class DetailedFragment extends Fragment {
         }
     }
 
-    public void clickWriteBtn(View view){
+    public void clickWriteBtn(){
         //Toast.makeText(this, "WriteBtn", Toast.LENGTH_SHORT).show();
 
         Intent intent = new Intent(getContext(), UploadReviewActivity.class);
@@ -156,7 +199,7 @@ public class DetailedFragment extends Fragment {
         startActivityForResult(intent,REQUEST_CODE_UPLOAD_REVIEW_ACTIVITY);
     }
 
-    public void clickMoreBtn(View view){
+    public void clickMoreBtn(){
         //Toast.makeText(this, "MoreBtn", Toast.LENGTH_SHORT).show();
 
         Intent intent = new Intent(getContext(), MoreReviewActivity.class);
@@ -210,6 +253,34 @@ public class DetailedFragment extends Fragment {
         binding.tvMainActDirector.setText("윤종빈");
         binding.tvMainActActor.setText("하정우(도치), 강동원(조윤)");
 
+    }
+
+    public void setImage(int index){
+
+        if(index == 1){
+            binding.ivMainActPosterImg.setImageResource(R.drawable.image11);
+            binding.tvMainActTitle.setText("군도");
+
+        }else if(index == 2){
+            binding.ivMainActPosterImg.setImageResource(R.drawable.image2);
+            binding.tvMainActTitle.setText("공조");
+
+        }else if(index == 3){
+            binding.ivMainActPosterImg.setImageResource(R.drawable.image3);
+            binding.tvMainActTitle.setText("더킹");
+
+        }else if(index == 4){
+            binding.ivMainActPosterImg.setImageResource(R.drawable.image4);
+            binding.tvMainActTitle.setText("레지던트 이블");
+
+        }else if(index == 5){
+            binding.ivMainActPosterImg.setImageResource(R.drawable.image5);
+            binding.tvMainActTitle.setText("럭키");
+
+        }else if(index == 6){
+            binding.ivMainActPosterImg.setImageResource(R.drawable.image6);
+            binding.tvMainActTitle.setText("아수라");
+        }
     }
 
 

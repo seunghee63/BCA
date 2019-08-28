@@ -3,6 +3,7 @@ package com.song2.boostcourse.util;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.view.View;
 
 import java.util.ArrayList;
 
@@ -31,4 +32,5 @@ public class MoviePagerAdapter extends FragmentStatePagerAdapter {
     public float getPageWidth(int position) {
         return (0.9f);
     }
+
 }

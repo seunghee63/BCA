@@ -1,7 +1,6 @@
 package com.song2.boostcourse.ui.main;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
@@ -13,14 +12,9 @@ import android.support.v4.widget.DrawerLayout;
 
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.widget.FrameLayout;
-import android.widget.Toast;
 
 import com.song2.boostcourse.R;
 import com.song2.boostcourse.util.MoviePagerAdapter;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 
 public class MovieMainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -51,34 +45,43 @@ public class MovieMainActivity extends AppCompatActivity
         //뷰페이저
         ViewPager pager;
 
-        ArrayList<Fragment> dataList = new ArrayList();
-
         pager = findViewById(R.id.pager);
         pager.setOffscreenPageLimit(6);
 
         MoviePagerAdapter adapter = new MoviePagerAdapter(getSupportFragmentManager());
 
-        MovieItemFragment fragment1 = new MovieItemFragment();
-        MovieItemFragment fragment2 = new MovieItemFragment();
-        MovieItemFragment fragment3 = new MovieItemFragment();
-        MovieItemFragment fragment4 = new MovieItemFragment();
-        MovieItemFragment fragment5 = new MovieItemFragment();
-        MovieItemFragment fragment6 = new MovieItemFragment();
-
-        adapter.addItem(fragment1);
-        adapter.addItem(fragment2);
-        adapter.addItem(fragment3);
-        adapter.addItem(fragment4);
-        adapter.addItem(fragment5);
-        adapter.addItem(fragment6);
+        adapter.addItem(setBundle(1));
+        adapter.addItem(setBundle(2));
+        adapter.addItem(setBundle(3));
+        adapter.addItem(setBundle(4));
+        adapter.addItem(setBundle(5));
+        adapter.addItem(setBundle(6));
 
         pager.setAdapter(adapter);
 
+
+        float d = getResources().getDisplayMetrics().density;
+        int margin = (int)(30 * d);
+        int marginRight = (int)(1 * d);
+
+
         pager.setClipToPadding(false);
-        pager.setPadding(20, 0, 20, 0);
+        pager.setPadding(margin, 0, marginRight, 0);
 
         pager.setPageMargin(getResources().getDisplayMetrics().widthPixels / -9);
 
+    }
+
+    public MovieItemFragment setBundle(int index){
+
+        MovieItemFragment fragment = new MovieItemFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putInt("movieIndex", index); // key , value
+
+        fragment.setArguments(bundle);
+
+        return fragment;
     }
 
     @Override
@@ -91,7 +94,6 @@ public class MovieMainActivity extends AppCompatActivity
         }
     }
 
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -99,11 +101,8 @@ public class MovieMainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_movie_list_item) {
-            Toast.makeText(this, "메뉴로 가야해!!!", Toast.LENGTH_SHORT).show();
             replaceMovieMainFrag();
-
         } else if (id == R.id.nav_api_item) {
-            replaceDetailedFrag();
         } else if (id == R.id.nav_book_item) {
 
         } else if (id == R.id.nav_setting_item) {
@@ -115,7 +114,10 @@ public class MovieMainActivity extends AppCompatActivity
         return true;
     }
 
-    public void replaceDetailedFrag() {
+    public void replaceDetailedFrag(Bundle bundle) {
+
+        detailedFragment.setArguments(bundle);
+
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_movie_main_frag_container, detailedFragment).commit();
