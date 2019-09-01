@@ -131,6 +131,7 @@
                                     android:id="@+id/iv_main_act_thumb_up"
                                     android:layout_width="24dp"
                                     android:layout_height="24dp"
+                                    android:onClick="@{detailedFrag::clickThumpUpBtn}"
                                     android:background="@drawable/thumb_up_selector"/>
 
                                 <TextView
@@ -150,6 +151,7 @@
                                     android:layout_width="24dp"
                                     android:layout_height="24dp"
                                     android:layout_marginStart="48dp"
+                                    android:onClick="@{detailedFrag::clickThumpDownBtn}"
                                     android:layout_toEndOf="@+id/iv_main_act_thumb_up"
                                     android:background="@drawable/thumb_down_selector" />
 
@@ -422,6 +424,7 @@
                                 android:id="@+id/ll_detailed_frag_write_Btn"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:onClick="@{detailedFrag::clickWriteBtn}"
                                 android:layout_alignParentRight="true">
 
                                 <ImageView
@@ -455,6 +458,7 @@
                             android:id="@+id/rl_detailed_frag_more_Btn"
                             android:layout_width="match_parent"
                             android:layout_height="48dp"
+                            android:onClick="@{detailedFrag::clickMoreBtn}"
                             android:layout_marginVertical="12dp"
                             android:background="@drawable/write_review">
 

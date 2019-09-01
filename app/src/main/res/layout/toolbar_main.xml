@@ -19,8 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="12dp"
             android:src="@drawable/ic_back_white"
-            android:onClick="@{moreReviewList::clickBackBtn}"
-            android:visibility="gone" />
+            android:onClick="@{moreReviewList::clickBackBtn}"/>
 
         <TextView
             android:id="@+id/tv_toolbar_title_text"

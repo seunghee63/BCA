@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<layout>
+    <data>
+        <variable
+            name="movieItemFrag"
+            type="com.song2.boostcourse.ui.main.MovieItemFragment" />
+    </data>
+
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="#00000000"
@@ -78,6 +86,7 @@
 
         <RelativeLayout
             android:id="@+id/rl_movie_item_frag_more_btn"
+            android:onClick="@{movieItemFrag::clickMoreBtn}"
             android:layout_marginVertical="20dp"
             android:background="@drawable/goto_detailed"
             android:layout_gravity="center_horizontal"
@@ -90,8 +99,8 @@
                 android:textColor="@color/colorWhite"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
-
         </RelativeLayout>
 
     </LinearLayout>
 </FrameLayout>
+</layout>

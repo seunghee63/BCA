@@ -1,11 +1,9 @@
 package com.song2.boostcourse.ui.main;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -44,100 +42,39 @@ public class DetailedFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-/*        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_detailed, container, false);
-        return binding.getRoot();*/
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_detailed, container, false);
+        binding.setDetailedFrag(this);
 
-        // Inflate the layout for this fragment
-
-        return inflater.inflate(R.layout.fragment_detailed, container, false);
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-
-        binding = DataBindingUtil.bind(view);
-        binding.setThumbUpDown(new ThumbUpDown(16,2)); //xml 에 객체를 만들어 줌
+        binding.setThumbUpDown(new ThumbUpDown(16, 2)); //xml 에 객체를 만들어 줌
 
         initialStrSetting();
 
         setExampleData();
         setListView();
 
-        clickMethod(view);
-
-        if( getArguments() != null)
-        {
-            movieIndex  = getArguments().getInt("movieIndex"); // 전달한 key 값
+        if (getArguments() != null) {
+            movieIndex = getArguments().getInt("movieIndex"); // 전달한 key 값
             setImage(movieIndex);
         }
 
-        //clickMoreBtn(view);
-        //binding.setHandler(this);
-
-        super.onViewCreated(view, savedInstanceState);
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-    }
-
-
-    public void clickMethod(View view){
-
-        /*        binding.ivMainActThumbUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                clickThumpUpBtn( view);
-            }
-        });*/
-
-        view.findViewById(R.id.iv_main_act_thumb_up).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                clickThumpUpBtn();
-            }
-        });
-
-        view.findViewById(R.id.iv_main_act_thumb_down).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                clickThumpDownBtn();
-            }
-        });
-
-        view.findViewById(R.id.rl_detailed_frag_more_Btn).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                clickMoreBtn();
-            }
-        });
-
-        view.findViewById(R.id.ll_detailed_frag_write_Btn).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                clickWriteBtn();
-            }
-        });
-
+        return binding.getRoot();
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == REQUEST_CODE_UPLOAD_REVIEW_ACTIVITY){
-            if(resultCode == Activity.RESULT_OK){
+        if (requestCode == REQUEST_CODE_UPLOAD_REVIEW_ACTIVITY) {
+            if (resultCode == Activity.RESULT_OK) {
 
-                dataList.add(addReviewData("tmpImg", "song2**", "방금 전", data.getStringExtra("ReviewContents"), data.getFloatExtra("RatingStarCnt",5.0f), 0));
+                dataList.add(addReviewData("tmpImg", "song2**", "방금 전", data.getStringExtra("ReviewContents"), data.getFloatExtra("RatingStarCnt", 5.0f), 0));
 
                 setListView();
             }
         }
 
-        if(requestCode == REQUEST_CODE_MORE_REVIEW_ACTIVITY){
-            if(resultCode == Activity.RESULT_OK){
+        if (requestCode == REQUEST_CODE_MORE_REVIEW_ACTIVITY) {
+            if (resultCode == Activity.RESULT_OK) {
 
                 dataList = data.getParcelableArrayListExtra("reviewDataList");
                 Log.e("reviewDataList data = ", String.valueOf(dataList));
@@ -147,7 +84,7 @@ public class DetailedFragment extends Fragment {
         }
     }
 
-    public void clickThumpUpBtn() {
+    public void clickThumpUpBtn(View view) {
 
         //Toast.makeText(this, "ThumpUp", Toast.LENGTH_SHORT).show();
 
@@ -170,7 +107,7 @@ public class DetailedFragment extends Fragment {
         }
     }
 
-    public void clickThumpDownBtn() {
+    public void clickThumpDownBtn(View view) {
 
         //Toast.makeText(this, "ThumpDown", Toast.LENGTH_SHORT).show();
 
@@ -189,30 +126,30 @@ public class DetailedFragment extends Fragment {
         }
     }
 
-    public void clickWriteBtn(){
+    public void clickWriteBtn(View view) {
         //Toast.makeText(this, "WriteBtn", Toast.LENGTH_SHORT).show();
 
         Intent intent = new Intent(getContext(), UploadReviewActivity.class);
-        intent.putExtra("MovieTitle",binding.tvMainActTitle.getText());
-        intent.putExtra("MovieRating","15");
-        intent.putExtra("whereFrom","main");
-        startActivityForResult(intent,REQUEST_CODE_UPLOAD_REVIEW_ACTIVITY);
+        intent.putExtra("MovieTitle", binding.tvMainActTitle.getText());
+        intent.putExtra("MovieRating", "15");
+        intent.putExtra("whereFrom", "main");
+        startActivityForResult(intent, REQUEST_CODE_UPLOAD_REVIEW_ACTIVITY);
     }
 
-    public void clickMoreBtn(){
+    public void clickMoreBtn(View view) {
         //Toast.makeText(this, "MoreBtn", Toast.LENGTH_SHORT).show();
 
         Intent intent = new Intent(getContext(), MoreReviewActivity.class);
-        intent.putExtra("MovieTitle",binding.tvMainActTitle.getText());
+        intent.putExtra("MovieTitle", binding.tvMainActTitle.getText());
 
         //기존의 댓글 데이터 전송
-        intent.putExtra("reviewDataList",dataList);
-        startActivityForResult(intent,REQUEST_CODE_MORE_REVIEW_ACTIVITY);
+        intent.putExtra("reviewDataList", dataList);
+        startActivityForResult(intent, REQUEST_CODE_MORE_REVIEW_ACTIVITY);
         //        startActivity(intent);
     }
 
     //댓글 listView
-    public void setListView(){
+    public void setListView() {
         ListView reviewList = binding.listViewMainActReviewList;
 
         //adapter - ListView 뷰 연결
@@ -220,14 +157,14 @@ public class DetailedFragment extends Fragment {
         reviewList.setAdapter(reviewAdapter);
     }
 
-    public void setExampleData(){
+    public void setExampleData() {
         dataList.add(addReviewData("https://www.google.com/url?sa=i&source=images&cd=&ved=2ahUKEwinndibrezjAhXaa94KHR8iAtkQjRx6BAgBEAU&url=http%3A%2F%2Fsocksplus.net%2Fproduct%2Fdetail.html%3Fproduct_no%3D13507&psig=AOvVaw2DZWjPEfCHSHcxbpnpF6CM&ust=1565115898969108", "aaa**", "어제", "아 재미없어...", 2.0f, 0));
         dataList.add(addReviewData("tmpImg", "song2**", "3시간 전", "이렇게 흥미로운 영화는 오랜만이에요!", 4.5f, 3));
         dataList.add(addReviewData("testImg", "abab**", "1시간 전", "무난 했어요", 3.5f, 0));
     }
 
     //댓글 Data
-    public ReviewData addReviewData(String img, String userId, String date, String comment, float rate, int like){
+    public ReviewData addReviewData(String img, String userId, String date, String comment, float rate, int like) {
 
         ReviewData newData = new ReviewData(img, userId, date, comment, rate, like);
 
@@ -236,7 +173,7 @@ public class DetailedFragment extends Fragment {
 
     //string 데이터 임시 저장
     //추후에 통신을 통해 받아 올 데이터들
-    public void initialStrSetting(){
+    public void initialStrSetting() {
 
         //제목, rate, rating
         binding.tvMainActTitle.setText("군도");
@@ -255,29 +192,29 @@ public class DetailedFragment extends Fragment {
 
     }
 
-    public void setImage(int index){
+    public void setImage(int index) {
 
-        if(index == 1){
+        if (index == 1) {
             binding.ivMainActPosterImg.setImageResource(R.drawable.image11);
             binding.tvMainActTitle.setText("군도");
 
-        }else if(index == 2){
+        } else if (index == 2) {
             binding.ivMainActPosterImg.setImageResource(R.drawable.image2);
             binding.tvMainActTitle.setText("공조");
 
-        }else if(index == 3){
+        } else if (index == 3) {
             binding.ivMainActPosterImg.setImageResource(R.drawable.image3);
             binding.tvMainActTitle.setText("더킹");
 
-        }else if(index == 4){
+        } else if (index == 4) {
             binding.ivMainActPosterImg.setImageResource(R.drawable.image4);
             binding.tvMainActTitle.setText("레지던트 이블");
 
-        }else if(index == 5){
+        } else if (index == 5) {
             binding.ivMainActPosterImg.setImageResource(R.drawable.image5);
             binding.tvMainActTitle.setText("럭키");
 
-        }else if(index == 6){
+        } else if (index == 6) {
             binding.ivMainActPosterImg.setImageResource(R.drawable.image6);
             binding.tvMainActTitle.setText("아수라");
         }
