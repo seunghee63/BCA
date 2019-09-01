@@ -31,8 +31,14 @@ public class DetailedFragment extends Fragment {
 
     int movieIndex = 0;
 
-    FragmentDetailedBinding binding;
+    //Key값
+    String MOVIETITLE = "MovieTitle";
+    String MOVIERATING= "MovieRating";
+    String MOVIEINDEX = "movieIndex";
+    String REVIEWDATALIST = "reviewDataList";
+    String WHEREFROM = "whereFrom";
 
+    FragmentDetailedBinding binding;
     ArrayList<ReviewData> dataList = new ArrayList<>();
 
     public DetailedFragment() {
@@ -53,7 +59,7 @@ public class DetailedFragment extends Fragment {
         setListView();
 
         if (getArguments() != null) {
-            movieIndex = getArguments().getInt("movieIndex"); // 전달한 key 값
+            movieIndex = getArguments().getInt(MOVIEINDEX); // 전달한 key 값
             setImage(movieIndex);
         }
 
@@ -76,7 +82,7 @@ public class DetailedFragment extends Fragment {
         if (requestCode == REQUEST_CODE_MORE_REVIEW_ACTIVITY) {
             if (resultCode == Activity.RESULT_OK) {
 
-                dataList = data.getParcelableArrayListExtra("reviewDataList");
+                dataList = data.getParcelableArrayListExtra(REVIEWDATALIST);
                 Log.e("reviewDataList data = ", String.valueOf(dataList));
 
                 setListView();
@@ -130,9 +136,9 @@ public class DetailedFragment extends Fragment {
         //Toast.makeText(this, "WriteBtn", Toast.LENGTH_SHORT).show();
 
         Intent intent = new Intent(getContext(), UploadReviewActivity.class);
-        intent.putExtra("MovieTitle", binding.tvMainActTitle.getText());
-        intent.putExtra("MovieRating", "15");
-        intent.putExtra("whereFrom", "main");
+        intent.putExtra(MOVIETITLE, binding.tvMainActTitle.getText());
+        intent.putExtra(MOVIERATING, "15");
+        intent.putExtra(WHEREFROM, "main");
         startActivityForResult(intent, REQUEST_CODE_UPLOAD_REVIEW_ACTIVITY);
     }
 
@@ -140,10 +146,10 @@ public class DetailedFragment extends Fragment {
         //Toast.makeText(this, "MoreBtn", Toast.LENGTH_SHORT).show();
 
         Intent intent = new Intent(getContext(), MoreReviewActivity.class);
-        intent.putExtra("MovieTitle", binding.tvMainActTitle.getText());
+        intent.putExtra(MOVIETITLE, binding.tvMainActTitle.getText());
 
         //기존의 댓글 데이터 전송
-        intent.putExtra("reviewDataList", dataList);
+        intent.putExtra(REVIEWDATALIST, dataList);
         startActivityForResult(intent, REQUEST_CODE_MORE_REVIEW_ACTIVITY);
         //        startActivity(intent);
     }

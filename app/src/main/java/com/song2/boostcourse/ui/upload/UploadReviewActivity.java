@@ -17,6 +17,13 @@ public class UploadReviewActivity extends AppCompatActivity {
 
     ActivityUploadReviewBinding binding;
 
+    String MOVIETITLE = "MovieTitle";
+    String MOVIERATING= "MovieRating";
+    String WHEREFROM = "whereFrom";
+
+    String REVIEWCONTENTS = "ReviewContents";
+    String REVIEWSTARTCNT = "RatingStarCnt";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,11 +44,11 @@ public class UploadReviewActivity extends AppCompatActivity {
         if(contents.equals("")){
             Toast.makeText(this, "내용을 입력 해 주세요" + contents, Toast.LENGTH_SHORT).show();
 
-        }else if (getIntent().getStringExtra("whereFrom").equals("main")) {
+        }else if (getIntent().getStringExtra(WHEREFROM).equals("main")) {
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
 
-            intent.putExtra("ReviewContents",contents);
-            intent.putExtra("RatingStarCnt",ratingValue);
+            intent.putExtra(REVIEWCONTENTS,contents);
+            intent.putExtra(REVIEWSTARTCNT,ratingValue);
 
             setResult(Activity.RESULT_OK,intent);
 
@@ -49,8 +56,8 @@ public class UploadReviewActivity extends AppCompatActivity {
         }else {
             Intent intent = new Intent(getApplicationContext(), MoreReviewActivity.class);
 
-            intent.putExtra("ReviewContents",contents);
-            intent.putExtra("RatingStarCnt",ratingValue);
+            intent.putExtra(REVIEWCONTENTS,contents);
+            intent.putExtra(REVIEWSTARTCNT,ratingValue);
 
             setResult(Activity.RESULT_OK,intent);
 
@@ -66,8 +73,8 @@ public class UploadReviewActivity extends AppCompatActivity {
 
     private void getReviewExtra(){
 
-        String title = getIntent().getStringExtra("MovieTitle");
-        String rating = getIntent().getStringExtra("MovieRating");
+        String title = getIntent().getStringExtra(MOVIETITLE);
+        String rating = getIntent().getStringExtra(MOVIERATING);
 
         binding.tvUploadActMovieTitle.setText(title);
         setMovieRatingImg(rating);
