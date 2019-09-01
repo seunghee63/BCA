@@ -16,8 +16,8 @@ import com.song2.boostcourse.R;
 import com.song2.boostcourse.ui.main.detailed.DetailedFragment;
 import com.song2.boostcourse.ui.main.movieList.MovieListFragment;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, MovieItemListener{
+
 
     DetailedFragment detailedFragment = new DetailedFragment();
 
@@ -72,6 +72,7 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    @Override
     public void replaceDetailedFrag(Bundle bundle) {
 
         detailedFragment.setArguments(bundle);
@@ -81,6 +82,7 @@ public class MainActivity extends AppCompatActivity
         fragmentTransaction.replace(R.id.fragment_movie_main_frag_container, detailedFragment).commit();
     }
 
+    @Override
     public void replaceMovieMainFrag() {
         MovieListFragment listFragment = new MovieListFragment();
 
@@ -88,4 +90,5 @@ public class MainActivity extends AppCompatActivity
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_movie_main_frag_container, listFragment).commit();
     }
+
 }

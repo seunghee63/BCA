@@ -6,9 +6,8 @@
     
     <data>
         <variable
-            name="handler"
-            type="com.song2.boostcourse.ui.main.detailed.DetailedFragment" />
-        
+            name="mainAct"
+            type="com.song2.boostcourse.ui.main.MainActivity" />
     </data>
 
     <android.support.v4.widget.DrawerLayout 

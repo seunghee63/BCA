@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import com.song2.boostcourse.R;
 import com.song2.boostcourse.databinding.FragmentMovieItemBinding;
 import com.song2.boostcourse.ui.main.MainActivity;
+import com.song2.boostcourse.ui.main.MovieItemListener;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,6 +24,10 @@ public class MovieItemFragment extends Fragment {
 
     int movieIndex;
 
+    //key값
+    String MOVIEINDEX = "movieIndex";
+
+
     public MovieItemFragment() {
         // Required empty public constructor
     }
@@ -30,14 +35,14 @@ public class MovieItemFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
 
+        // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_movie_item, container, false);
         binding.setMovieItemFrag(this);
 
         if( getArguments() != null)
         {
-            movieIndex = getArguments().getInt("movieIndex"); // 전달한 key 값
+            movieIndex = getArguments().getInt(MOVIEINDEX); // 전달한 key 값
             setImage(movieIndex);
         }
 
@@ -46,9 +51,9 @@ public class MovieItemFragment extends Fragment {
 
     public void clickMoreBtn(View view){
         final Bundle bundle = new Bundle();
-        bundle.putInt("movieIndex",movieIndex);
+        bundle.putInt(MOVIEINDEX,movieIndex);
 
-        ((MainActivity)getActivity()).replaceDetailedFrag(bundle);
+        ((MovieItemListener)getActivity()).replaceDetailedFrag(bundle);
     }
 
     public void setImage(int index){
