@@ -1,4 +1,4 @@
-package com.song2.boostcourse.ui.main;
+package com.song2.boostcourse.ui.main.movieList;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import com.song2.boostcourse.R;
 import com.song2.boostcourse.databinding.FragmentMovieItemBinding;
+import com.song2.boostcourse.ui.main.MainActivity;
 
 /**
  * A simple {@link Fragment} subclass.

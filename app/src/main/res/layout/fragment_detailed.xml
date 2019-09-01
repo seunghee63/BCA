@@ -2,16 +2,16 @@
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ui.main.DetailedFragment">
+    tools:context=".ui.main.detailed.DetailedFragment">
 
     <data>
         <variable
             name="detailedFrag"
-            type="com.song2.boostcourse.ui.main.DetailedFragment" />
+            type="com.song2.boostcourse.ui.main.detailed.DetailedFragment" />
 
         <variable
             name="thumbUpDown"
-            type="com.song2.boostcourse.ui.main.ThumbUpDown" />
+            type="com.song2.boostcourse.ui.main.detailed.ThumbUpDown" />
 
     </data>
 

@@ -1,4 +1,4 @@
-package com.song2.boostcourse.ui.main;
+package com.song2.boostcourse.ui.main.detailed;
 
 import android.app.Activity;
 import android.content.Intent;

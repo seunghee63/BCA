@@ -13,6 +13,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.song2.boostcourse.R;
+import com.song2.boostcourse.ui.main.detailed.DetailedFragment;
+import com.song2.boostcourse.ui.main.movieList.MovieListFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {

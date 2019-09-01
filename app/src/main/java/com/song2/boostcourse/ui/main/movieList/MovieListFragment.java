@@ -1,4 +1,4 @@
-package com.song2.boostcourse.ui.main;
+package com.song2.boostcourse.ui.main.movieList;
 
 
 import android.os.Bundle;
@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.song2.boostcourse.R;
+import com.song2.boostcourse.ui.main.movieList.MovieItemFragment;
 import com.song2.boostcourse.util.MoviePagerAdapter;
 
 /**

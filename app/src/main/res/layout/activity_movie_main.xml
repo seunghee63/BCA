@@ -7,7 +7,7 @@
     <data>
         <variable
             name="handler"
-            type="com.song2.boostcourse.ui.main.DetailedFragment" />
+            type="com.song2.boostcourse.ui.main.detailed.DetailedFragment" />
         
     </data>
 
