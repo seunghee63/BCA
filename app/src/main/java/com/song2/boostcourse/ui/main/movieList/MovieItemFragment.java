@@ -22,15 +22,24 @@ public class MovieItemFragment extends Fragment {
 
     FragmentMovieItemBinding binding;
 
-    int movieIndex;
-
     //key값
     String MOVIEINDEX = "movieIndex";
+    int movieIndex;
 
 
     public MovieItemFragment() {
         // Required empty public constructor
     }
+
+    public static MovieItemFragment newInstance() {
+
+        Bundle args = new Bundle();
+
+        MovieItemFragment fragment = new MovieItemFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

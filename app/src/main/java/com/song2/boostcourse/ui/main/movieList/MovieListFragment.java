@@ -17,6 +17,8 @@ import com.song2.boostcourse.util.MoviePagerAdapter;
  */
 public class MovieListFragment extends Fragment {
 
+    String MOVIEINDEX = "movieIndex";
+
 
     public MovieListFragment() {
         // Required empty public constructor
@@ -52,7 +54,6 @@ public class MovieListFragment extends Fragment {
 
         pager.setAdapter(adapter);
 
-
         float d = getResources().getDisplayMetrics().density;
         int margin = (int)(30 * d);
         int marginRight = (int)(1 * d);
@@ -65,12 +66,13 @@ public class MovieListFragment extends Fragment {
 
     }
 
+    //추가하기
     public MovieItemFragment setBundle(int index){
 
         MovieItemFragment fragment = new MovieItemFragment();
 
         Bundle bundle = new Bundle();
-        bundle.putInt("movieIndex", index); // key , value
+        bundle.putInt(MOVIEINDEX, index); // key , value
 
         fragment.setArguments(bundle);
 
