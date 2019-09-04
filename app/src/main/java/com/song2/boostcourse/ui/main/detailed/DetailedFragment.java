@@ -181,6 +181,8 @@ public class DetailedFragment extends Fragment {
     //추후에 통신을 통해 받아 올 데이터들
     public void initialStrSetting() {
 
+        getActivity().setTitle("영화 상세");
+
         //제목, rate, rating
         binding.tvMainActTitle.setText("군도");
         binding.tvMainActMovieInfo.setText("2014.07.23 개봉 \n액션 / 137 분");
