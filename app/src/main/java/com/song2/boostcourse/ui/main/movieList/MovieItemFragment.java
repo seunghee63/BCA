@@ -9,12 +9,7 @@ import android.view.ViewGroup;
 
 import com.song2.boostcourse.R;
 import com.song2.boostcourse.databinding.FragmentMovieItemBinding;
-import com.song2.boostcourse.ui.main.MainActivity;
 import com.song2.boostcourse.ui.main.MovieItemListener;
-
-/**
- * A simple {@link Fragment} subclass.
- */
 
 public class MovieItemFragment extends Fragment {
 
@@ -23,7 +18,7 @@ public class MovieItemFragment extends Fragment {
     FragmentMovieItemBinding binding;
 
     //key값
-    String MOVIEINDEX = "movieIndex";
+    static String MOVIEINDEX = "movieIndex";
     int movieIndex;
 
 
@@ -31,12 +26,14 @@ public class MovieItemFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static MovieItemFragment newInstance() {
+    public static MovieItemFragment newInstance(int index) {
 
-        Bundle args = new Bundle();
+        Bundle bundle = new Bundle();
+
+        bundle.putInt(MOVIEINDEX, index); // key , value
 
         MovieItemFragment fragment = new MovieItemFragment();
-        fragment.setArguments(args);
+        fragment.setArguments(bundle);
         return fragment;
     }
 

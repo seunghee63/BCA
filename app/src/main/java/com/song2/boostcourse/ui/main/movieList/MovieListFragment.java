@@ -9,16 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.song2.boostcourse.R;
+import com.song2.boostcourse.ui.main.MovieItemListener;
 import com.song2.boostcourse.ui.main.movieList.MovieItemFragment;
 import com.song2.boostcourse.util.MoviePagerAdapter;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class MovieListFragment extends Fragment {
-
-    String MOVIEINDEX = "movieIndex";
-
 
     public MovieListFragment() {
         // Required empty public constructor
@@ -45,12 +40,12 @@ public class MovieListFragment extends Fragment {
 
         MoviePagerAdapter adapter = new MoviePagerAdapter(getFragmentManager());
 
-        adapter.addItem(setBundle(1));
-        adapter.addItem(setBundle(2));
-        adapter.addItem(setBundle(3));
-        adapter.addItem(setBundle(4));
-        adapter.addItem(setBundle(5));
-        adapter.addItem(setBundle(6));
+        adapter.addItem(MovieItemFragment.newInstance(1));
+        adapter.addItem(MovieItemFragment.newInstance(2));
+        adapter.addItem(MovieItemFragment.newInstance(3));
+        adapter.addItem(MovieItemFragment.newInstance(4));
+        adapter.addItem(MovieItemFragment.newInstance(5));
+        adapter.addItem(MovieItemFragment.newInstance(6));
 
         pager.setAdapter(adapter);
 
@@ -65,18 +60,4 @@ public class MovieListFragment extends Fragment {
         pager.setPageMargin(getResources().getDisplayMetrics().widthPixels / -9);
 
     }
-
-    //추가하기
-    public MovieItemFragment setBundle(int index){
-
-        MovieItemFragment fragment = new MovieItemFragment();
-
-        Bundle bundle = new Bundle();
-        bundle.putInt(MOVIEINDEX, index); // key , value
-
-        fragment.setArguments(bundle);
-
-        return fragment;
-    }
-
 }
