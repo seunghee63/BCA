@@ -27,6 +27,7 @@ public class MoreReviewActivity extends AppCompatActivity {
     ActivityMoreReviewBinding binding;
     ArrayList<ReviewData> reviewDataArrayList = new ArrayList<>();
 
+    int rating;
     String MOVIETITLE = "MovieTitle";
     String MOVIERATING= "MovieRating";
     String REVIEWDATALIST = "reviewDataList";
@@ -42,9 +43,11 @@ public class MoreReviewActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_more_review);
         binding.setMoreReview(this);
 
-
         //main에서 넘어온 데이터 setting
         String title = getIntent().getStringExtra(MOVIETITLE);
+        rating = getIntent().getIntExtra(MOVIERATING,0);
+        setMovieRatingImg(rating);
+
         reviewDataArrayList = getIntent().getParcelableArrayListExtra(REVIEWDATALIST);
         Log.e("reviewDataList data = ", String.valueOf(reviewDataArrayList));
 
@@ -70,13 +73,12 @@ public class MoreReviewActivity extends AppCompatActivity {
         }
     }
 
-
     public void clickWriteBtn(View view){
         //Toast.makeText(this, "WriteBtn", Toast.LENGTH_SHORT).show();
 
         Intent intent = new Intent(getApplicationContext(), UploadReviewActivity.class);
         intent.putExtra(MOVIETITLE,binding.tvMoreReviewActMovieTitle.getText());
-        intent.putExtra(MOVIERATING,"15");
+        intent.putExtra(MOVIERATING,rating);
         intent.putExtra(WHEREFROM,"more");
         startActivityForResult(intent,REQUEST_CODE_UPLOAD_REVIEW_ACTIVITY);
     }
@@ -105,5 +107,31 @@ public class MoreReviewActivity extends AppCompatActivity {
 
         ReviewData newData = new ReviewData(img, userId, date, comment, rate, like);
         reviewDataArrayList.add(newData);
+    }
+
+    private void setMovieRatingImg(int rating){
+
+        binding.ivMoreReviewActMovieRating12.setVisibility(View.GONE);
+        binding.ivMoreReviewActMovieRating15.setVisibility(View.GONE);
+        binding.ivMoreReviewActMovieRating19.setVisibility(View.GONE);
+        binding.ivMoreReviewActMovieRatingAll.setVisibility(View.GONE);
+
+        switch(rating){
+            case 12:
+                binding.ivMoreReviewActMovieRating12.setVisibility(View.VISIBLE);
+                break;
+
+            case 15:
+                binding.ivMoreReviewActMovieRating15.setVisibility(View.VISIBLE);
+                break;
+
+            case 19:
+                binding.ivMoreReviewActMovieRating19.setVisibility(View.VISIBLE);
+                break;
+
+            case 0:
+                binding.ivMoreReviewActMovieRatingAll.setVisibility(View.VISIBLE);
+                break;
+        }
     }
 }

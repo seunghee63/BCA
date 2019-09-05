@@ -28,12 +28,17 @@ public class UploadReviewActivity extends AppCompatActivity {
 
     ActivityUploadReviewBinding binding;
 
+    int rating;
     String MOVIETITLE = "MovieTitle";
     String MOVIERATING= "MovieRating";
     String WHEREFROM = "whereFrom";
+    String MOVIEINDEX = "movieIndex";
 
     String REVIEWCONTENTS = "ReviewContents";
     String REVIEWSTARTCNT = "RatingStarCnt";
+
+    String contents;
+    float ratingValue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,11 +51,11 @@ public class UploadReviewActivity extends AppCompatActivity {
     }
 
     public void clickSaveBtn(View view){
+
         Toast.makeText(this, "저장", Toast.LENGTH_SHORT).show();
 
-
-        String contents = binding.etUploadActWriteReview.getText().toString();
-        float ratingValue =binding.rbUploadActRatingBar.getRating();
+         contents = binding.etUploadActWriteReview.getText().toString();
+         ratingValue = binding.rbUploadActRatingBar.getRating();
 
         if(contents.equals("")){
             Toast.makeText(this, "내용을 입력 해 주세요" + contents, Toast.LENGTH_SHORT).show();
@@ -63,6 +68,7 @@ public class UploadReviewActivity extends AppCompatActivity {
 
             setResult(Activity.RESULT_OK,intent);
 
+            sendRequest("/movie/createComment");
             finish();
         }else {
             Intent intent = new Intent(getApplicationContext(), MoreReviewActivity.class);
@@ -72,6 +78,7 @@ public class UploadReviewActivity extends AppCompatActivity {
 
             setResult(Activity.RESULT_OK,intent);
 
+            sendRequest("/movie/createComment");
             finish();
         }
     }
@@ -85,10 +92,11 @@ public class UploadReviewActivity extends AppCompatActivity {
     private void getReviewExtra(){
 
         String title = getIntent().getStringExtra(MOVIETITLE);
-        String rating = getIntent().getStringExtra(MOVIERATING);
-
         binding.tvUploadActMovieTitle.setText(title);
+
+        rating = getIntent().getIntExtra(MOVIERATING,0);
         setMovieRatingImg(rating);
+        Log.e("uploaduploadupload",String.valueOf(rating));
     }
 
     public void sendRequest(final String route) {
@@ -102,13 +110,12 @@ public class UploadReviewActivity extends AppCompatActivity {
 
         //get,post :
         StringRequest request = new StringRequest(
-                Request.Method.GET,
+                Request.Method.POST,
                 url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-
-                        Log.e("detailed Movie 응답 : ", response);
+                        Log.e("upload Review 응답 status : ", response);
 
                     }
                 },
@@ -125,6 +132,14 @@ public class UploadReviewActivity extends AppCompatActivity {
 
                 Map<String, String> params = new HashMap<String, String>();
 
+                //영화 아이디 받아오기
+                params.put("id", String.valueOf(getIntent().getIntExtra(MOVIEINDEX,0)));
+                params.put("writer","0603yang");
+                //params.put("time",); //없어도 됨!
+                params.put("rating",String.valueOf(ratingValue));
+                params.put("contents",contents);
+                Log.e("contents",contents);
+
                 return params;
             }
         };
@@ -137,28 +152,29 @@ public class UploadReviewActivity extends AppCompatActivity {
 
     }
 
-    private void setMovieRatingImg(String rating){
+    public void setMovieRatingImg(int rating){
 
+        Log.e("isIn","???");
         binding.ivUploadActMovieRating12.setVisibility(View.GONE);
         binding.ivUploadActMovieRating15.setVisibility(View.GONE);
         binding.ivUploadActMovieRating19.setVisibility(View.GONE);
         binding.ivUploadActMovieRatingAll.setVisibility(View.GONE);
 
         switch(rating){
-            case "12":
+            case 12:
                 binding.ivUploadActMovieRating15.setVisibility(View.VISIBLE);
                 break;
 
-            case "15":
+            case 15:
                 binding.ivUploadActMovieRating15.setVisibility(View.VISIBLE);
                 break;
 
-            case "19":
-                binding.ivUploadActMovieRating15.setVisibility(View.VISIBLE);
+            case 19:
+                binding.ivUploadActMovieRating19.setVisibility(View.VISIBLE);
                 break;
 
-            case "all":
-                binding.ivUploadActMovieRating15.setVisibility(View.VISIBLE);
+            case 0:
+                binding.ivUploadActMovieRatingAll.setVisibility(View.VISIBLE);
                 break;
         }
     }

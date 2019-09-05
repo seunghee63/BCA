@@ -65,7 +65,7 @@
                     android:src="@drawable/ic_12" />
                 <ImageView
                     android:id="@+id/iv_upload_act_movie_rating_15"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     android:layout_toEndOf="@+id/tv_upload_act_movie_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

@@ -42,6 +42,7 @@ public class DetailedFragment extends Fragment {
     int REQUEST_CODE_UPLOAD_REVIEW_ACTIVITY = 7777;
     int REQUEST_CODE_MORE_REVIEW_ACTIVITY = 3333;
 
+    int rating = 0;
     int movieIndex = 0;
 
     //Key값
@@ -72,8 +73,8 @@ public class DetailedFragment extends Fragment {
             movieIndex = getArguments().getInt(MOVIEINDEX); // 전달한 key 값
         }
 
-        sendDetailRequest("/movie/readMovie?id=" + String.valueOf(movieIndex));
-        sendRequest("/movie/readCommentList?id="+String.valueOf(movieIndex)+"&limit=\"all\"");
+        sendDetailRequest("/movie/readMovie?id="+String.valueOf(movieIndex));
+        sendRequest("/movie/readCommentList?id="+String.valueOf(movieIndex)+"&limit=all");
 
         return binding.getRoot();
     }
@@ -148,8 +149,9 @@ public class DetailedFragment extends Fragment {
 
         Intent intent = new Intent(getContext(), UploadReviewActivity.class);
         intent.putExtra(MOVIETITLE, binding.tvMainActTitle.getText());
-        intent.putExtra(MOVIERATING, "15");
+        intent.putExtra(MOVIERATING, rating);
         intent.putExtra(WHEREFROM, "main");
+        intent.putExtra(MOVIEINDEX,movieIndex);
         startActivityForResult(intent, REQUEST_CODE_UPLOAD_REVIEW_ACTIVITY);
     }
 
@@ -158,6 +160,8 @@ public class DetailedFragment extends Fragment {
 
         Intent intent = new Intent(getContext(), MoreReviewActivity.class);
         intent.putExtra(MOVIETITLE, binding.tvMainActTitle.getText());
+        intent.putExtra(MOVIERATING, rating);
+        intent.putExtra(MOVIEINDEX,movieIndex);
 
         //기존의 댓글 데이터 전송
         intent.putExtra(REVIEWDATALIST, dataList);
@@ -212,28 +216,7 @@ public class DetailedFragment extends Fragment {
                         Log.e("에러 : ", error.toString());
                     }
                 }
-        ) {
-/*            @Override
-            public Map<String, String> post() throws AuthFailureError {
-                Map<String, String> headers = new HashMap<String, String>();
-                headers.put("id", "1");
-                headers.put("limit", "all");
-
-                return headers;
-            }*/
-
-                        //request 객체 안에 메소드 재정의
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-
-                Map<String, String> params = new HashMap<String, String>();
-
-                params.put("id","1");
-                params.put("limit", "all");
-
-                return params;
-            }
-        };
+        );
 
         //아래 두 줄은 일반적으로 AppHelper에 넣어서 관리. 메소드 호출해서 여기서 씀..ㅎ
         request.setShouldCache(true);
@@ -252,7 +235,7 @@ public class DetailedFragment extends Fragment {
             AppHelper.requestQueue = Volley.newRequestQueue(getActivity());
         }
 
-        //get,post :
+        //get,post
         StringRequest request = new StringRequest(
                 Request.Method.GET,
                 url,
@@ -271,23 +254,13 @@ public class DetailedFragment extends Fragment {
                         Log.e("에러 : ", error.toString());
                     }
                 }
-        ){
-            //request 객체 안에 메소드 재정의
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-
-                Map<String, String> params = new HashMap<String, String>();
-
-                return params;
-            }
-        };
+        );
 
         //아래 두 줄은 일반적으로 AppHelper에 넣어서 관리. 메소드 호출해서 여기서 씀..ㅎ
         request.setShouldCache(false);
         AppHelper.requestQueue.add(request);
 
         Log.e("sendRequest","요청보냄");
-
     }
 
     //data setting
@@ -330,7 +303,9 @@ public class DetailedFragment extends Fragment {
 
             binding.setThumbUpDown(new ThumbUpDown(movieDetailResult.result.get(0).like, movieDetailResult.result.get(0).dislike)); //xml 에 객체를 만들어 줌
 
-            setMovieRatingImg(movieDetailResult.result.get(0).grade);
+            rating = movieDetailResult.result.get(0).grade;
+            setMovieRatingImg(rating);
+
         } else {
             Log.e("데이터 길이 : ", "null");
         }
