@@ -23,6 +23,7 @@ import com.google.gson.Gson;
 import com.song2.boostcourse.R;
 import com.song2.boostcourse.data.MovieDetailResult;
 import com.song2.boostcourse.data.ReviewData;
+import com.song2.boostcourse.data.ReviewResult;
 import com.song2.boostcourse.databinding.FragmentDetailedBinding;
 import com.song2.boostcourse.ui.moreReview.MoreReviewActivity;
 import com.song2.boostcourse.ui.upload.UploadReviewActivity;
@@ -66,16 +67,13 @@ public class DetailedFragment extends Fragment {
 
         getActivity().setTitle("영화 상세");
 
-        setExampleData();
-        setListView();
-
 
         if (getArguments() != null) {
             movieIndex = getArguments().getInt(MOVIEINDEX); // 전달한 key 값
         }
 
         sendDetailRequest("/movie/readMovie?id=" + String.valueOf(movieIndex));
-        sendRequest("/movie/readCommentList?id="+String.valueOf(movieIndex)+"&limit=20");
+        sendRequest("/movie/readCommentList?id="+String.valueOf(movieIndex)+"&limit=\"all\"");
 
         return binding.getRoot();
     }
@@ -176,12 +174,6 @@ public class DetailedFragment extends Fragment {
         reviewList.setAdapter(reviewAdapter);
     }
 
-    public void setExampleData() {
-        dataList.add(addReviewData("https://www.google.com/url?sa=i&source=images&cd=&ved=2ahUKEwinndibrezjAhXaa94KHR8iAtkQjRx6BAgBEAU&url=http%3A%2F%2Fsocksplus.net%2Fproduct%2Fdetail.html%3Fproduct_no%3D13507&psig=AOvVaw2DZWjPEfCHSHcxbpnpF6CM&ust=1565115898969108", "aaa**", "어제", "아 재미없어...", 2.0f, 0));
-        dataList.add(addReviewData("tmpImg", "song2**", "3시간 전", "이렇게 흥미로운 영화는 오랜만이에요!", 4.5f, 3));
-        dataList.add(addReviewData("testImg", "abab**", "1시간 전", "무난 했어요", 3.5f, 0));
-    }
-
     //댓글 Data
     public ReviewData addReviewData(String img, String userId, String date, String comment, float rate, int like) {
 
@@ -190,7 +182,7 @@ public class DetailedFragment extends Fragment {
         return newData;
     }
 
-    //통신
+    //댓글 통신
     public void sendRequest(final String route) {
 
         String base = "http://boostcourse-appapi.connect.or.kr:10000";
@@ -210,7 +202,7 @@ public class DetailedFragment extends Fragment {
                     public void onResponse(String response) {
                         //Log.e("route 경로! : ", "/movie/readMovie?id=" + String.valueOf(movieIndex));
 
-                        Log.e("detailed Movie 응답 : ", response);
+                        Log.e("review Movie 응답 : ", response);
                         reviewProcessResponse(response);
                     }
                 },
@@ -348,12 +340,19 @@ public class DetailedFragment extends Fragment {
     public void reviewProcessResponse(String response) {
         Gson gson = new Gson();
 
-        MovieDetailResult movieDetailResult = gson.fromJson(response, MovieDetailResult.class);
+        ReviewResult reviewResult = gson.fromJson(response, ReviewResult.class);
 
         Log.e("moviereviewResult : ", response);
 
-        if (movieDetailResult != null) {
-            Log.e("movieDetailResult : ", String.valueOf(movieDetailResult));
+        if (reviewResult != null) {
+            Log.e("movieDetailResult : ", String.valueOf(reviewResult));
+
+            for (int i=0;i<reviewResult.result.size();i++){
+                Log.e("ReviewList : ",i+"번 쨰 댓글");
+                dataList.add(addReviewData("tmpImg", reviewResult.result.get(i).writer, reviewResult.result.get(i).time, reviewResult.result.get(i).contents, reviewResult.result.get(i).rating, reviewResult.result.get(i).recommend));
+            }
+
+            setListView();
 
         } else {
             Log.e("데이터 길이 : ", "null");

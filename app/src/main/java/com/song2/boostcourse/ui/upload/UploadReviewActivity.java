@@ -5,13 +5,24 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.song2.boostcourse.R;
 import com.song2.boostcourse.databinding.ActivityUploadReviewBinding;
 import com.song2.boostcourse.ui.main.MainActivity;
 import com.song2.boostcourse.ui.moreReview.MoreReviewActivity;
+import com.song2.boostcourse.util.network.AppHelper;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class UploadReviewActivity extends AppCompatActivity {
 
@@ -78,6 +89,52 @@ public class UploadReviewActivity extends AppCompatActivity {
 
         binding.tvUploadActMovieTitle.setText(title);
         setMovieRatingImg(rating);
+    }
+
+    public void sendRequest(final String route) {
+
+        String base = "http://boostcourse-appapi.connect.or.kr:10000";
+        String url = base + route;
+
+        if (AppHelper.requestQueue == null) {
+            AppHelper.requestQueue = Volley.newRequestQueue(getApplication());
+        }
+
+        //get,post :
+        StringRequest request = new StringRequest(
+                Request.Method.GET,
+                url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        Log.e("detailed Movie 응답 : ", response);
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e("에러 : ", error.toString());
+                    }
+                }
+        ){
+            //request 객체 안에 메소드 재정의
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Map<String, String> params = new HashMap<String, String>();
+
+                return params;
+            }
+        };
+
+        //아래 두 줄은 일반적으로 AppHelper에 넣어서 관리. 메소드 호출해서 여기서 씀..ㅎ
+        request.setShouldCache(false);
+        AppHelper.requestQueue.add(request);
+
+        Log.e("sendRequest","요청보냄");
+
     }
 
     private void setMovieRatingImg(String rating){
