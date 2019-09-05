@@ -1,4 +1,4 @@
-package com.song2.boostcourse.util;
+package com.song2.boostcourse.util.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

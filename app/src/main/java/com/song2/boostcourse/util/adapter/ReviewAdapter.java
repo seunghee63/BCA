@@ -1,4 +1,4 @@
-package com.song2.boostcourse.util;
+package com.song2.boostcourse.util.adapter;
 
 import android.databinding.DataBindingUtil;
 import android.view.LayoutInflater;

@@ -3,13 +3,27 @@ package com.song2.boostcourse.ui.main.movieList;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 import com.song2.boostcourse.R;
+import com.song2.boostcourse.data.MovieRankList;
 import com.song2.boostcourse.databinding.FragmentMovieItemBinding;
 import com.song2.boostcourse.ui.main.MovieItemListener;
+import com.song2.boostcourse.util.network.AppHelper;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MovieItemFragment extends Fragment {
 
@@ -20,7 +34,6 @@ public class MovieItemFragment extends Fragment {
     //key값
     static String MOVIEINDEX = "movieIndex";
     int movieIndex;
-
 
     public MovieItemFragment() {
         // Required empty public constructor
@@ -48,11 +61,14 @@ public class MovieItemFragment extends Fragment {
         if( getArguments() != null)
         {
             movieIndex = getArguments().getInt(MOVIEINDEX); // 전달한 key 값
-            setImage(movieIndex);
+            //setImage(movieIndex);
         }
+
+        sendRequest("/movie/readMovieList");
 
         return binding.getRoot();
     }
+
 
     public void clickMoreBtn(View view){
         final Bundle bundle = new Bundle();
@@ -61,32 +77,77 @@ public class MovieItemFragment extends Fragment {
         ((MovieItemListener)getActivity()).replaceDetailedFrag(bundle);
     }
 
-    public void setImage(int index){
+    public void sendRequest(final String route){
 
-        if(index == 1){
-            binding.ivMovieFragItemPoster.setImageResource(R.drawable.image1);
-            binding.tvMovieFragItemRankTitle.setText("1. 군도");
+        String base = "http://boostcourse-appapi.connect.or.kr:10000";
+        String url = base + route;
 
-        }else if(index == 2){
-            binding.ivMovieFragItemPoster.setImageResource(R.drawable.image2);
-            binding.tvMovieFragItemRankTitle.setText("2. 공조");
+        //url = "http://www.kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json?key=430156241533f1d058c603178cc3ca0e&targetDt=20120101";
+        //volley
+        if(AppHelper.requestQueue == null ){
+            AppHelper.requestQueue = Volley.newRequestQueue(getActivity());
+        }
 
-        }else if(index == 3){
-            binding.ivMovieFragItemPoster.setImageResource(R.drawable.image3);
-            binding.tvMovieFragItemRankTitle.setText("3. 더킹");
+        //get,post :
+        StringRequest request = new StringRequest(
+                Request.Method.GET,
+                url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.e("응답 : ", response);
 
-        }else if(index == 4){
-            binding.ivMovieFragItemPoster.setImageResource(R.drawable.image4);
-            binding.tvMovieFragItemRankTitle.setText("3. 레지던트 이블");
+                        if(route == "/movie/readMovieList"){
+                            movieListProcessResponse(response);
+                        }else if(route == "/movie/readMovie"){
 
-        }else if(index == 5){
-            binding.ivMovieFragItemPoster.setImageResource(R.drawable.image5);
-            binding.tvMovieFragItemRankTitle.setText("5. 럭키");
+                        }else if(route == ""){
 
-        }else if(index == 6){
-            binding.ivMovieFragItemPoster.setImageResource(R.drawable.image6);
-            binding.tvMovieFragItemRankTitle.setText("6. 아수라");
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e("에러 : ", error.toString());
+                    }
+                }
+        ){
+            //request 객체 안에 메소드 재정의
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
 
+                Map<String, String> params = new HashMap<String, String>();
+
+                return params;
+            }
+        };
+
+        //아래 두 줄은 일반적으로 AppHelper에 넣어서 관리. 메소드 호출해서 여기서 씀..ㅎ
+        request.setShouldCache(false);
+        AppHelper.requestQueue.add(request);
+
+        Log.e("sendRequest","요청보냄");
+    }
+
+    public void movieListProcessResponse(String response){
+        Gson gson = new Gson();
+        MovieRankList movieRankList = gson.fromJson(response, MovieRankList.class);
+
+        if (movieRankList != null){
+            int count = movieRankList.result.size();
+
+            Log.e("movieIdx 크기 : ", String.valueOf(movieIndex));
+            Log.e("데이터 data : ",movieRankList.result.get(movieIndex-1).title);
+
+            Glide.with(getActivity()).load(movieRankList.result.get(movieIndex-1).image).into(binding.ivMovieFragItemPoster);
+            binding.tvMovieFragItemRankTitle.setText(movieRankList.result.get(movieIndex-1).reservation_grade + ". "+  movieRankList.result.get(movieIndex-1).title);
+            binding.tvMovieFragItemRate.setText("예매율 " + movieRankList.result.get(movieIndex-1).reservation_rate +"%");
+            binding.tvMovieFragItemRanting.setText(movieRankList.result.get(movieIndex-1).grade + "세 관람가");
+
+        }else{
+            Log.e("데이터 길이 : ", "null");
         }
     }
+
 }

@@ -16,7 +16,7 @@ import com.song2.boostcourse.data.ReviewData;
 import com.song2.boostcourse.databinding.ActivityMoreReviewBinding;
 import com.song2.boostcourse.ui.main.MainActivity;
 import com.song2.boostcourse.ui.upload.UploadReviewActivity;
-import com.song2.boostcourse.util.ReviewAdapter;
+import com.song2.boostcourse.util.adapter.ReviewAdapter;
 
 import java.util.ArrayList;
 
@@ -53,8 +53,8 @@ public class MoreReviewActivity extends AppCompatActivity {
         setListView();
 
         binding.tvMoreReviewActMovieTitle.setText(title);
-    }
 
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

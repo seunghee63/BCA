@@ -9,9 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.song2.boostcourse.R;
-import com.song2.boostcourse.ui.main.MovieItemListener;
-import com.song2.boostcourse.ui.main.movieList.MovieItemFragment;
-import com.song2.boostcourse.util.MoviePagerAdapter;
+import com.song2.boostcourse.util.adapter.MoviePagerAdapter;
 
 public class MovieListFragment extends Fragment {
 
@@ -40,12 +38,12 @@ public class MovieListFragment extends Fragment {
 
         MoviePagerAdapter adapter = new MoviePagerAdapter(getFragmentManager());
 
+        //size만
         adapter.addItem(MovieItemFragment.newInstance(1));
         adapter.addItem(MovieItemFragment.newInstance(2));
         adapter.addItem(MovieItemFragment.newInstance(3));
         adapter.addItem(MovieItemFragment.newInstance(4));
         adapter.addItem(MovieItemFragment.newInstance(5));
-        adapter.addItem(MovieItemFragment.newInstance(6));
 
         pager.setAdapter(adapter);
 
@@ -58,6 +56,5 @@ public class MovieListFragment extends Fragment {
         pager.setPadding(margin, 0, marginRight, 0);
 
         pager.setPageMargin(getResources().getDisplayMetrics().widthPixels / -9);
-
     }
 }

@@ -5,6 +5,9 @@
         <variable
             name="movieItemFrag"
             type="com.song2.boostcourse.ui.main.movieList.MovieItemFragment" />
+        <variable
+            name="movieRankList"
+            type="com.song2.boostcourse.data.MovieRankList" />
     </data>
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"

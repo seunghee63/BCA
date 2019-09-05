@@ -12,14 +12,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 import com.song2.boostcourse.R;
+import com.song2.boostcourse.data.MovieRankList;
 import com.song2.boostcourse.data.ReviewData;
 import com.song2.boostcourse.databinding.FragmentDetailedBinding;
 import com.song2.boostcourse.ui.moreReview.MoreReviewActivity;
 import com.song2.boostcourse.ui.upload.UploadReviewActivity;
-import com.song2.boostcourse.util.ReviewAdapter;
+import com.song2.boostcourse.util.adapter.ReviewAdapter;
+import com.song2.boostcourse.util.network.AppHelper;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -58,9 +70,10 @@ public class DetailedFragment extends Fragment {
         setExampleData();
         setListView();
 
+        //sendRequest("/movie/readMovie");
+
         if (getArguments() != null) {
             movieIndex = getArguments().getInt(MOVIEINDEX); // 전달한 key 값
-            setImage(movieIndex);
         }
 
         return binding.getRoot();
@@ -199,34 +212,4 @@ public class DetailedFragment extends Fragment {
         binding.tvMainActActor.setText("하정우(도치), 강동원(조윤)");
 
     }
-
-    public void setImage(int index) {
-
-        if (index == 1) {
-            binding.ivMainActPosterImg.setImageResource(R.drawable.image11);
-            binding.tvMainActTitle.setText("군도");
-
-        } else if (index == 2) {
-            binding.ivMainActPosterImg.setImageResource(R.drawable.image2);
-            binding.tvMainActTitle.setText("공조");
-
-        } else if (index == 3) {
-            binding.ivMainActPosterImg.setImageResource(R.drawable.image3);
-            binding.tvMainActTitle.setText("더킹");
-
-        } else if (index == 4) {
-            binding.ivMainActPosterImg.setImageResource(R.drawable.image4);
-            binding.tvMainActTitle.setText("레지던트 이블");
-
-        } else if (index == 5) {
-            binding.ivMainActPosterImg.setImageResource(R.drawable.image5);
-            binding.tvMainActTitle.setText("럭키");
-
-        } else if (index == 6) {
-            binding.ivMainActPosterImg.setImageResource(R.drawable.image6);
-            binding.tvMainActTitle.setText("아수라");
-        }
-    }
-
-
 }
