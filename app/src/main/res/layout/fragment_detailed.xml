@@ -150,9 +150,9 @@
                                     android:id="@+id/iv_main_act_thumb_down"
                                     android:layout_width="24dp"
                                     android:layout_height="24dp"
-                                    android:layout_marginStart="48dp"
+                                    android:layout_marginStart="16dp"
                                     android:onClick="@{detailedFrag::clickThumpDownBtn}"
-                                    android:layout_toEndOf="@+id/iv_main_act_thumb_up"
+                                    android:layout_toEndOf="@+id/tv_main_act_thumb_up_cnt"
                                     android:background="@drawable/thumb_down_selector" />
 
                                 <TextView

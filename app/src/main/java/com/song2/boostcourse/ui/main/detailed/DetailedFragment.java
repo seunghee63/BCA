@@ -21,7 +21,7 @@ import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.song2.boostcourse.R;
-import com.song2.boostcourse.data.MovieRankList;
+import com.song2.boostcourse.data.MovieDetailResult;
 import com.song2.boostcourse.data.ReviewData;
 import com.song2.boostcourse.databinding.FragmentDetailedBinding;
 import com.song2.boostcourse.ui.moreReview.MoreReviewActivity;
@@ -45,7 +45,7 @@ public class DetailedFragment extends Fragment {
 
     //Key값
     String MOVIETITLE = "MovieTitle";
-    String MOVIERATING= "MovieRating";
+    String MOVIERATING = "MovieRating";
     String MOVIEINDEX = "movieIndex";
     String REVIEWDATALIST = "reviewDataList";
     String WHEREFROM = "whereFrom";
@@ -63,18 +63,19 @@ public class DetailedFragment extends Fragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_detailed, container, false);
         binding.setDetailedFrag(this);
 
-        binding.setThumbUpDown(new ThumbUpDown(16, 2)); //xml 에 객체를 만들어 줌
 
-        initialStrSetting();
+        getActivity().setTitle("영화 상세");
 
         setExampleData();
         setListView();
 
-        //sendRequest("/movie/readMovie");
 
         if (getArguments() != null) {
             movieIndex = getArguments().getInt(MOVIEINDEX); // 전달한 key 값
         }
+
+        sendDetailRequest("/movie/readMovie?id=" + String.valueOf(movieIndex));
+        sendRequest("/movie/readCommentList?id="+String.valueOf(movieIndex)+"&limit=20");
 
         return binding.getRoot();
     }
@@ -106,7 +107,6 @@ public class DetailedFragment extends Fragment {
     public void clickThumpUpBtn(View view) {
 
         //Toast.makeText(this, "ThumpUp", Toast.LENGTH_SHORT).show();
-
         if (binding.ivMainActThumbDown.isSelected() && !binding.ivMainActThumbUp.isSelected()) {
 
             //싫어요 버튼을 누른 상태였을 때,
@@ -190,26 +190,200 @@ public class DetailedFragment extends Fragment {
         return newData;
     }
 
-    //string 데이터 임시 저장
-    //추후에 통신을 통해 받아 올 데이터들
-    public void initialStrSetting() {
+    //통신
+    public void sendRequest(final String route) {
 
-        getActivity().setTitle("영화 상세");
+        String base = "http://boostcourse-appapi.connect.or.kr:10000";
+        String url = base + route;
 
-        //제목, rate, rating
-        binding.tvMainActTitle.setText("군도");
-        binding.tvMainActMovieInfo.setText("2014.07.23 개봉 \n액션 / 137 분");
-        binding.tvMainActMovieRateNRank.setText("5위 1.8%");
-        binding.tvMainActGrade.setText("8.2");
-        binding.tvMainActAudienceCnt.setText("839,399명");
-        binding.tvMainActSummary.setText("군도, 백성을 구하라!" +
-                "\n양반과 탐관오리들의 착취가 극에 달했던 조선 철종 13년. 힘 없는 백성의 편이 되어 세상을 바로잡고자 하는 의적떼인 군도(群盜), 지리산 추설이 있었다." +
-                "\n\n쌍칼 도치 vs 백성의 적 조윤" +
-                "\n잦은 자연재해, 기근과 관의 횡포까지 겹쳐 백성들의 삶이 날로 피폐해져 가는 사이, 나주 대부호의 서자로 조선 최고의 무관 출신인 조윤은 극악한 수법으로 양민들을 수탈, 삼남지방 최고의 대부호로 성장한다. 한편 소, 돼지를 잡아 근근이 살아가던 천한 백정 돌무치는 죽어도 잊지 못할 끔찍한 일을 당한 뒤 군도에 합류. 지리산 추설의 신 거성(新 巨星) 도치로 거듭난다." +
-                "\n\n뭉치면 백성, 흩어지면 도적!" +
-                "\n망할 세상을 뒤집기 위해, 백성이 주인인 새 세상을 향해 도치를 필두로 한 군도는 백성의 적, 조윤과 한 판 승부를 시작하는데...");
-        binding.tvMainActDirector.setText("윤종빈");
-        binding.tvMainActActor.setText("하정우(도치), 강동원(조윤)");
+        if (AppHelper.requestQueue == null) {
+            AppHelper.requestQueue = Volley.newRequestQueue(getActivity());
+        }
 
+        //get,post :
+        StringRequest request = new StringRequest(
+                Request.Method.GET,
+                url
+                ,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        //Log.e("route 경로! : ", "/movie/readMovie?id=" + String.valueOf(movieIndex));
+
+                        Log.e("detailed Movie 응답 : ", response);
+                        reviewProcessResponse(response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e("에러 : ", error.toString());
+                    }
+                }
+        ) {
+/*            @Override
+            public Map<String, String> post() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<String, String>();
+                headers.put("id", "1");
+                headers.put("limit", "all");
+
+                return headers;
+            }*/
+
+                        //request 객체 안에 메소드 재정의
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Map<String, String> params = new HashMap<String, String>();
+
+                params.put("id","1");
+                params.put("limit", "all");
+
+                return params;
+            }
+        };
+
+        //아래 두 줄은 일반적으로 AppHelper에 넣어서 관리. 메소드 호출해서 여기서 씀..ㅎ
+        request.setShouldCache(true);
+        AppHelper.requestQueue.add(request);
+
+        Log.e("sendRequest", "요청보냄");
+    }
+
+    //상세페이지 통신
+    public void sendDetailRequest(final String route) {
+
+        String base = "http://boostcourse-appapi.connect.or.kr:10000";
+        String url = base + route;
+
+        if (AppHelper.requestQueue == null) {
+            AppHelper.requestQueue = Volley.newRequestQueue(getActivity());
+        }
+
+        //get,post :
+        StringRequest request = new StringRequest(
+                Request.Method.GET,
+                url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        Log.e("detailed Movie 응답 : ", response);
+
+                        movieDetailedProcessResponse(response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e("에러 : ", error.toString());
+                    }
+                }
+        ){
+            //request 객체 안에 메소드 재정의
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+
+                Map<String, String> params = new HashMap<String, String>();
+
+                return params;
+            }
+        };
+
+        //아래 두 줄은 일반적으로 AppHelper에 넣어서 관리. 메소드 호출해서 여기서 씀..ㅎ
+        request.setShouldCache(false);
+        AppHelper.requestQueue.add(request);
+
+        Log.e("sendRequest","요청보냄");
+
+    }
+
+    //data setting
+    public void movieDetailedProcessResponse(String response) {
+        Gson gson = new Gson();
+        MovieDetailResult movieDetailResult = gson.fromJson(response, MovieDetailResult.class);
+
+        Log.e("movieDetailResult : ", String.valueOf(movieDetailResult));
+
+        if (movieDetailResult != null) {
+
+            Log.e("movieDetailResult : ", String.valueOf(movieDetailResult));
+
+            int count = movieDetailResult.result.size();
+
+            Log.e("movieIdx 크기111 : ", String.valueOf(movieIndex));
+
+            Glide.with(getActivity()).load(movieDetailResult.result.get(0).image).into(binding.ivMainActPosterImg);
+            binding.tvMainActTitle.setText(movieDetailResult.result.get(0).title);
+            binding.tvMainActMovieInfo.setText(movieDetailResult.result.get(0).date + " 개봉 \n" + movieDetailResult.result.get(0).genre + " / " + movieDetailResult.result.get(0).duration + " 분");
+
+            binding.tvMainActMovieRateNRank.setText(movieDetailResult.result.get(0).reservation_grade + "위 " + movieDetailResult.result.get(0).reservation_rate + "%");
+
+            binding.rbMainActRatingBar.setRating((movieDetailResult.result.get(0).audience_rating) / 2);
+            binding.tvMainActGrade.setText(movieDetailResult.result.get(0).audience_rating + "");
+
+            int audience = movieDetailResult.result.get(0).audience;
+
+            String audience_cnt;
+            if (audience > 1000000) {
+                audience_cnt = String.valueOf(audience / 1000000) + "," + String.valueOf((audience % 1000000) / 1000) + "," + String.valueOf((audience % 1000000) % 1000);
+            } else
+                audience_cnt = String.valueOf((audience % 1000000) / 1000) + "," + String.valueOf((audience % 1000000) % 1000);
+
+            binding.tvMainActAudienceCnt.setText(audience_cnt + " 명");
+
+            binding.tvMainActSummary.setText(movieDetailResult.result.get(0).synopsis);
+            binding.tvMainActDirector.setText(movieDetailResult.result.get(0).director);
+            binding.tvMainActActor.setText(movieDetailResult.result.get(0).actor);
+
+            binding.setThumbUpDown(new ThumbUpDown(movieDetailResult.result.get(0).like, movieDetailResult.result.get(0).dislike)); //xml 에 객체를 만들어 줌
+
+            setMovieRatingImg(movieDetailResult.result.get(0).grade);
+        } else {
+            Log.e("데이터 길이 : ", "null");
+        }
+    }
+
+    //review data setting
+    public void reviewProcessResponse(String response) {
+        Gson gson = new Gson();
+
+        MovieDetailResult movieDetailResult = gson.fromJson(response, MovieDetailResult.class);
+
+        Log.e("moviereviewResult : ", response);
+
+        if (movieDetailResult != null) {
+            Log.e("movieDetailResult : ", String.valueOf(movieDetailResult));
+
+        } else {
+            Log.e("데이터 길이 : ", "null");
+        }
+    }
+
+    //관람등급 이미지 setting
+    private void setMovieRatingImg(int rating) {
+
+        binding.ivMainActRating12.setVisibility(View.GONE);
+        binding.ivMainActRating15.setVisibility(View.GONE);
+        binding.ivMainActRating19.setVisibility(View.GONE);
+        binding.ivMainActRatingAll.setVisibility(View.GONE);
+
+        switch (rating) {
+            case 12:
+                binding.ivMainActRating12.setVisibility(View.VISIBLE);
+                break;
+
+            case 15:
+                binding.ivMainActRating15.setVisibility(View.VISIBLE);
+                break;
+
+            case 19:
+                binding.ivMainActRating19.setVisibility(View.VISIBLE);
+                break;
+
+            case 0:
+                binding.ivMainActRatingAll.setVisibility(View.VISIBLE);
+                break;
+        }
     }
 }
