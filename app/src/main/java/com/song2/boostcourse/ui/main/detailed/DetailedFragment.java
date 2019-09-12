@@ -278,7 +278,10 @@ public class DetailedFragment extends Fragment {
 
             Log.e("movieIdx 크기111 : ", String.valueOf(movieIndex));
 
-            Glide.with(getActivity()).load(movieDetailResult.result.get(0).image).into(binding.ivMainActPosterImg);
+            Glide.with(getActivity())
+                    .load(movieDetailResult.result.get(0).image)
+                    .into(binding.ivMainActPosterImg);
+
             binding.tvMainActTitle.setText(movieDetailResult.result.get(0).title);
             binding.tvMainActMovieInfo.setText(movieDetailResult.result.get(0).date + " 개봉 \n" + movieDetailResult.result.get(0).genre + " / " + movieDetailResult.result.get(0).duration + " 분");
 
