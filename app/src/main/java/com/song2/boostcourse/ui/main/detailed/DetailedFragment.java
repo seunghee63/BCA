@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -31,12 +30,7 @@ import com.song2.boostcourse.util.adapter.ReviewAdapter;
 import com.song2.boostcourse.util.network.AppHelper;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class DetailedFragment extends Fragment {
 
     int REQUEST_CODE_UPLOAD_REVIEW_ACTIVITY = 7777;
@@ -73,8 +67,8 @@ public class DetailedFragment extends Fragment {
             movieIndex = getArguments().getInt(MOVIEINDEX); // 전달한 key 값
         }
 
-        sendDetailRequest("/movie/readMovie?id="+String.valueOf(movieIndex));
-        sendRequest("/movie/readCommentList?id="+String.valueOf(movieIndex)+"&limit=all");
+        sendRequest("/movie/readMovie","?id="+String.valueOf(movieIndex)); // 영화
+        sendRequest("/movie/readCommentList","?id="+String.valueOf(movieIndex)+"&limit=all"); // 댓글
 
         return binding.getRoot();
     }
@@ -186,11 +180,11 @@ public class DetailedFragment extends Fragment {
         return newData;
     }
 
-    //댓글 통신
-    public void sendRequest(final String route) {
+    // 통신
+    public void sendRequest(final String route, final String query) {
 
         String base = "http://boostcourse-appapi.connect.or.kr:10000";
-        String url = base + route;
+        String url = base + route + query;
 
         if (AppHelper.requestQueue == null) {
             AppHelper.requestQueue = Volley.newRequestQueue(getActivity());
@@ -205,9 +199,14 @@ public class DetailedFragment extends Fragment {
                     @Override
                     public void onResponse(String response) {
                         //Log.e("route 경로! : ", "/movie/readMovie?id=" + String.valueOf(movieIndex));
+                        Log.e("응답 : ", "<"+route + "> ::" + response);
 
-                        Log.e("review Movie 응답 : ", response);
-                        reviewProcessResponse(response);
+                        if (route=="/movie/readMovie"){
+                            movieDetailedProcessResponse(response);
+                        }else if (route =="/movie/readCommentList"){
+                            reviewProcessResponse(response);
+                        }
+
                     }
                 },
                 new Response.ErrorListener() {
@@ -223,44 +222,6 @@ public class DetailedFragment extends Fragment {
         AppHelper.requestQueue.add(request);
 
         Log.e("sendRequest", "요청보냄");
-    }
-
-    //상세페이지 통신
-    public void sendDetailRequest(final String route) {
-
-        String base = "http://boostcourse-appapi.connect.or.kr:10000";
-        String url = base + route;
-
-        if (AppHelper.requestQueue == null) {
-            AppHelper.requestQueue = Volley.newRequestQueue(getActivity());
-        }
-
-        //get,post
-        StringRequest request = new StringRequest(
-                Request.Method.GET,
-                url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-
-                        Log.e("detailed Movie 응답 : ", response);
-
-                        movieDetailedProcessResponse(response);
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.e("에러 : ", error.toString());
-                    }
-                }
-        );
-
-        //아래 두 줄은 일반적으로 AppHelper에 넣어서 관리. 메소드 호출해서 여기서 씀..ㅎ
-        request.setShouldCache(false);
-        AppHelper.requestQueue.add(request);
-
-        Log.e("sendRequest","요청보냄");
     }
 
     //data setting

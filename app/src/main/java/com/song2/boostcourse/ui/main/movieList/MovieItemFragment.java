@@ -82,7 +82,6 @@ public class MovieItemFragment extends Fragment {
         String base = "http://boostcourse-appapi.connect.or.kr:10000";
         String url = base + route;
 
-        //url = "http://www.kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json?key=430156241533f1d058c603178cc3ca0e&targetDt=20120101";
         //volley
         if(AppHelper.requestQueue == null ){
             AppHelper.requestQueue = Volley.newRequestQueue(getActivity());
@@ -112,16 +111,7 @@ public class MovieItemFragment extends Fragment {
                         Log.e("에러 : ", error.toString());
                     }
                 }
-        ){
-            //request 객체 안에 메소드 재정의
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-
-                Map<String, String> params = new HashMap<String, String>();
-
-                return params;
-            }
-        };
+        );
 
         //아래 두 줄은 일반적으로 AppHelper에 넣어서 관리. 메소드 호출해서 여기서 씀..ㅎ
         request.setShouldCache(false);

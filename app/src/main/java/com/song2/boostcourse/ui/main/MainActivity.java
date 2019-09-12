@@ -17,9 +17,6 @@ import com.song2.boostcourse.R;
 import com.song2.boostcourse.ui.main.detailed.DetailedFragment;
 import com.song2.boostcourse.ui.main.movieList.MovieListFragment;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, MovieItemListener {
 
 
@@ -73,8 +70,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.nav_book_item) {
         } else if (id == R.id.nav_setting_item) {
         }
-
-        replaceMovieMainFrag();
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
