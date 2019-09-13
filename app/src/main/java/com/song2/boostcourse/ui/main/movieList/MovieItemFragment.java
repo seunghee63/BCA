@@ -8,31 +8,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
-import com.google.gson.Gson;
 import com.song2.boostcourse.R;
 import com.song2.boostcourse.data.MovieRank;
-import com.song2.boostcourse.data.MovieRankList;
 import com.song2.boostcourse.databinding.FragmentMovieItemBinding;
 import com.song2.boostcourse.ui.main.MovieItemListener;
-import com.song2.boostcourse.util.network.AppHelper;
-
-import java.util.ArrayList;
 
 public class MovieItemFragment extends Fragment {
-
-    private static final String ARG_NO = "ARG_NO";
 
     FragmentMovieItemBinding binding;
 
     //key값
     static String MOVIEINDEX = "movieIndex";
+    static String MOVIEDATA = "movieData";
     int movieIndex;
     MovieRank rankData = new MovieRank();
 
@@ -45,7 +33,7 @@ public class MovieItemFragment extends Fragment {
         Bundle bundle = new Bundle();
 
         bundle.putInt(MOVIEINDEX, index); // key , value
-        bundle.putParcelable("MovieData", data);
+        bundle.putParcelable(MOVIEDATA, data);
 
         MovieItemFragment fragment = new MovieItemFragment();
         fragment.setArguments(bundle);
@@ -63,8 +51,7 @@ public class MovieItemFragment extends Fragment {
         if( getArguments() != null)
         {
             movieIndex = getArguments().getInt(MOVIEINDEX); // 전달한 key 값
-            rankData = getArguments().getParcelable("MovieData");
-            //setImage(movieIndex);
+            rankData = getArguments().getParcelable(MOVIEDATA);
         }
 
         Log.e("성공!!! RankData 내용 : ",rankData.title);
@@ -87,7 +74,5 @@ public class MovieItemFragment extends Fragment {
         binding.tvMovieFragItemRankTitle.setText(rankData.reservation_grade + ". "+  rankData.title);
         binding.tvMovieFragItemRate.setText("예매율 " + rankData.reservation_rate +"%");
         binding.tvMovieFragItemRanting.setText(rankData.grade + "세 관람가");
-
-
     }
 }

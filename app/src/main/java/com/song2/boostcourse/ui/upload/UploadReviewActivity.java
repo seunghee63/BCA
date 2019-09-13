@@ -34,9 +34,6 @@ public class UploadReviewActivity extends AppCompatActivity {
     String WHEREFROM = "whereFrom";
     String MOVIEINDEX = "movieIndex";
 
-    String REVIEWCONTENTS = "ReviewContents";
-    String REVIEWSTARTCNT = "RatingStarCnt";
-
     String contents;
     float ratingValue;
 
@@ -61,24 +58,21 @@ public class UploadReviewActivity extends AppCompatActivity {
             Toast.makeText(this, "내용을 입력 해 주세요" + contents, Toast.LENGTH_SHORT).show();
 
         }else if (getIntent().getStringExtra(WHEREFROM).equals("main")) {
+
+            sendRequest("/movie/createComment");
+
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
 
-            intent.putExtra(REVIEWCONTENTS,contents);
-            intent.putExtra(REVIEWSTARTCNT,ratingValue);
-
             setResult(Activity.RESULT_OK,intent);
 
-            sendRequest("/movie/createComment");
             finish();
-        }else {
-            Intent intent = new Intent(getApplicationContext(), MoreReviewActivity.class);
-
-            intent.putExtra(REVIEWCONTENTS,contents);
-            intent.putExtra(REVIEWSTARTCNT,ratingValue);
-
-            setResult(Activity.RESULT_OK,intent);
+        }else if(getIntent().getStringExtra(WHEREFROM).equals("more")){
 
             sendRequest("/movie/createComment");
+
+            Intent intent = new Intent(getApplicationContext(), MoreReviewActivity.class);
+            setResult(Activity.RESULT_OK,intent);
+
             finish();
         }
     }
@@ -148,7 +142,7 @@ public class UploadReviewActivity extends AppCompatActivity {
         request.setShouldCache(false);
         AppHelper.requestQueue.add(request);
 
-        Log.e("sendRequest","요청보냄");
+        Log.e("sendRequest","댓글 작성 request!!!");
 
     }
 

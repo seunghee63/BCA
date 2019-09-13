@@ -33,18 +33,17 @@ import java.util.ArrayList;
 
 public class DetailedFragment extends Fragment {
 
-    int REQUEST_CODE_UPLOAD_REVIEW_ACTIVITY = 7777;
-    int REQUEST_CODE_MORE_REVIEW_ACTIVITY = 3333;
+    static final int REQUEST_CODE_UPLOAD_REVIEW_ACTIVITY = 7777;
+    static final int REQUEST_CODE_MORE_REVIEW_ACTIVITY = 3333;
 
     int rating = 0;
     int movieIndex = 0;
 
     //Key값
-    String MOVIETITLE = "MovieTitle";
-    String MOVIERATING = "MovieRating";
-    String MOVIEINDEX = "movieIndex";
-    String REVIEWDATALIST = "reviewDataList";
-    String WHEREFROM = "whereFrom";
+    static final String MOVIETITLE = "MovieTitle";
+    static final String MOVIERATING = "MovieRating";
+    static final String MOVIEINDEX = "movieIndex";
+    static final String WHEREFROM = "whereFrom";
 
     FragmentDetailedBinding binding;
     ArrayList<ReviewData> dataList = new ArrayList<>();
@@ -68,7 +67,7 @@ public class DetailedFragment extends Fragment {
         }
 
         sendRequest("/movie/readMovie","?id="+String.valueOf(movieIndex)); // 영화
-        sendRequest("/movie/readCommentList","?id="+String.valueOf(movieIndex)+"&limit=all"); // 댓글
+        sendRequest("/movie/readCommentList","?id="+String.valueOf(movieIndex)+"&limit=2"); // 댓글
 
         return binding.getRoot();
     }
@@ -77,10 +76,14 @@ public class DetailedFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        dataList.clear();
+
         if (requestCode == REQUEST_CODE_UPLOAD_REVIEW_ACTIVITY) {
             if (resultCode == Activity.RESULT_OK) {
 
-                dataList.add(addReviewData("tmpImg", "song2**", "방금 전", data.getStringExtra("ReviewContents"), data.getFloatExtra("RatingStarCnt", 5.0f), 0));
+
+                sendRequest("/movie/readCommentList","?id="+String.valueOf(movieIndex)+"&limit=2"); // 댓글
+                Log.e("reviewDataList data = ", String.valueOf(dataList));
 
                 setListView();
             }
@@ -89,7 +92,7 @@ public class DetailedFragment extends Fragment {
         if (requestCode == REQUEST_CODE_MORE_REVIEW_ACTIVITY) {
             if (resultCode == Activity.RESULT_OK) {
 
-                dataList = data.getParcelableArrayListExtra(REVIEWDATALIST);
+                sendRequest("/movie/readCommentList","?id="+String.valueOf(movieIndex)+"&limit=2"); // 댓글
                 Log.e("reviewDataList data = ", String.valueOf(dataList));
 
                 setListView();
@@ -144,8 +147,9 @@ public class DetailedFragment extends Fragment {
         Intent intent = new Intent(getContext(), UploadReviewActivity.class);
         intent.putExtra(MOVIETITLE, binding.tvMainActTitle.getText());
         intent.putExtra(MOVIERATING, rating);
-        intent.putExtra(WHEREFROM, "main");
         intent.putExtra(MOVIEINDEX,movieIndex);
+        intent.putExtra(WHEREFROM, "main");
+
         startActivityForResult(intent, REQUEST_CODE_UPLOAD_REVIEW_ACTIVITY);
     }
 
@@ -157,10 +161,7 @@ public class DetailedFragment extends Fragment {
         intent.putExtra(MOVIERATING, rating);
         intent.putExtra(MOVIEINDEX,movieIndex);
 
-        //기존의 댓글 데이터 전송
-        intent.putExtra(REVIEWDATALIST, dataList);
         startActivityForResult(intent, REQUEST_CODE_MORE_REVIEW_ACTIVITY);
-        //        startActivity(intent);
     }
 
     //댓글 listView
@@ -180,7 +181,7 @@ public class DetailedFragment extends Fragment {
         return newData;
     }
 
-    // 통신
+    //통신
     public void sendRequest(final String route, final String query) {
 
         String base = "http://boostcourse-appapi.connect.or.kr:10000";

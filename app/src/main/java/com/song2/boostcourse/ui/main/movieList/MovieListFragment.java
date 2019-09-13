@@ -1,6 +1,5 @@
 package com.song2.boostcourse.ui.main.movieList;
 
-
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,7 +14,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.song2.boostcourse.R;
 import com.song2.boostcourse.data.MovieRank;
