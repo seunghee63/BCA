@@ -18,10 +18,13 @@ import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.song2.boostcourse.R;
+import com.song2.boostcourse.data.MovieRank;
 import com.song2.boostcourse.data.MovieRankList;
 import com.song2.boostcourse.databinding.FragmentMovieListBinding;
 import com.song2.boostcourse.util.adapter.MoviePagerAdapter;
 import com.song2.boostcourse.util.network.AppHelper;
+
+import java.util.ArrayList;
 
 public class MovieListFragment extends Fragment {
 
@@ -44,27 +47,27 @@ public class MovieListFragment extends Fragment {
         return binding.getRoot();
     }
 
-    public void settingViewPager(int count) {
+    public void settingViewPager(int count, ArrayList<MovieRank> dataList) {
 
         //뷰페이저
         ViewPager pager;
 
         pager = binding.pager;
-        pager.setOffscreenPageLimit(6);
+        pager.setOffscreenPageLimit(count+1);
 
         MoviePagerAdapter adapter = new MoviePagerAdapter(getFragmentManager());
 
         //instance 생성
         for (int i =0; i< count; i++){
-            adapter.addItem(MovieItemFragment.newInstance(i+1));
+            adapter.addItem(MovieItemFragment.newInstance(i+1, dataList.get(i)));
         }
 
         pager.setAdapter(adapter);
 
+        //좌우 미리보기 padding
         float d = getResources().getDisplayMetrics().density;
         int margin = (int)(30 * d);
         int marginRight = (int)(1 * d);
-
 
         pager.setClipToPadding(false);
         pager.setPadding(margin, 0, marginRight, 0);
@@ -90,10 +93,8 @@ public class MovieListFragment extends Fragment {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        //Log.e("route 경로! : ", "/movie/readMovie?id=" + String.valueOf(movieIndex));
                         Log.e("응답 : ", "<"+ route + "> ::" + response);
                         movieListProcessResponse(response);
-
                     }
                 },
                 new Response.ErrorListener() {
@@ -108,7 +109,7 @@ public class MovieListFragment extends Fragment {
         request.setShouldCache(true);
         AppHelper.requestQueue.add(request);
 
-        Log.e("sendRequest", "요청보냄");
+        Log.e("sendRequest", "/movie/readMovieList - 요청보냄");
     }
 
     public void movieListProcessResponse(String response){
@@ -119,7 +120,8 @@ public class MovieListFragment extends Fragment {
             int count = movieRankList.result.size();
 
             Log.e("데이터 길이 : ", String.valueOf(count));
-            settingViewPager(count);
+
+            settingViewPager(count, movieRankList.result);
 
         }else{
             Log.e("데이터 길이 : ", "null");

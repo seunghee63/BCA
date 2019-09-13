@@ -2,7 +2,7 @@ package com.song2.boostcourse.data;
 
 import java.util.ArrayList;
 
-public class MovieDetailResult extends MovieDataResult {
+public class MovieDetailResult extends ResponseData {
 /*
     public String message;
     public int code;
