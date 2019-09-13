@@ -156,7 +156,7 @@ public class UploadReviewActivity extends AppCompatActivity {
 
         switch(rating){
             case 12:
-                binding.ivUploadActMovieRating15.setVisibility(View.VISIBLE);
+                binding.ivUploadActMovieRating12.setVisibility(View.VISIBLE);
                 break;
 
             case 15:

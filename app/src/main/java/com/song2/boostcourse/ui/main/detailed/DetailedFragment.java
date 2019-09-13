@@ -38,8 +38,10 @@ public class DetailedFragment extends Fragment {
 
     int rating = 0;
     int movieIndex = 0;
+    float audienceRating ;
 
     //Key값
+    static final String AUDIENCERATING = "AudienceRating";
     static final String MOVIETITLE = "MovieTitle";
     static final String MOVIERATING = "MovieRating";
     static final String MOVIEINDEX = "movieIndex";
@@ -76,11 +78,10 @@ public class DetailedFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        dataList.clear();
-
         if (requestCode == REQUEST_CODE_UPLOAD_REVIEW_ACTIVITY) {
             if (resultCode == Activity.RESULT_OK) {
 
+                dataList.clear();
 
                 sendRequest("/movie/readCommentList","?id="+String.valueOf(movieIndex)+"&limit=2"); // 댓글
                 Log.e("reviewDataList data = ", String.valueOf(dataList));
@@ -91,6 +92,8 @@ public class DetailedFragment extends Fragment {
 
         if (requestCode == REQUEST_CODE_MORE_REVIEW_ACTIVITY) {
             if (resultCode == Activity.RESULT_OK) {
+
+                dataList.clear();
 
                 sendRequest("/movie/readCommentList","?id="+String.valueOf(movieIndex)+"&limit=2"); // 댓글
                 Log.e("reviewDataList data = ", String.valueOf(dataList));
@@ -160,6 +163,7 @@ public class DetailedFragment extends Fragment {
         intent.putExtra(MOVIETITLE, binding.tvMainActTitle.getText());
         intent.putExtra(MOVIERATING, rating);
         intent.putExtra(MOVIEINDEX,movieIndex);
+        intent.putExtra(AUDIENCERATING,audienceRating);
 
         startActivityForResult(intent, REQUEST_CODE_MORE_REVIEW_ACTIVITY);
     }
@@ -249,6 +253,7 @@ public class DetailedFragment extends Fragment {
 
             binding.tvMainActMovieRateNRank.setText(movieDetailResult.result.get(0).reservation_grade + "위 " + movieDetailResult.result.get(0).reservation_rate + "%");
 
+            audienceRating = (movieDetailResult.result.get(0).audience_rating);
             binding.rbMainActRatingBar.setRating((movieDetailResult.result.get(0).audience_rating) / 2);
             binding.tvMainActGrade.setText(movieDetailResult.result.get(0).audience_rating + "");
 
@@ -256,9 +261,11 @@ public class DetailedFragment extends Fragment {
 
             String audience_cnt;
             if (audience > 1000000) {
-                audience_cnt = String.valueOf(audience / 1000000) + "," + String.valueOf((audience % 1000000) / 1000) + "," + String.valueOf((audience % 1000000) % 1000);
+                audience_cnt = String.valueOf(audience / 1000000) + "," + String.format("%03d",(audience % 1000000) / 1000) + "," + String.format("%03d",(audience % 1000000) % 1000);
+            } else if(audience<1000){
+                audience_cnt = String.valueOf(audience);
             } else
-                audience_cnt = String.valueOf((audience % 1000000) / 1000) + "," + String.valueOf((audience % 1000000) % 1000);
+                audience_cnt = String.valueOf((audience % 1000000) / 1000) + "," + String.format("%03d",(audience % 1000000) % 1000);
 
             binding.tvMainActAudienceCnt.setText(audience_cnt + " 명");
 

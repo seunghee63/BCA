@@ -37,11 +37,12 @@ public class MoreReviewActivity extends AppCompatActivity {
 
     int movieIndex = 0;
     int rating;
+    float audienceRating;
 
+    static final String AUDIENCERATING = "AudienceRating";
     static final String MOVIEINDEX = "movieIndex";
     static final String MOVIETITLE = "MovieTitle";
     static final String MOVIERATING = "MovieRating";
-    static final String REVIEWDATALIST = "reviewDataList";
     static final String WHEREFROM = "whereFrom";
 
     @Override
@@ -56,16 +57,19 @@ public class MoreReviewActivity extends AppCompatActivity {
 
         //main에서 넘어온 데이터 setting
         String title = getIntent().getStringExtra(MOVIETITLE);
-        movieIndex = getIntent().getIntExtra(MOVIEINDEX,0);
+
+        audienceRating = getIntent().getFloatExtra(AUDIENCERATING, 0);
+        movieIndex = getIntent().getIntExtra(MOVIEINDEX, 0);
         rating = getIntent().getIntExtra(MOVIERATING, 0);
         setMovieRatingImg(rating);
 
         //통신데이터 보여주어야 함
-        sendRequest("/movie/readCommentList","?id="+String.valueOf(movieIndex)+"&limit=all"); // 댓글
+        sendRequest("/movie/readCommentList", "?id=" + String.valueOf(movieIndex) + "&limit=all"); // 댓글
 
         binding.tvMoreReviewActMovieTitle.setText(title);
 
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -74,9 +78,9 @@ public class MoreReviewActivity extends AppCompatActivity {
         if (requestCode == REQUEST_CODE_UPLOAD_REVIEW_ACTIVITY) {
             if (resultCode == Activity.RESULT_OK) {
 
-                Log.e("통신데이터 : ","제대로 들어왔는지 확인");
+                Log.e("통신데이터 : ", "제대로 들어왔는지 확인");
                 reviewDataArrayList.clear();
-                sendRequest("/movie/readCommentList","?id="+String.valueOf(movieIndex)+"&limit=all"); // 댓글
+                sendRequest("/movie/readCommentList", "?id=" + String.valueOf(movieIndex) + "&limit=all"); // 댓글
 
                 setListView();
             }
@@ -169,8 +173,21 @@ public class MoreReviewActivity extends AppCompatActivity {
         if (reviewResult != null) {
             Log.e("movieDetailResult : ", String.valueOf(reviewResult));
 
-            for (int i=0;i<reviewResult.result.size();i++){
-                Log.e("ReviewList : ",i+"번 쨰 댓글");
+
+            String reviewCnt = "";
+
+            if (reviewResult.totalCount > 1000000) {
+                reviewCnt = String.valueOf(reviewResult.totalCount / 1000000) + "," + String.format("%03d", (reviewResult.totalCount % 1000000) / 1000) + "," + String.format("%03d", (reviewResult.totalCount % 1000000) % 1000);
+            } else if (reviewResult.totalCount < 1000) {
+                reviewCnt = String.valueOf(reviewResult.totalCount);
+            } else
+                reviewCnt = String.valueOf((reviewResult.totalCount % 1000000) / 1000) + "," + String.format("%03d", (reviewResult.totalCount % 1000000) % 1000);
+
+            binding.tvMoreReviewActGrade.setText(audienceRating + " (" + reviewCnt + "명 참여)");
+            binding.rbMoreReviewActRatingBar.setRating(audienceRating/2);
+
+            for (int i = 0; i < reviewResult.result.size(); i++) {
+                Log.e("ReviewList : ", i + "번 쨰 댓글");
                 addReviewData("tmpImg", reviewResult.result.get(i).writer, reviewResult.result.get(i).time, reviewResult.result.get(i).contents, reviewResult.result.get(i).rating, reviewResult.result.get(i).recommend);
             }
 
