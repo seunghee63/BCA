@@ -173,7 +173,6 @@ public class MoreReviewActivity extends AppCompatActivity {
         if (reviewResult != null) {
             Log.e("movieDetailResult : ", String.valueOf(reviewResult));
 
-
             String reviewCnt = "";
 
             if (reviewResult.totalCount > 1000000) {

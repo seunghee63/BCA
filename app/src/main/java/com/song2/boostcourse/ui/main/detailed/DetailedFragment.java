@@ -1,6 +1,7 @@
 package com.song2.boostcourse.ui.main.detailed;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import com.song2.boostcourse.data.MovieDetailResult;
 import com.song2.boostcourse.data.ReviewData;
 import com.song2.boostcourse.data.ReviewResult;
 import com.song2.boostcourse.databinding.FragmentDetailedBinding;
+import com.song2.boostcourse.ui.main.MainActivity;
 import com.song2.boostcourse.ui.moreReview.MoreReviewActivity;
 import com.song2.boostcourse.ui.upload.UploadReviewActivity;
 import com.song2.boostcourse.util.adapter.ReviewAdapter;
@@ -31,7 +33,7 @@ import com.song2.boostcourse.util.network.AppHelper;
 
 import java.util.ArrayList;
 
-public class DetailedFragment extends Fragment {
+public class DetailedFragment extends Fragment{
 
     static final int REQUEST_CODE_UPLOAD_REVIEW_ACTIVITY = 7777;
     static final int REQUEST_CODE_MORE_REVIEW_ACTIVITY = 3333;

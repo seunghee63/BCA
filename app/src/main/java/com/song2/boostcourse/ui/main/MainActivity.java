@@ -19,7 +19,6 @@ import com.song2.boostcourse.ui.main.movieList.MovieListFragment;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, MovieItemListener {
 
-
     DetailedFragment detailedFragment = new DetailedFragment();
 
     @Override
@@ -47,15 +46,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        Log.e("TEST=",getSupportFragmentManager().findFragmentById(R.id.fragment_movie_main_frag_container).toString());
-
+        //Log.e("TEST=",getSupportFragmentManager().findFragmentById(R.id.fragment_movie_main_frag_container).toString());
+        Log.e("TEST2=",String.valueOf(getFragmentManager().getBackStackEntryCount()));
+        //Log.e("냠냠냠? :",);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
+            Log.e("MainAct 11", "backpress 들어왔는지 확인용");
             drawer.closeDrawer(GravityCompat.START);
-        } else if(false){
-            //replaceMovieMainFrag();
-        } else{
+        }else if(getSupportFragmentManager().findFragmentById(R.id.fragment_movie_main_frag_container) instanceof DetailedFragment){
+            Log.e("MainAct 22", "backpress 들어왔는지 확인용");
+            replaceMovieMainFrag();
+        }else{
             super.onBackPressed();
         }
+
+        Log.e("MainAct 55", "backpress 들어왔는지 확인용");
+
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -83,7 +88,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_movie_main_frag_container, detailedFragment).commit();
+        fragmentTransaction.replace(R.id.fragment_movie_main_frag_container, detailedFragment)
+                .commit();
     }
 
     @Override
@@ -92,7 +98,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_movie_main_frag_container, listFragment).commit();
+        fragmentTransaction.replace(R.id.fragment_movie_main_frag_container, listFragment)
+                .commit();
         setTitle("영화 목록");
     }
 }
