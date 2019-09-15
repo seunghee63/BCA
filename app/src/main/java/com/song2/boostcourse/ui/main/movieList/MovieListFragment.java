@@ -1,6 +1,5 @@
 package com.song2.boostcourse.ui.main.movieList;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.databinding.DataBindingUtil;
@@ -28,7 +27,6 @@ import com.song2.boostcourse.util.db.DatabaseHelper;
 import com.song2.boostcourse.util.network.AppHelper;
 import com.song2.boostcourse.util.network.NetworkStatus;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class MovieListFragment extends Fragment {
@@ -53,7 +51,7 @@ public class MovieListFragment extends Fragment {
         helper = new DatabaseHelper(getContext(), "movieRank",null,1);
         database = helper.getWritableDatabase();
 
-        network = confirmNetwork(getContext());
+        network = confirmNetwork();
         if(network){
             sendRequest("/movie/readMovieList");
         }else {
@@ -83,7 +81,7 @@ public class MovieListFragment extends Fragment {
             if(network){
                 //존재하지 않는 데이터 일 경우에만
                 Log.e("dataList.get(i).title",dataList.get(i).title+ " <title boolean>"+helper.search(database, dataList.get(i).title));
-                if(!helper.search(database, dataList.get(i).title)){
+                if(helper.search(database, dataList.get(i).title)){
                     insertData("movieRank",dataList.get(i).image, dataList.get(i).title, dataList.get(i).reservation_grade, dataList.get(i).reservation_rate, dataList.get(i).grade);
                 }
             }
@@ -154,8 +152,7 @@ public class MovieListFragment extends Fragment {
         }
     }
 
-
-    public boolean confirmNetwork(Context context){
+    public boolean confirmNetwork(){
         int status = NetworkStatus.getConnectivityStatus(getContext());
 
         if(status == NetworkStatus.TYPE_NOT_CONNECTED){

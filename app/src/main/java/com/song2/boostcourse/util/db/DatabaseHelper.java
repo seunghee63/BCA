@@ -18,6 +18,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String MOVIE =
             "CREATE TABLE IF NOT EXISTS movie (_id INTEGER PRIMARY KEY, " +
+                    "movie_index Int, "+
                     "image TEXT, " +
                     "title TEXT, " +
                     "date TEXT, " +
@@ -27,7 +28,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     "reservation_rate FLOAT, " +
                     "audience_rating FLOAT, " +
                     "audience INTEGER, " +
-                    "synopsus TEXT, " +
+                    "synopsis TEXT, " +
                     "director TEXT, " +
                     "actor TEXT, " +
                     "_like INTEGER, " +

@@ -2,6 +2,8 @@ package com.song2.boostcourse.ui.main.detailed;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -20,6 +23,7 @@ import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.song2.boostcourse.R;
+import com.song2.boostcourse.data.MovieDetail;
 import com.song2.boostcourse.data.MovieDetailResult;
 import com.song2.boostcourse.data.ReviewData;
 import com.song2.boostcourse.data.ReviewResult;
@@ -27,18 +31,24 @@ import com.song2.boostcourse.databinding.FragmentDetailedBinding;
 import com.song2.boostcourse.ui.moreReview.MoreReviewActivity;
 import com.song2.boostcourse.ui.upload.UploadReviewActivity;
 import com.song2.boostcourse.util.adapter.ReviewAdapter;
+import com.song2.boostcourse.util.db.DatabaseHelper;
 import com.song2.boostcourse.util.network.AppHelper;
+import com.song2.boostcourse.util.network.NetworkStatus;
 
 import java.util.ArrayList;
 
-public class DetailedFragment extends Fragment{
+public class DetailedFragment extends Fragment {
 
     static final int REQUEST_CODE_UPLOAD_REVIEW_ACTIVITY = 7777;
     static final int REQUEST_CODE_MORE_REVIEW_ACTIVITY = 3333;
 
+    SQLiteDatabase database;
+    DatabaseHelper helper;
+    Boolean network = false;
+
     int rating = 0;
     int movieIndex = 0;
-    float audienceRating ;
+    float audienceRating;
 
     //Key값
     static final String AUDIENCERATING = "AudienceRating";
@@ -60,6 +70,8 @@ public class DetailedFragment extends Fragment{
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_detailed, container, false);
         binding.setDetailedFrag(this);
 
+        helper = new DatabaseHelper(getContext(), "movieRank", null, 1);
+        database = helper.getWritableDatabase();
 
         getActivity().setTitle("영화 상세");
 
@@ -68,8 +80,14 @@ public class DetailedFragment extends Fragment{
             movieIndex = getArguments().getInt(MOVIEINDEX); // 전달한 key 값
         }
 
-        sendRequest("/movie/readMovie","?id="+String.valueOf(movieIndex)); // 영화
-        sendRequest("/movie/readCommentList","?id="+String.valueOf(movieIndex)+"&limit=2"); // 댓글
+        network = confirmNetwork();
+        if (network) {
+            sendRequest("/movie/readMovie", "?id=" + String.valueOf(movieIndex)); // 영화
+            sendRequest("/movie/readCommentList", "?id=" + String.valueOf(movieIndex) + "&limit=2"); // 댓글
+        } else {
+            selectData();
+        }
+
 
         return binding.getRoot();
     }
@@ -83,7 +101,7 @@ public class DetailedFragment extends Fragment{
 
                 dataList.clear();
 
-                sendRequest("/movie/readCommentList","?id="+String.valueOf(movieIndex)+"&limit=2"); // 댓글
+                sendRequest("/movie/readCommentList", "?id=" + String.valueOf(movieIndex) + "&limit=2"); // 댓글
                 Log.e("reviewDataList data = ", String.valueOf(dataList));
 
                 setListView();
@@ -95,7 +113,7 @@ public class DetailedFragment extends Fragment{
 
                 dataList.clear();
 
-                sendRequest("/movie/readCommentList","?id="+String.valueOf(movieIndex)+"&limit=2"); // 댓글
+                sendRequest("/movie/readCommentList", "?id=" + String.valueOf(movieIndex) + "&limit=2"); // 댓글
                 Log.e("reviewDataList data = ", String.valueOf(dataList));
 
                 setListView();
@@ -150,7 +168,7 @@ public class DetailedFragment extends Fragment{
         Intent intent = new Intent(getContext(), UploadReviewActivity.class);
         intent.putExtra(MOVIETITLE, binding.tvMainActTitle.getText());
         intent.putExtra(MOVIERATING, rating);
-        intent.putExtra(MOVIEINDEX,movieIndex);
+        intent.putExtra(MOVIEINDEX, movieIndex);
         intent.putExtra(WHEREFROM, "main");
 
         startActivityForResult(intent, REQUEST_CODE_UPLOAD_REVIEW_ACTIVITY);
@@ -162,8 +180,8 @@ public class DetailedFragment extends Fragment{
         Intent intent = new Intent(getContext(), MoreReviewActivity.class);
         intent.putExtra(MOVIETITLE, binding.tvMainActTitle.getText());
         intent.putExtra(MOVIERATING, rating);
-        intent.putExtra(MOVIEINDEX,movieIndex);
-        intent.putExtra(AUDIENCERATING,audienceRating);
+        intent.putExtra(MOVIEINDEX, movieIndex);
+        intent.putExtra(AUDIENCERATING, audienceRating);
 
         startActivityForResult(intent, REQUEST_CODE_MORE_REVIEW_ACTIVITY);
     }
@@ -203,12 +221,11 @@ public class DetailedFragment extends Fragment{
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        //Log.e("route 경로! : ", "/movie/readMovie?id=" + String.valueOf(movieIndex));
-                        Log.e("응답 : ", "<"+route + "> ::" + response);
+                        Log.e("응답 : ", "<" + route + "> ::" + response);
 
-                        if (route=="/movie/readMovie"){
+                        if (route == "/movie/readMovie") {
                             movieDetailedProcessResponse(response);
-                        }else if (route =="/movie/readCommentList"){
+                        } else if (route == "/movie/readCommentList") {
                             reviewProcessResponse(response);
                         }
 
@@ -240,43 +257,8 @@ public class DetailedFragment extends Fragment{
 
             Log.e("movieDetailResult : ", String.valueOf(movieDetailResult));
 
-            int count = movieDetailResult.result.size();
-
-            Log.e("movieIdx 크기111 : ", String.valueOf(movieIndex));
-
-            Glide.with(getActivity())
-                    .load(movieDetailResult.result.get(0).image)
-                    .into(binding.ivMainActPosterImg);
-
-            binding.tvMainActTitle.setText(movieDetailResult.result.get(0).title);
-            binding.tvMainActMovieInfo.setText(movieDetailResult.result.get(0).date + " 개봉 \n" + movieDetailResult.result.get(0).genre + " / " + movieDetailResult.result.get(0).duration + " 분");
-
-            binding.tvMainActMovieRateNRank.setText(movieDetailResult.result.get(0).reservation_grade + "위 " + movieDetailResult.result.get(0).reservation_rate + "%");
-
-            audienceRating = (movieDetailResult.result.get(0).audience_rating);
-            binding.rbMainActRatingBar.setRating((movieDetailResult.result.get(0).audience_rating) / 2);
-            binding.tvMainActGrade.setText(movieDetailResult.result.get(0).audience_rating + "");
-
-            int audience = movieDetailResult.result.get(0).audience;
-
-            String audience_cnt;
-            if (audience > 1000000) {
-                audience_cnt = String.valueOf(audience / 1000000) + "," + String.format("%03d",(audience % 1000000) / 1000) + "," + String.format("%03d",(audience % 1000000) % 1000);
-            } else if(audience<1000){
-                audience_cnt = String.valueOf(audience);
-            } else
-                audience_cnt = String.valueOf((audience % 1000000) / 1000) + "," + String.format("%03d",(audience % 1000000) % 1000);
-
-            binding.tvMainActAudienceCnt.setText(audience_cnt + " 명");
-
-            binding.tvMainActSummary.setText(movieDetailResult.result.get(0).synopsis);
-            binding.tvMainActDirector.setText(movieDetailResult.result.get(0).director);
-            binding.tvMainActActor.setText(movieDetailResult.result.get(0).actor);
-
-            binding.setThumbUpDown(new ThumbUpDown(movieDetailResult.result.get(0).like, movieDetailResult.result.get(0).dislike)); //xml 에 객체를 만들어 줌
-
-            rating = movieDetailResult.result.get(0).grade;
-            setMovieRatingImg(rating);
+            setMovieData(movieDetailResult.result.get(0));
+            insertData("movie",movieIndex, movieDetailResult.result.get(0));
 
         } else {
             Log.e("데이터 길이 : ", "null");
@@ -294,8 +276,8 @@ public class DetailedFragment extends Fragment{
         if (reviewResult != null) {
             Log.e("movieDetailResult : ", String.valueOf(reviewResult));
 
-            for (int i=0;i<reviewResult.result.size();i++){
-                Log.e("ReviewList : ",i+"번 쨰 댓글");
+            for (int i = 0; i < reviewResult.result.size(); i++) {
+                Log.e("ReviewList : ", i + "번 쨰 댓글");
                 dataList.add(addReviewData("tmpImg", reviewResult.result.get(i).writer, reviewResult.result.get(i).time, reviewResult.result.get(i).contents, reviewResult.result.get(i).rating, reviewResult.result.get(i).recommend));
             }
 
@@ -304,6 +286,50 @@ public class DetailedFragment extends Fragment{
         } else {
             Log.e("데이터 길이 : ", "null");
         }
+    }
+
+    public void setMovieData(MovieDetail movieDetail) {
+
+        Log.e("movieDetailResult : ", String.valueOf(movieDetail));
+
+        Log.e("movieIdx 크기111 : ", String.valueOf(movieDetail));
+
+        Glide.with(getActivity())
+                .load(movieDetail.image)
+                .into(binding.ivMainActPosterImg);
+
+        binding.tvMainActTitle.setText(movieDetail.title);
+        binding.tvMainActMovieInfo.setText(movieDetail.date + " 개봉 \n"
+                + movieDetail.genre + " / " + movieDetail.duration + " 분");
+
+        binding.tvMainActMovieRateNRank.setText(movieDetail.reservation_grade + "위 "
+                + movieDetail.reservation_rate + "%");
+
+        audienceRating = (movieDetail.audience_rating);
+        binding.rbMainActRatingBar.setRating((movieDetail.audience_rating) / 2);
+        binding.tvMainActGrade.setText(movieDetail.audience_rating + "");
+
+        int audience = movieDetail.audience;
+
+        String audience_cnt;
+        if (audience > 1000000) {
+            audience_cnt = String.valueOf(audience / 1000000) + "," + String.format("%03d", (audience % 1000000) / 1000) + "," + String.format("%03d", (audience % 1000000) % 1000);
+        } else if (audience < 1000) {
+            audience_cnt = String.valueOf(audience);
+        } else
+            audience_cnt = String.valueOf((audience % 1000000) / 1000) + "," + String.format("%03d", (audience % 1000000) % 1000);
+
+        binding.tvMainActAudienceCnt.setText(audience_cnt + " 명");
+
+        binding.tvMainActSummary.setText(movieDetail.synopsis);
+        binding.tvMainActDirector.setText(movieDetail.director);
+        binding.tvMainActActor.setText(movieDetail.actor);
+
+        binding.setThumbUpDown(new ThumbUpDown(movieDetail.like, movieDetail.dislike)); //xml 에 객체를 만들어 줌
+
+        rating = movieDetail.grade;
+        setMovieRatingImg(rating);
+
     }
 
     //관람등급 이미지 setting
@@ -330,6 +356,75 @@ public class DetailedFragment extends Fragment{
             case 0:
                 binding.ivMainActRatingAll.setVisibility(View.VISIBLE);
                 break;
+        }
+    }
+
+    public boolean confirmNetwork() {
+        int status = NetworkStatus.getConnectivityStatus(getContext());
+
+        if (status == NetworkStatus.TYPE_NOT_CONNECTED) {
+            Log.e("연결상태", "연결 안 됨");
+            return false;
+        }
+
+        return true;
+    }
+
+    public void insertData(String tableName, int movieIndex, MovieDetail movieDetail) {
+
+        Log.e("insertData", "insertData호출");
+
+        if (database != null) {
+            String sql = "insert into " + tableName + "(movie_index, image, title, date, genre, duration, reservation_grade, reservation_rate, audience_rating, audience, synopsis, director, actor, _like, _dislike, grade) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            Object[] params = {movieIndex, movieDetail.image, movieDetail.title, movieDetail.date, movieDetail.genre, movieDetail.duration, movieDetail.reservation_grade, movieDetail.reservation_rate, movieDetail.audience_rating, movieDetail.audience, movieDetail.synopsis, movieDetail.director, movieDetail.actor, movieDetail.like, movieDetail.dislike, movieDetail.grade};
+
+            database.execSQL(sql, params);
+
+            Log.e("insertData", movieDetail.toString());
+            Log.e("insertData11", params.toString());
+            Log.e("insertData22", "데이터 삽입 완료!");
+
+        }
+    }
+
+    public void selectData() {
+
+        if (database != null) {
+            MovieDetail movieDetail;
+
+            String sql = "select movie_index, image, title, date, genre, duration, reservation_grade, reservation_rate, audience_rating, audience, synopsis, director,actor, _like, _dislike, grade from " + "movie WHERE movie_index=" + movieIndex;
+
+            Cursor cursor = database.rawQuery(sql, null);
+            Log.e("조회된 데이터 개수 : ", String.valueOf(cursor.getCount()));
+
+            if (cursor.getCount() == 0) {
+                Toast.makeText(getActivity(), "어플을 처음 실행 한 경우, 인터넷에 연결해야 데이터를 받아 올 수 있습니다.", Toast.LENGTH_SHORT).show();
+            } else {
+                cursor.moveToNext();
+                int movie_index = cursor.getInt(0);
+                String image = cursor.getString(1);
+                String title = cursor.getString(2);
+                String date = cursor.getString(3);
+                String genre = cursor.getString(4);
+                int duration = cursor.getInt(5);
+                int reservation_grade = cursor.getInt(6);
+                float reservation_rate = cursor.getFloat(7);
+                float audience_rating = cursor.getFloat(8);
+                int audience = cursor.getInt(9);
+                String synopsus = cursor.getString(10);
+                String director = cursor.getString(11);
+                String actor = cursor.getString(12);
+                int _like = cursor.getInt(13);
+                int _dislike = cursor.getInt(14);
+                int grade = cursor.getInt(15);
+
+                movieDetail = new MovieDetail(movie_index, image, title, date, genre, duration, reservation_grade, reservation_rate, audience_rating, audience, synopsus, director, actor, _like, _dislike, grade);
+                Log.e("selectData", image + " " + title + " " + reservation_grade + " " + reservation_rate + " " + grade);
+
+                setMovieData(movieDetail);
+
+            }
+
         }
     }
 }
