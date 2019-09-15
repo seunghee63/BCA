@@ -69,7 +69,6 @@ public class MoreReviewActivity extends AppCompatActivity {
         database = helper.getWritableDatabase();
 
 
-
         //main에서 넘어온 데이터 setting
         String title = getIntent().getStringExtra(MOVIETITLE);
 
@@ -212,7 +211,10 @@ public class MoreReviewActivity extends AppCompatActivity {
             for (int i = 0; i < reviewResult.result.size(); i++) {
                 Log.e("ReviewList : ", i + "번 쨰 댓글");
                 reviewDataArrayList.add(addReviewData("tmpImg", reviewResult.result.get(i).writer, reviewResult.result.get(i).time, reviewResult.result.get(i).contents, reviewResult.result.get(i).rating, reviewResult.result.get(i).recommend, reviewResult.result.get(i).id));
-                insertCommentData("review", addReviewData("tmpImg", reviewResult.result.get(i).writer, reviewResult.result.get(i).time, reviewResult.result.get(i).contents, reviewResult.result.get(i).rating, reviewResult.result.get(i).recommend, reviewResult.result.get(i).id));
+
+                if(helper.searchReview(database, reviewResult.result.get(i).id)){
+                    insertCommentData("review", addReviewData("tmpImg", reviewResult.result.get(i).writer, reviewResult.result.get(i).time, reviewResult.result.get(i).contents, reviewResult.result.get(i).rating, reviewResult.result.get(i).recommend, reviewResult.result.get(i).id));
+                }
             }
 
             setListView();
@@ -254,8 +256,8 @@ public class MoreReviewActivity extends AppCompatActivity {
         Log.e("insertCommentData", "insertCommentData");
 
         if (database != null) {
-            String sql = "insert into " + tableName + "(movie_id, profile_img, writer, time, content, star_rate, recommend) values(?,?,?,?,?,?,?)";
-            Object[] params = {movieIndex, reviewData.profileImg, reviewData.userId, reviewData.date, reviewData.comment, reviewData.rate, reviewData.like};
+            String sql = "insert into " + tableName + "(id,movie_id, profile_img, writer, time, content, star_rate, recommend) values(?,?,?,?,?,?,?,?)";
+            Object[] params = {reviewData.id,movieIndex, reviewData.profileImg, reviewData.userId, reviewData.date, reviewData.comment, reviewData.rate, reviewData.like};
 
             database.execSQL(sql, params);
 

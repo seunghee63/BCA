@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -18,7 +19,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String MOVIE =
             "CREATE TABLE IF NOT EXISTS movie (_id INTEGER PRIMARY KEY, " +
-                    "movie_index Int, "+
+                    "movie_index Int, " +
                     "image TEXT, " +
                     "title TEXT, " +
                     "date TEXT, " +
@@ -62,14 +63,31 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int i, int i1) {
     }
 
-    public boolean search(SQLiteDatabase db, String title){
+    public boolean search(SQLiteDatabase db, String title) {
 
-        Cursor cursor = db.rawQuery("SELECT title FROM movieRank WHERE title ='"+title+"';",null);
+        Log.e("search", "중복처리 " + title);
+        Cursor cursor = db.rawQuery("SELECT title FROM movieRank WHERE title ='" + title + "';", null);
 
-        if ( cursor == null){
+        if (cursor == null) {
+            return true;
+        } else if (cursor.getCount() > 0) {
             return false;
         }
-        else
+        return true;
+    }
+
+    public boolean searchReview(SQLiteDatabase db, int id) {
+
+        Log.e("searchReview", "중복처리id : " + id);
+        Cursor cursor = db.rawQuery("SELECT id FROM review WHERE id =" + id + ";", null);
+
+        if (cursor == null) {
             return true;
+        } else if (cursor.getCount() > 0) {
+            cursor.moveToNext();
+            //Log.e("searchReview cursor.getInt : ", String.valueOf(cursor.getInt(0)));
+            return false;
+        }
+        return true;
     }
 }
