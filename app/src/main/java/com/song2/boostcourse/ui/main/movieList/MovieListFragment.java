@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -27,12 +28,15 @@ import com.song2.boostcourse.util.db.DatabaseHelper;
 import com.song2.boostcourse.util.network.AppHelper;
 import com.song2.boostcourse.util.network.NetworkStatus;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class MovieListFragment extends Fragment {
 
     FragmentMovieListBinding binding;
     SQLiteDatabase database;
+    DatabaseHelper helper;
+    Boolean network = false;
 
     public MovieListFragment() {
         // Required empty public constructor
@@ -46,15 +50,13 @@ public class MovieListFragment extends Fragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_movie_list, container, false);
         binding.setMovieList(this);
 
-        DatabaseHelper helper = new DatabaseHelper(getContext(), "movieRank",null,1);
+        helper = new DatabaseHelper(getContext(), "movieRank",null,1);
         database = helper.getWritableDatabase();
-        //helper.dropTable(database);
 
-        if(confirmNetwork(getContext())){
-            //통신
+        network = confirmNetwork(getContext());
+        if(network){
             sendRequest("/movie/readMovieList");
         }else {
-            //연결안됨
             selectData();
         }
 
@@ -73,8 +75,18 @@ public class MovieListFragment extends Fragment {
 
         //instance 생성
         for (int i =0; i< count; i++){
+            Log.e("instance생성 : ", "i : "+ i + " count : "+count);
+
             adapter.addItem(MovieItemFragment.newInstance(i+1, dataList.get(i)));
-            insertData("movieRank",dataList.get(i).image, dataList.get(i).title, dataList.get(i).reservation_grade, dataList.get(i).reservation_rate, dataList.get(i).grade);
+
+            //인터넷 연결 o 때만
+            if(network){
+                //존재하지 않는 데이터 일 경우에만
+                Log.e("dataList.get(i).title",dataList.get(i).title+ " <title boolean>"+helper.search(database, dataList.get(i).title));
+                if(!helper.search(database, dataList.get(i).title)){
+                    insertData("movieRank",dataList.get(i).image, dataList.get(i).title, dataList.get(i).reservation_grade, dataList.get(i).reservation_rate, dataList.get(i).grade);
+                }
+            }
         }
 
         pager.setAdapter(adapter);
@@ -142,6 +154,7 @@ public class MovieListFragment extends Fragment {
         }
     }
 
+
     public boolean confirmNetwork(Context context){
         int status = NetworkStatus.getConnectivityStatus(getContext());
 
@@ -171,22 +184,33 @@ public class MovieListFragment extends Fragment {
     public void selectData(){
 
         if (database != null){
+            ArrayList<MovieRank> movieRankList = new ArrayList<MovieRank>();
+
             String sql = "select image, title, reservation_grade, reservation_rate, grade from "+ "movieRank";
 
             //sql에 ?를 넣고 null 대신 ?를 대체 할 파라미터를 넣는 방법도 가능!
             Cursor cursor = database.rawQuery(sql, null);
             Log.e("조회된 데이터 개수 : " , String.valueOf(cursor.getCount()));
 
-            for(int i = 0; i<cursor.getCount();i++){
-                cursor.moveToNext();
-                String title = cursor.getString(1);
-                String reservation_grade = cursor.getString(2);
-                String reservation_rate = cursor.getString(3);
-                String grade = cursor.getString(4);
+            if (cursor.getCount()==0){
+                Toast.makeText(getActivity(), "어플을 처음 실행 한 경우, 인터넷에 연결해야 데이터를 받아 올 수 있습니다.", Toast.LENGTH_SHORT).show();
+            }else{
+                for(int i = 0; i<cursor.getCount();i++){
+                    cursor.moveToNext();
+                    String image = cursor.getString(0);
+                    String title = cursor.getString(1);
+                    String reservation_grade = cursor.getString(2);
+                    String reservation_rate = cursor.getString(3);
+                    String grade = cursor.getString(4);
 
-                Log.e("selectData", title + " "+  reservation_grade + " "+  reservation_rate + " "+ grade);
+                    MovieRank movieRank = new MovieRank(image, title, reservation_grade, reservation_rate, grade);
+                    movieRankList.add(i,movieRank);
+
+                    Log.e("selectData", image+ " "+ title + " "+  reservation_grade + " "+  reservation_rate + " "+ grade);
+                }
+                settingViewPager(cursor.getCount(), movieRankList);
             }
+
         }
     }
-
 }

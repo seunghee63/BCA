@@ -17,6 +17,21 @@ public class MovieRank implements Parcelable {
     public String thumb;
     public String image;
 
+    public MovieRank (String img, String title, String reservation_grade, String reservation_rate, String grade){
+
+        //this.id = in.readInt();
+        this.title_eng = "";
+        this.date = "";
+        this.user_rating = "";
+        this.audience_rating = "";
+        this.reviewer_rating = "";
+        this.image = img;
+        this.title = title;
+        this.reservation_grade = reservation_grade;
+        this.reservation_rate = reservation_rate;
+        this.grade = grade;
+    }
+
     public MovieRank(Parcel in) {
         id = in.readInt();
         title = in.readString();

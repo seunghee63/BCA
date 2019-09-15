@@ -1,6 +1,7 @@
 package com.song2.boostcourse.util.db;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.Nullable;
@@ -57,5 +58,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int i, int i1) {
+    }
+
+    public boolean search(SQLiteDatabase db, String title){
+
+        Cursor cursor = db.rawQuery("SELECT title FROM movieRank WHERE title ='"+title+"';",null);
+
+        if ( cursor == null){
+            return false;
+        }
+        else
+            return true;
     }
 }
