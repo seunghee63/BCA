@@ -4,6 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class ReviewData implements Parcelable {
+    public int movie_id;
+    public int id;
     public String profileImg;
     public String userId;
     public String date;
@@ -11,13 +13,15 @@ public class ReviewData implements Parcelable {
     public float rate;
     public String like;
 
-    public ReviewData (String img, String userId, String date, String comment, float rate, int like){
+    public ReviewData (String img, String userId, String date, String comment, float rate, int like, int movie_id , int id){
         this.profileImg = img;
         this.userId = userId;
         this.date = date;
         this.comment = comment;
         this.rate = rate;
         this.like = "좋아요   " + like;
+        this.movie_id = movie_id;
+        this.id = id;
     }
 
     protected ReviewData(Parcel in) {

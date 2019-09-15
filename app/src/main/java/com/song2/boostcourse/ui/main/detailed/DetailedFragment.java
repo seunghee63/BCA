@@ -86,6 +86,7 @@ public class DetailedFragment extends Fragment {
             sendRequest("/movie/readCommentList", "?id=" + String.valueOf(movieIndex) + "&limit=2"); // 댓글
         } else {
             selectData();
+            selectCommentData();
         }
 
 
@@ -101,7 +102,12 @@ public class DetailedFragment extends Fragment {
 
                 dataList.clear();
 
-                sendRequest("/movie/readCommentList", "?id=" + String.valueOf(movieIndex) + "&limit=2"); // 댓글
+                if (network) {
+                    sendRequest("/movie/readCommentList", "?id=" + String.valueOf(movieIndex) + "&limit=2"); // 댓글
+                } else {
+                    selectCommentData();
+                }
+
                 Log.e("reviewDataList data = ", String.valueOf(dataList));
 
                 setListView();
@@ -113,7 +119,12 @@ public class DetailedFragment extends Fragment {
 
                 dataList.clear();
 
-                sendRequest("/movie/readCommentList", "?id=" + String.valueOf(movieIndex) + "&limit=2"); // 댓글
+                if (network) {
+                    sendRequest("/movie/readCommentList", "?id=" + String.valueOf(movieIndex) + "&limit=2"); // 댓글
+                } else {
+                    selectCommentData();
+                }
+
                 Log.e("reviewDataList data = ", String.valueOf(dataList));
 
                 setListView();
@@ -165,13 +176,19 @@ public class DetailedFragment extends Fragment {
     public void clickWriteBtn(View view) {
         //Toast.makeText(this, "WriteBtn", Toast.LENGTH_SHORT).show();
 
-        Intent intent = new Intent(getContext(), UploadReviewActivity.class);
-        intent.putExtra(MOVIETITLE, binding.tvMainActTitle.getText());
-        intent.putExtra(MOVIERATING, rating);
-        intent.putExtra(MOVIEINDEX, movieIndex);
-        intent.putExtra(WHEREFROM, "main");
+        if (network) {
+            Intent intent = new Intent(getContext(), UploadReviewActivity.class);
+            intent.putExtra(MOVIETITLE, binding.tvMainActTitle.getText());
+            intent.putExtra(MOVIERATING, rating);
+            intent.putExtra(MOVIEINDEX, movieIndex);
+            intent.putExtra(WHEREFROM, "main");
 
-        startActivityForResult(intent, REQUEST_CODE_UPLOAD_REVIEW_ACTIVITY);
+            startActivityForResult(intent, REQUEST_CODE_UPLOAD_REVIEW_ACTIVITY);
+        } else {
+            Toast.makeText(getContext(), "network에 연결된 상태에서만 댓글작성이 가능합니다..", Toast.LENGTH_SHORT).show();
+        }
+
+
     }
 
     public void clickMoreBtn(View view) {
@@ -196,9 +213,9 @@ public class DetailedFragment extends Fragment {
     }
 
     //댓글 Data
-    public ReviewData addReviewData(String img, String userId, String date, String comment, float rate, int like) {
+    public ReviewData addReviewData(String img, String userId, String date, String comment, float rate, int like, int id) {
 
-        ReviewData newData = new ReviewData(img, userId, date, comment, rate, like);
+        ReviewData newData = new ReviewData(img, userId, date, comment, rate, like, movieIndex, id);
 
         return newData;
     }
@@ -258,7 +275,7 @@ public class DetailedFragment extends Fragment {
             Log.e("movieDetailResult : ", String.valueOf(movieDetailResult));
 
             setMovieData(movieDetailResult.result.get(0));
-            insertData("movie",movieIndex, movieDetailResult.result.get(0));
+            insertData("movie", movieDetailResult.result.get(0));
 
         } else {
             Log.e("데이터 길이 : ", "null");
@@ -278,7 +295,8 @@ public class DetailedFragment extends Fragment {
 
             for (int i = 0; i < reviewResult.result.size(); i++) {
                 Log.e("ReviewList : ", i + "번 쨰 댓글");
-                dataList.add(addReviewData("tmpImg", reviewResult.result.get(i).writer, reviewResult.result.get(i).time, reviewResult.result.get(i).contents, reviewResult.result.get(i).rating, reviewResult.result.get(i).recommend));
+                dataList.add(addReviewData("tmpImg", reviewResult.result.get(i).writer, reviewResult.result.get(i).time, reviewResult.result.get(i).contents, reviewResult.result.get(i).rating, reviewResult.result.get(i).recommend, reviewResult.result.get(i).id));
+                insertCommentData("review", addReviewData("tmpImg", reviewResult.result.get(i).writer, reviewResult.result.get(i).time, reviewResult.result.get(i).contents, reviewResult.result.get(i).rating, reviewResult.result.get(i).recommend, reviewResult.result.get(i).id));
             }
 
             setListView();
@@ -370,7 +388,7 @@ public class DetailedFragment extends Fragment {
         return true;
     }
 
-    public void insertData(String tableName, int movieIndex, MovieDetail movieDetail) {
+    public void insertData(String tableName, MovieDetail movieDetail) {
 
         Log.e("insertData", "insertData호출");
 
@@ -382,11 +400,25 @@ public class DetailedFragment extends Fragment {
 
             Log.e("insertData", movieDetail.toString());
             Log.e("insertData11", params.toString());
-            Log.e("insertData22", "데이터 삽입 완료!");
-
         }
     }
 
+    public void insertCommentData(String tableName, ReviewData reviewData) {
+
+        Log.e("insertCommentData", "insertCommentData");
+
+        if (database != null) {
+            String sql = "insert into " + tableName + "(movie_id, profile_img, writer, time, content, star_rate, recommend) values(?,?,?,?,?,?,?)";
+            Object[] params = {movieIndex, reviewData.profileImg, reviewData.userId, reviewData.date, reviewData.comment, reviewData.rate, reviewData.like};
+
+            database.execSQL(sql, params);
+
+            Log.e("insertCommentData", reviewData.toString());
+            Log.e("insertCommentData11", params.toString());
+        }
+    }
+
+    //MovieDetailed 조회
     public void selectData() {
 
         if (database != null) {
@@ -400,6 +432,7 @@ public class DetailedFragment extends Fragment {
             if (cursor.getCount() == 0) {
                 Toast.makeText(getActivity(), "어플을 처음 실행 한 경우, 인터넷에 연결해야 데이터를 받아 올 수 있습니다.", Toast.LENGTH_SHORT).show();
             } else {
+
                 cursor.moveToNext();
                 int movie_index = cursor.getInt(0);
                 String image = cursor.getString(1);
@@ -411,14 +444,14 @@ public class DetailedFragment extends Fragment {
                 float reservation_rate = cursor.getFloat(7);
                 float audience_rating = cursor.getFloat(8);
                 int audience = cursor.getInt(9);
-                String synopsus = cursor.getString(10);
+                String synopsis = cursor.getString(10);
                 String director = cursor.getString(11);
                 String actor = cursor.getString(12);
                 int _like = cursor.getInt(13);
                 int _dislike = cursor.getInt(14);
                 int grade = cursor.getInt(15);
 
-                movieDetail = new MovieDetail(movie_index, image, title, date, genre, duration, reservation_grade, reservation_rate, audience_rating, audience, synopsus, director, actor, _like, _dislike, grade);
+                movieDetail = new MovieDetail(movie_index, image, title, date, genre, duration, reservation_grade, reservation_rate, audience_rating, audience, synopsis, director, actor, _like, _dislike, grade);
                 Log.e("selectData", image + " " + title + " " + reservation_grade + " " + reservation_rate + " " + grade);
 
                 setMovieData(movieDetail);
@@ -427,4 +460,41 @@ public class DetailedFragment extends Fragment {
 
         }
     }
+
+    //댓글 조회
+    public void selectCommentData() {
+
+        if (database != null) {
+
+            String sql = "select id, movie_id, profile_img, writer, time, content, star_rate, recommend from " + "review WHERE movie_id=" + movieIndex;
+
+            Cursor cursor = database.rawQuery(sql, null);
+            Log.e("조회된 데이터 개수 : ", String.valueOf(cursor.getCount()));
+
+            if (cursor.getCount() == 0) {
+                Toast.makeText(getActivity(), "어플을 처음 실행 한 경우, 인터넷에 연결해야 데이터를 받아 올 수 있습니다.", Toast.LENGTH_SHORT).show();
+            } else {
+                dataList.clear();
+
+                for(int i = 0; i<2;i++){
+
+                    cursor.moveToNext();
+                    int id = cursor.getInt(0);
+                    //int movie_index = cursor.getInt(1);
+                    String image = cursor.getString(2);
+                    String writer = cursor.getString(3);
+                    String time = cursor.getString(4);
+                    String content = cursor.getString(5);
+                    float star_rate = cursor.getInt(6);
+                    int recommend = cursor.getInt(7);
+
+                    dataList.add(addReviewData(image, writer, time, content, star_rate, recommend,id));
+                    Log.e("selectData", image + " " + writer + " " + time + " " + content + " " + star_rate);
+                }
+                setListView();
+            }
+
+        }
+    }
+
 }

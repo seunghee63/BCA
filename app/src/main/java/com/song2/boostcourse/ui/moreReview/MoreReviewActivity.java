@@ -2,6 +2,8 @@ package com.song2.boostcourse.ui.moreReview;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.databinding.DataBindingUtil;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -24,7 +27,9 @@ import com.song2.boostcourse.databinding.ActivityMoreReviewBinding;
 import com.song2.boostcourse.ui.main.MainActivity;
 import com.song2.boostcourse.ui.upload.UploadReviewActivity;
 import com.song2.boostcourse.util.adapter.ReviewAdapter;
+import com.song2.boostcourse.util.db.DatabaseHelper;
 import com.song2.boostcourse.util.network.AppHelper;
+import com.song2.boostcourse.util.network.NetworkStatus;
 
 import java.util.ArrayList;
 
@@ -34,6 +39,11 @@ public class MoreReviewActivity extends AppCompatActivity {
 
     ActivityMoreReviewBinding binding;
     ArrayList<ReviewData> reviewDataArrayList = new ArrayList<>();
+
+    SQLiteDatabase database;
+    DatabaseHelper helper;
+    Boolean network = false;
+
 
     int movieIndex = 0;
     int rating;
@@ -55,6 +65,11 @@ public class MoreReviewActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_more_review);
         binding.setMoreReview(this);
 
+        helper = new DatabaseHelper(getApplicationContext(), "movieRank", null, 1);
+        database = helper.getWritableDatabase();
+
+
+
         //main에서 넘어온 데이터 setting
         String title = getIntent().getStringExtra(MOVIETITLE);
 
@@ -64,10 +79,14 @@ public class MoreReviewActivity extends AppCompatActivity {
         setMovieRatingImg(rating);
 
         //통신데이터 보여주어야 함
-        sendRequest("/movie/readCommentList", "?id=" + String.valueOf(movieIndex) + "&limit=all"); // 댓글
 
+        network = confirmNetwork();
+        if (network) {
+            sendRequest("/movie/readCommentList", "?id=" + String.valueOf(movieIndex) + "&limit=all"); // 댓글
+        } else {
+            selectCommentData();
+        }
         binding.tvMoreReviewActMovieTitle.setText(title);
-
     }
 
 
@@ -90,12 +109,17 @@ public class MoreReviewActivity extends AppCompatActivity {
     public void clickWriteBtn(View view) {
         //Toast.makeText(this, "WriteBtn", Toast.LENGTH_SHORT).show();
 
-        Intent intent = new Intent(getApplicationContext(), UploadReviewActivity.class);
-        intent.putExtra(MOVIETITLE, binding.tvMoreReviewActMovieTitle.getText());
-        intent.putExtra(MOVIERATING, rating);
-        intent.putExtra(MOVIEINDEX, movieIndex);
-        intent.putExtra(WHEREFROM, "more");
-        startActivityForResult(intent, REQUEST_CODE_UPLOAD_REVIEW_ACTIVITY);
+        if (network) {
+            Intent intent = new Intent(getApplicationContext(), UploadReviewActivity.class);
+            intent.putExtra(MOVIETITLE, binding.tvMoreReviewActMovieTitle.getText());
+            intent.putExtra(MOVIERATING, rating);
+            intent.putExtra(MOVIEINDEX, movieIndex);
+            intent.putExtra(WHEREFROM, "more");
+            startActivityForResult(intent, REQUEST_CODE_UPLOAD_REVIEW_ACTIVITY);
+        } else {
+            Toast.makeText(getApplicationContext(), "network에 연결된 상태에서만 댓글작성이 가능합니다..", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     public void clickBackBtn(View view) {
@@ -117,10 +141,10 @@ public class MoreReviewActivity extends AppCompatActivity {
     }
 
     //댓글 Data
-    public void addReviewData(String img, String userId, String date, String comment, float rate, int like) {
+    public ReviewData addReviewData(String img, String userId, String date, String comment, float rate, int like, int id) {
 
-        ReviewData newData = new ReviewData(img, userId, date, comment, rate, like);
-        reviewDataArrayList.add(newData);
+        ReviewData newData = new ReviewData(img, userId, date, comment, rate, like, movieIndex, id);
+        return newData;
     }
 
     //통신
@@ -183,11 +207,12 @@ public class MoreReviewActivity extends AppCompatActivity {
                 reviewCnt = String.valueOf((reviewResult.totalCount % 1000000) / 1000) + "," + String.format("%03d", (reviewResult.totalCount % 1000000) % 1000);
 
             binding.tvMoreReviewActGrade.setText(audienceRating + " (" + reviewCnt + "명 참여)");
-            binding.rbMoreReviewActRatingBar.setRating(audienceRating/2);
+            binding.rbMoreReviewActRatingBar.setRating(audienceRating / 2);
 
             for (int i = 0; i < reviewResult.result.size(); i++) {
                 Log.e("ReviewList : ", i + "번 쨰 댓글");
-                addReviewData("tmpImg", reviewResult.result.get(i).writer, reviewResult.result.get(i).time, reviewResult.result.get(i).contents, reviewResult.result.get(i).rating, reviewResult.result.get(i).recommend);
+                reviewDataArrayList.add(addReviewData("tmpImg", reviewResult.result.get(i).writer, reviewResult.result.get(i).time, reviewResult.result.get(i).contents, reviewResult.result.get(i).rating, reviewResult.result.get(i).recommend, reviewResult.result.get(i).id));
+                insertCommentData("review", addReviewData("tmpImg", reviewResult.result.get(i).writer, reviewResult.result.get(i).time, reviewResult.result.get(i).contents, reviewResult.result.get(i).rating, reviewResult.result.get(i).recommend, reviewResult.result.get(i).id));
             }
 
             setListView();
@@ -222,5 +247,65 @@ public class MoreReviewActivity extends AppCompatActivity {
                 binding.ivMoreReviewActMovieRatingAll.setVisibility(View.VISIBLE);
                 break;
         }
+    }
+
+    public void insertCommentData(String tableName, ReviewData reviewData) {
+
+        Log.e("insertCommentData", "insertCommentData");
+
+        if (database != null) {
+            String sql = "insert into " + tableName + "(movie_id, profile_img, writer, time, content, star_rate, recommend) values(?,?,?,?,?,?,?)";
+            Object[] params = {movieIndex, reviewData.profileImg, reviewData.userId, reviewData.date, reviewData.comment, reviewData.rate, reviewData.like};
+
+            database.execSQL(sql, params);
+
+            Log.e("insertCommentData", reviewData.toString());
+            Log.e("insertCommentData11", params.toString());
+        }
+    }
+
+    //댓글 조회
+    public void selectCommentData() {
+
+        if (database != null) {
+
+            String sql = "select id,movie_id, profile_img, writer, time, content, star_rate, recommend from " + "review WHERE movie_id=" + movieIndex;
+
+            Cursor cursor = database.rawQuery(sql, null);
+            Log.e("조회된 데이터 개수 : ", String.valueOf(cursor.getCount()));
+
+            if (cursor.getCount() == 0) {
+                Toast.makeText(getApplicationContext(), "어플을 처음 실행 한 경우, 인터넷에 연결해야 데이터를 받아 올 수 있습니다.", Toast.LENGTH_SHORT).show();
+            } else {
+                reviewDataArrayList.clear();
+                for (int i = 0; i < cursor.getCount(); i++) {
+                    cursor.moveToNext();
+
+                    int id = cursor.getInt(0);
+                    //int movie_index = cursor.getInt(1);
+                    String image = cursor.getString(2);
+                    String writer = cursor.getString(3);
+                    String time = cursor.getString(4);
+                    String content = cursor.getString(5);
+                    float star_rate = cursor.getInt(6);
+                    int recommend = cursor.getInt(7);
+
+                    reviewDataArrayList.add(addReviewData(image, writer, time, content, star_rate, recommend,id));
+                    Log.e("selectData", image + " " + writer + " " + time + " " + content + " " + star_rate);
+                }
+                setListView();
+            }
+
+        }
+    }
+
+    public boolean confirmNetwork() {
+        int status = NetworkStatus.getConnectivityStatus(getApplicationContext());
+
+        if (status == NetworkStatus.TYPE_NOT_CONNECTED) {
+            Log.e("연결상태", "연결 안 됨");
+            return false;
+        }
+        return true;
     }
 }
