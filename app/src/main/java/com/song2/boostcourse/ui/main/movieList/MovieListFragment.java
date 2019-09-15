@@ -1,5 +1,8 @@
 package com.song2.boostcourse.ui.main.movieList;
 
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -20,13 +23,16 @@ import com.song2.boostcourse.data.MovieRank;
 import com.song2.boostcourse.data.MovieRankList;
 import com.song2.boostcourse.databinding.FragmentMovieListBinding;
 import com.song2.boostcourse.util.adapter.MoviePagerAdapter;
+import com.song2.boostcourse.util.db.DatabaseHelper;
 import com.song2.boostcourse.util.network.AppHelper;
+import com.song2.boostcourse.util.network.NetworkStatus;
 
 import java.util.ArrayList;
 
 public class MovieListFragment extends Fragment {
 
     FragmentMovieListBinding binding;
+    SQLiteDatabase database;
 
     public MovieListFragment() {
         // Required empty public constructor
@@ -40,7 +46,17 @@ public class MovieListFragment extends Fragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_movie_list, container, false);
         binding.setMovieList(this);
 
-        sendRequest("/movie/readMovieList");
+        DatabaseHelper helper = new DatabaseHelper(getContext(), "movieRank",null,1);
+        database = helper.getWritableDatabase();
+        //helper.dropTable(database);
+
+        if(confirmNetwork(getContext())){
+            //통신
+            sendRequest("/movie/readMovieList");
+        }else {
+            //연결안됨
+            selectData();
+        }
 
         return binding.getRoot();
     }
@@ -58,6 +74,7 @@ public class MovieListFragment extends Fragment {
         //instance 생성
         for (int i =0; i< count; i++){
             adapter.addItem(MovieItemFragment.newInstance(i+1, dataList.get(i)));
+            insertData("movieRank",dataList.get(i).image, dataList.get(i).title, dataList.get(i).reservation_grade, dataList.get(i).reservation_rate, dataList.get(i).grade);
         }
 
         pager.setAdapter(adapter);
@@ -120,9 +137,56 @@ public class MovieListFragment extends Fragment {
             Log.e("데이터 길이 : ", String.valueOf(count));
 
             settingViewPager(count, movieRankList.result);
-
         }else{
             Log.e("데이터 길이 : ", "null");
         }
     }
+
+    public boolean confirmNetwork(Context context){
+        int status = NetworkStatus.getConnectivityStatus(getContext());
+
+        if(status == NetworkStatus.TYPE_NOT_CONNECTED){
+            Log.e("연결상태", "연결 안 됨");
+            return false;
+        }
+
+        return true;
+    }
+
+    public void insertData(String tableName, String image, String title, String reservation_grade, String reservation_rate, String grade){
+
+        Log.e("insertData", "insertData호출");
+
+        if (database != null){
+            String sql = "insert into "+ tableName+"(image, title, reservation_grade, reservation_rate, grade) values(?,?,?,?,?)";
+            Object[] params = {image, title, reservation_grade, reservation_rate, grade};
+
+            database.execSQL(sql,params);
+
+            Log.e("insertData", "데이터 삽입 완료!");
+
+        }
+    }
+
+    public void selectData(){
+
+        if (database != null){
+            String sql = "select image, title, reservation_grade, reservation_rate, grade from "+ "movieRank";
+
+            //sql에 ?를 넣고 null 대신 ?를 대체 할 파라미터를 넣는 방법도 가능!
+            Cursor cursor = database.rawQuery(sql, null);
+            Log.e("조회된 데이터 개수 : " , String.valueOf(cursor.getCount()));
+
+            for(int i = 0; i<cursor.getCount();i++){
+                cursor.moveToNext();
+                String title = cursor.getString(1);
+                String reservation_grade = cursor.getString(2);
+                String reservation_rate = cursor.getString(3);
+                String grade = cursor.getString(4);
+
+                Log.e("selectData", title + " "+  reservation_grade + " "+  reservation_rate + " "+ grade);
+            }
+        }
+    }
+
 }

@@ -1,5 +1,8 @@
 package com.song2.boostcourse.ui.main;
 
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -16,11 +19,13 @@ import android.support.v7.widget.Toolbar;
 import com.song2.boostcourse.R;
 import com.song2.boostcourse.ui.main.detailed.DetailedFragment;
 import com.song2.boostcourse.ui.main.movieList.MovieListFragment;
+import com.song2.boostcourse.util.network.NetworkStatus;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, MovieItemListener {
 
-    DetailedFragment detailedFragment = new DetailedFragment();
 
+    DetailedFragment detailedFragment = new DetailedFragment();
+    SQLiteDatabase database;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,9 +51,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        //Log.e("TEST=",getSupportFragmentManager().findFragmentById(R.id.fragment_movie_main_frag_container).toString());
-        Log.e("TEST2=",String.valueOf(getFragmentManager().getBackStackEntryCount()));
-        //Log.e("냠냠냠? :",);
+        Log.e("TEST=",String.valueOf(getFragmentManager().getBackStackEntryCount()));
+
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             Log.e("MainAct 11", "backpress 들어왔는지 확인용");
             drawer.closeDrawer(GravityCompat.START);
@@ -58,9 +62,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }else{
             super.onBackPressed();
         }
-
-        Log.e("MainAct 55", "backpress 들어왔는지 확인용");
-
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -102,4 +103,5 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .commit();
         setTitle("영화 목록");
     }
+
 }
