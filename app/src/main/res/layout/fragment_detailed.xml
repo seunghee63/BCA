@@ -305,6 +305,7 @@
                         </RelativeLayout>
                     </LinearLayout>
 
+                    <!--줄거리-->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -330,8 +331,8 @@
                             android:textColor="#373737"
                             android:textSize="14sp" />
                     </LinearLayout>
-                    //줄거리
 
+                    <!--감독,출연-->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -392,7 +393,32 @@
                                 android:textSize="14sp" />
                         </LinearLayout>
                     </LinearLayout>
-                    //감독출연
+
+                    <!--갤러리-->
+                    <LinearLayout
+                        android:id="@+id/ll_detailed_frag_gallery_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:background="@color/colorWhite"
+                        android:orientation="vertical"
+                        android:padding="10dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="4dp"
+                            android:text="@string/gellary"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+                        
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/rv_detailed_frag_gellary_list"
+                            android:layout_width="match_parent"
+                            android:layout_height="100dp"/>
+
+                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"

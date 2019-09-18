@@ -1,5 +1,7 @@
 package com.song2.boostcourse.data;
 
+import java.util.ArrayList;
+
 public class MovieDetail {
     public String title;
     public int id;
@@ -11,6 +13,7 @@ public class MovieDetail {
     public int reservation_grade;
     public int grade;
     public String thumb;
+
     public String image;
     public String photos;
     public String videos;
@@ -24,7 +27,7 @@ public class MovieDetail {
     public int like;
     public int dislike;
 
-    public MovieDetail (int movie_index, String image, String title, String date, String genre, int duration, int reservation_grade, float reservation_rate, float audience_rating, int audience, String synopsus, String director, String actor, int _like, int _dislike, int grade){
+    public MovieDetail (int movie_index, String image, String title, String date, String genre, int duration, int reservation_grade, float reservation_rate, float audience_rating, int audience, String synopsus, String director, String actor, int _like, int _dislike, int grade, String photos ,String videos){
 
         this.title = title;
         this.id = movie_index;
@@ -43,12 +46,12 @@ public class MovieDetail {
         this.like = _like;
         this.dislike = _dislike;
 
+        this.videos = videos;
+        this.photos = photos;
 
         this.user_rating =0;
         this.reviewer_rating = 0;
         this.thumb = "";
-        this.photos = "";
-        this.videos = "";
         this.outlinks = "";
     }
 }

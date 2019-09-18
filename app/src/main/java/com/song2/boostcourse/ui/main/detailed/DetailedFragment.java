@@ -7,6 +7,8 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +24,7 @@ import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.song2.boostcourse.R;
+import com.song2.boostcourse.data.GalleryData;
 import com.song2.boostcourse.data.MovieDetail;
 import com.song2.boostcourse.data.MovieDetailResult;
 import com.song2.boostcourse.data.ReviewData;
@@ -29,6 +32,7 @@ import com.song2.boostcourse.data.ReviewResult;
 import com.song2.boostcourse.databinding.FragmentDetailedBinding;
 import com.song2.boostcourse.ui.moreReview.MoreReviewActivity;
 import com.song2.boostcourse.ui.upload.UploadReviewActivity;
+import com.song2.boostcourse.util.adapter.GalleryRecyclerViewAdapter;
 import com.song2.boostcourse.util.adapter.ReviewAdapter;
 import com.song2.boostcourse.util.db.DatabaseHelper;
 import com.song2.boostcourse.util.db.MovieInfoTable;
@@ -58,12 +62,17 @@ public class DetailedFragment extends Fragment {
     static final String MOVIEINDEX = "movieIndex";
     static final String WHEREFROM = "whereFrom";
 
-    //
+    GalleryRecyclerViewAdapter gellaryRecyclerViewAdapter;
+
+    private ArrayList<GalleryData> galleryDataList = new ArrayList<>();
+    private GalleryData itemData;
+
+
     MovieInfoTable movieInfoTable;
     ReviewTable reviewTable;
 
     FragmentDetailedBinding binding;
-    ArrayList<ReviewData> dataList ;
+    ArrayList<ReviewData> dataList;
 
     public DetailedFragment() {
         // Required empty public constructor
@@ -81,6 +90,7 @@ public class DetailedFragment extends Fragment {
         movieInfoTable = new MovieInfoTable(getContext());
         reviewTable = new ReviewTable(getContext());
 
+
         getActivity().setTitle("영화 상세");
 
         dataList = new ArrayList<>();
@@ -95,10 +105,9 @@ public class DetailedFragment extends Fragment {
             sendRequest("/movie/readMovie", "?id=" + movieIndex); // 영화
             sendRequest("/movie/readCommentList", "?id=" + movieIndex + "&limit=2"); // 댓글
         } else {
-            //selectData();
-            if (movieInfoTable.selectData(getContext(), movieIndex) != null) {
+
+            if (movieInfoTable.selectData(getContext(), movieIndex) != null)
                 setMovieData(movieInfoTable.selectData(getContext(), movieIndex));
-            }
 
             dataList = reviewTable.selectCommentData(getContext(), movieIndex, dataList);
             if (dataList != null)
@@ -148,6 +157,52 @@ public class DetailedFragment extends Fragment {
                     setListView();
             }
         }
+    }
+
+    public void setRecyclerView(MovieDetail movieDetail) {
+
+        int photoLength =0;
+
+        if(movieDetail.photos != null){
+            String photoStr = movieDetail.photos;
+            String[] photoArray = photoStr.split(",");
+            photoLength=photoArray.length;
+
+            for(int i=0;i<photoLength;i++) {
+                itemData = new GalleryData(false, photoArray[i]);
+                galleryDataList.add(itemData);
+                Log.e("i", i+photoArray[i]);
+            }
+        }
+
+        if(movieDetail.videos != null){
+            String videoStr = movieDetail.videos;
+            String[] videoArray = videoStr.split(",");
+
+            int x =0;
+            for(int i=photoLength;i<photoLength + videoArray.length;i++) {
+                itemData = new GalleryData(true, videoArray[x]);
+                galleryDataList.add(itemData);
+                Log.e("i:",i + videoArray[x]);
+                x++;
+            }
+        }
+
+        if(movieDetail.videos != null || movieDetail.photos != null){
+
+            binding.llDetailedFragGalleryContainer.setVisibility(View.VISIBLE);
+
+            RecyclerView mRecyclerView = binding.rvDetailedFragGellaryList;
+            LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false);
+            mRecyclerView.setLayoutManager(mLinearLayoutManager);
+
+            gellaryRecyclerViewAdapter = new GalleryRecyclerViewAdapter(galleryDataList, getContext());
+            mRecyclerView.setAdapter(gellaryRecyclerViewAdapter);
+
+        }else
+            binding.llDetailedFragGalleryContainer.setVisibility(View.GONE);
+
+
     }
 
     public void clickThumpUpBtn(View view) {
@@ -285,7 +340,8 @@ public class DetailedFragment extends Fragment {
         Gson gson = new Gson();
         MovieDetailResult movieDetailResult = gson.fromJson(response, MovieDetailResult.class);
 
-        Log.e("movieDetailResult : ", String.valueOf(movieDetailResult));
+        //Log.e("movieDetailResult1 : ", movieDetailResult.result.get(0).photos);
+        //Log.e("movieDetailResult2 : ", movieDetailResult.result.get(0).videos);
 
         if (movieDetailResult != null) {
 
@@ -306,7 +362,7 @@ public class DetailedFragment extends Fragment {
 
         ReviewResult reviewResult = gson.fromJson(response, ReviewResult.class);
 
-        Log.e("moviereviewResult : ", response);
+        Log.e("moviereviewResult : ", reviewResult.result.toString());
 
         if (reviewResult != null) {
             Log.e("movieDetailResult : ", String.valueOf(reviewResult));
@@ -368,6 +424,7 @@ public class DetailedFragment extends Fragment {
         rating = movieDetail.grade;
         setMovieRatingImg(rating);
 
+        setRecyclerView(movieDetail);
     }
 
     //관람등급 이미지 setting

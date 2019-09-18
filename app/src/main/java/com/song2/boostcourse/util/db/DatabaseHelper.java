@@ -34,7 +34,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     "actor TEXT, " +
                     "_like INTEGER, " +
                     "_dislike INTEGER, " +
-                    "grade INT)";
+                    "grade INT," +
+                    "photos TEXT," +
+                    "videos TEXT)";
 
     private static final String REVIEW =
             "CREATE TABLE IF NOT EXISTS review (_id INTEGER PRIMARY KEY, " +
