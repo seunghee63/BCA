@@ -84,7 +84,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (cursor == null) {
             return true;
         } else if (cursor.getCount() > 0) {
-            cursor.moveToNext();
+            //cursor.moveToNext();
             //Log.e("searchReview cursor.getInt : ", String.valueOf(cursor.getInt(0)));
             return false;
         }

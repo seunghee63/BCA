@@ -17,22 +17,11 @@
     <string name="audience_cnt">000,000명</string>
 
     <string name="summary_text">줄거리</string>
-    <string name="summary">줄거리 입니다.
-    \n줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다.
-
-    \n\n줄거리입니다.
-    \n줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다.
-
-    \n\n줄거리입니다.
-    \n줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다.줄거리입니다....</string>
 
     <string name="director_n_actor_text">감독/출연</string>
 
     <string name="director_text">감독</string>
-    <string name="director">윤종빈</string>
-
     <string name="actor_text">출연</string>
-    <string name="actor">배우1이름(배역1이름),배우2이름(배역2이름)</string>
 
     <string name="review_text">한줄평</string>
     <string name="review_write_text">작성하기</string>

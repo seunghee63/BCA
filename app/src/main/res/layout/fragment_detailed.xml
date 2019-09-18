@@ -47,8 +47,7 @@
                             android:layout_height="200dp"
                             android:scaleType="fitXY"
                             android:layout_centerVertical="true"
-                            android:layout_marginHorizontal="16dp"
-                            android:src="@drawable/image11" />
+                            android:layout_marginHorizontal="16dp"/>
 
                         <RelativeLayout
                             android:layout_width="wrap_content"
@@ -68,7 +67,6 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_centerVertical="true"
-                                    android:text="@string/movie_name"
                                     android:textColor="@color/colorWhite"
                                     android:textSize="18sp"
                                     android:textStyle="bold" />
@@ -253,7 +251,6 @@
                                         android:layout_centerHorizontal="true"
                                         android:isIndicator="true"
                                         android:numStars="5"
-                                        android:rating="4.5"
                                         android:stepSize="0.5" />
 
                                     <TextView
@@ -330,7 +327,6 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             android:lineSpacingExtra="5dp"
-                            android:text="@string/summary"
                             android:textColor="#373737"
                             android:textSize="14sp" />
                     </LinearLayout>
@@ -371,7 +367,6 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="8dp"
-                                android:text="@string/director"
                                 android:textColor="#373737"
                                 android:textSize="14sp" />
                         </LinearLayout>
@@ -393,7 +388,6 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="8dp"
-                                android:text="@string/actor"
                                 android:textColor="#373737"
                                 android:textSize="14sp" />
                         </LinearLayout>

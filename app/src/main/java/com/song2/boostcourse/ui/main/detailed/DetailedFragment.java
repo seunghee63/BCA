@@ -187,8 +187,6 @@ public class DetailedFragment extends Fragment {
         } else {
             Toast.makeText(getContext(), "network에 연결된 상태에서만 댓글작성이 가능합니다..", Toast.LENGTH_SHORT).show();
         }
-
-
     }
 
     public void clickMoreBtn(View view) {
