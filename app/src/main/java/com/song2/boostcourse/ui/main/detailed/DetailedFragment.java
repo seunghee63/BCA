@@ -62,7 +62,6 @@ public class DetailedFragment extends Fragment {
     MovieInfoTable movieInfoTable;
     ReviewTable reviewTable;
 
-
     FragmentDetailedBinding binding;
     ArrayList<ReviewData> dataList ;
 

@@ -24,6 +24,7 @@ import com.song2.boostcourse.data.MovieRankList;
 import com.song2.boostcourse.databinding.FragmentMovieListBinding;
 import com.song2.boostcourse.util.adapter.MoviePagerAdapter;
 import com.song2.boostcourse.util.db.DatabaseHelper;
+import com.song2.boostcourse.util.db.MovieRankTable;
 import com.song2.boostcourse.util.network.AppHelper;
 import com.song2.boostcourse.util.network.NetworkStatus;
 
@@ -35,6 +36,8 @@ public class MovieListFragment extends Fragment {
     SQLiteDatabase database;
     DatabaseHelper helper;
     Boolean network = false;
+
+    MovieRankTable movieRankTable;
 
     public MovieListFragment() {
         // Required empty public constructor
@@ -51,11 +54,18 @@ public class MovieListFragment extends Fragment {
         helper = new DatabaseHelper(getContext());
         database = helper.getWritableDatabase();
 
+        movieRankTable = new MovieRankTable(getContext());
+
         network = confirmNetwork();
         if(network){
             sendRequest("/movie/readMovieList");
         }else {
-            selectData();
+            ArrayList<MovieRank> movieRankList = new ArrayList<MovieRank>();
+            movieRankList = movieRankTable.selectData(getContext());
+
+            if(movieRankList != null){
+                settingViewPager(movieRankList.size(),movieRankList);
+            }
         }
 
         return binding.getRoot();
@@ -82,7 +92,7 @@ public class MovieListFragment extends Fragment {
                 //존재하지 않는 데이터 일 경우에만
                 Log.e("dataList.get(i).title",dataList.get(i).title+ " <title boolean>"+helper.search(database, dataList.get(i).title));
                 if(helper.search(database, dataList.get(i).title)){
-                    insertData("movieRank",dataList.get(i).image, dataList.get(i).title, dataList.get(i).reservation_grade, dataList.get(i).reservation_rate, dataList.get(i).grade);
+                    movieRankTable.insertData(dataList.get(i).image, dataList.get(i).title, dataList.get(i).reservation_grade, dataList.get(i).reservation_rate, dataList.get(i).grade);
                 }
             }
         }
@@ -162,7 +172,7 @@ public class MovieListFragment extends Fragment {
 
         return true;
     }
-
+/*
     public void insertData(String tableName, String image, String title, String reservation_grade, String reservation_rate, String grade){
 
         Log.e("insertData", "insertData호출");
@@ -209,5 +219,5 @@ public class MovieListFragment extends Fragment {
             }
 
         }
-    }
+    }*/
 }
