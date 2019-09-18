@@ -48,7 +48,7 @@ public class MovieListFragment extends Fragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_movie_list, container, false);
         binding.setMovieList(this);
 
-        helper = new DatabaseHelper(getContext(), "movieRank",null,1);
+        helper = new DatabaseHelper(getContext());
         database = helper.getWritableDatabase();
 
         network = confirmNetwork();

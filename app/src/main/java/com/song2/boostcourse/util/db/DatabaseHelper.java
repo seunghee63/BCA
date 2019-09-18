@@ -48,8 +48,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     "recommend INTEGER)";
 
     //파라미터를 받는 생성자
-    public DatabaseHelper(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
-        super(context, name, factory, version);
+    public DatabaseHelper(@Nullable Context context) {
+        super(context, "movieRank", null, 1);
     }
 
     @Override

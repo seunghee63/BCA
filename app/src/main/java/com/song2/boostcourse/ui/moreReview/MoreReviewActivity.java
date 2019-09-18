@@ -65,7 +65,7 @@ public class MoreReviewActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_more_review);
         binding.setMoreReview(this);
 
-        helper = new DatabaseHelper(getApplicationContext(), "movieRank", null, 1);
+        helper = new DatabaseHelper(getApplicationContext());
         database = helper.getWritableDatabase();
 
 

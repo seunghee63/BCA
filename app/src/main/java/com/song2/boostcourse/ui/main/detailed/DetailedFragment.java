@@ -32,6 +32,7 @@ import com.song2.boostcourse.ui.moreReview.MoreReviewActivity;
 import com.song2.boostcourse.ui.upload.UploadReviewActivity;
 import com.song2.boostcourse.util.adapter.ReviewAdapter;
 import com.song2.boostcourse.util.db.DatabaseHelper;
+import com.song2.boostcourse.util.db.MovieInfoDB;
 import com.song2.boostcourse.util.network.AppHelper;
 import com.song2.boostcourse.util.network.NetworkStatus;
 
@@ -57,6 +58,14 @@ public class DetailedFragment extends Fragment {
     static final String MOVIEINDEX = "movieIndex";
     static final String WHEREFROM = "whereFrom";
 
+    //dbColumn
+    static final String COMMENTCOLUMN = "id, movie_id, profile_img, writer, time, content, star_rate, recommend";
+    static final String MOVIEINFOCOLUMN = "movie_index, image, title, date, genre, duration, reservation_grade, reservation_rate, audience_rating, audience, synopsis, director,actor, _like, _dislike, grade";
+
+    //
+    MovieInfoDB movieInfoDB = new MovieInfoDB();
+
+
     FragmentDetailedBinding binding;
     ArrayList<ReviewData> dataList = new ArrayList<>();
 
@@ -70,7 +79,7 @@ public class DetailedFragment extends Fragment {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_detailed, container, false);
         binding.setDetailedFrag(this);
 
-        helper = new DatabaseHelper(getContext(), "movieRank", null, 1);
+        helper = new DatabaseHelper(getContext());
         database = helper.getWritableDatabase();
 
         getActivity().setTitle("영화 상세");
@@ -82,10 +91,14 @@ public class DetailedFragment extends Fragment {
 
         network = confirmNetwork();
         if (network) {
-            sendRequest("/movie/readMovie", "?id=" + String.valueOf(movieIndex)); // 영화
-            sendRequest("/movie/readCommentList", "?id=" + String.valueOf(movieIndex) + "&limit=2"); // 댓글
+            sendRequest("/movie/readMovie", "?id=" + movieIndex); // 영화
+            sendRequest("/movie/readCommentList", "?id=" + movieIndex + "&limit=2"); // 댓글
         } else {
-            selectData();
+            //selectData();
+            if(movieInfoDB.selectData(getContext(),movieIndex)!= null){
+                setMovieData(movieInfoDB.selectData(getContext(),movieIndex));
+            }
+
             selectCommentData();
         }
 
@@ -103,7 +116,7 @@ public class DetailedFragment extends Fragment {
                 dataList.clear();
 
                 if (network) {
-                    sendRequest("/movie/readCommentList", "?id=" + String.valueOf(movieIndex) + "&limit=2"); // 댓글
+                    sendRequest("/movie/readCommentList", "?id=" + movieIndex + "&limit=2"); // 댓글
                 } else {
                     selectCommentData();
                 }
@@ -120,7 +133,7 @@ public class DetailedFragment extends Fragment {
                 dataList.clear();
 
                 if (network) {
-                    sendRequest("/movie/readCommentList", "?id=" + String.valueOf(movieIndex) + "&limit=2"); // 댓글
+                    sendRequest("/movie/readCommentList", "?id=" + movieIndex + "&limit=2"); // 댓글
                 } else {
                     selectCommentData();
                 }
@@ -273,7 +286,8 @@ public class DetailedFragment extends Fragment {
             Log.e("movieDetailResult : ", String.valueOf(movieDetailResult));
 
             setMovieData(movieDetailResult.result.get(0));
-            insertData("movie", movieDetailResult.result.get(0));
+            //insertData("movie", movieDetailResult.result.get(0));
+            movieInfoDB.insertData(getContext(),movieIndex,movieDetailResult.result.get(0));
 
         } else {
             Log.e("데이터 길이 : ", "null");
@@ -332,11 +346,11 @@ public class DetailedFragment extends Fragment {
 
         String audience_cnt;
         if (audience > 1000000) {
-            audience_cnt = String.valueOf(audience / 1000000) + "," + String.format("%03d", (audience % 1000000) / 1000) + "," + String.format("%03d", (audience % 1000000) % 1000);
+            audience_cnt = (audience / 1000000) + "," + String.format("%03d", (audience % 1000000) / 1000) + "," + String.format("%03d", (audience % 1000000) % 1000);
         } else if (audience < 1000) {
             audience_cnt = String.valueOf(audience);
         } else
-            audience_cnt = String.valueOf((audience % 1000000) / 1000) + "," + String.format("%03d", (audience % 1000000) % 1000);
+            audience_cnt = ((audience % 1000000) / 1000) + "," + String.format("%03d", (audience % 1000000) % 1000);
 
         binding.tvMainActAudienceCnt.setText(audience_cnt + " 명");
 
@@ -389,27 +403,12 @@ public class DetailedFragment extends Fragment {
         return true;
     }
 
-    public void insertData(String tableName, MovieDetail movieDetail) {
-
-        Log.e("insertData", "insertData호출");
-
-        if (database != null) {
-            String sql = "insert into " + tableName + "(movie_index, image, title, date, genre, duration, reservation_grade, reservation_rate, audience_rating, audience, synopsis, director, actor, _like, _dislike, grade) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-            Object[] params = {movieIndex, movieDetail.image, movieDetail.title, movieDetail.date, movieDetail.genre, movieDetail.duration, movieDetail.reservation_grade, movieDetail.reservation_rate, movieDetail.audience_rating, movieDetail.audience, movieDetail.synopsis, movieDetail.director, movieDetail.actor, movieDetail.like, movieDetail.dislike, movieDetail.grade};
-
-            database.execSQL(sql, params);
-
-            Log.e("insertData", movieDetail.toString());
-            Log.e("insertData11", params.toString());
-        }
-    }
-
     public void insertCommentData(String tableName, ReviewData reviewData) {
 
         Log.e("insertCommentData", "insertCommentData");
 
         if (database != null) {
-            String sql = "insert into " + tableName + "(id, movie_id, profile_img, writer, time, content, star_rate, recommend) values(?,?,?,?,?,?,?,?)";
+            String sql = "insert into " + tableName + "("+COMMENTCOLUMN+") values(?,?,?,?,?,?,?,?)";
             Object[] params = {reviewData.id, movieIndex, reviewData.profileImg, reviewData.userId, reviewData.date, reviewData.comment, reviewData.rate, reviewData.like};
 
             database.execSQL(sql, params);
@@ -419,55 +418,11 @@ public class DetailedFragment extends Fragment {
         }
     }
 
-    //MovieDetailed 조회
-    public void selectData() {
-
-        if (database != null) {
-            MovieDetail movieDetail;
-
-            String sql = "select movie_index, image, title, date, genre, duration, reservation_grade, reservation_rate, audience_rating, audience, synopsis, director,actor, _like, _dislike, grade from " + "movie WHERE movie_index=" + movieIndex;
-
-            Cursor cursor = database.rawQuery(sql, null);
-            Log.e("조회된 데이터 개수 : ", String.valueOf(cursor.getCount()));
-
-            if (cursor.getCount() == 0) {
-                Toast.makeText(getActivity(), "어플을 처음 실행 한 경우, 인터넷에 연결해야 데이터를 받아 올 수 있습니다.", Toast.LENGTH_SHORT).show();
-            } else {
-
-                cursor.moveToNext();
-                int movie_index = cursor.getInt(0);
-                String image = cursor.getString(1);
-                String title = cursor.getString(2);
-                String date = cursor.getString(3);
-                String genre = cursor.getString(4);
-                int duration = cursor.getInt(5);
-                int reservation_grade = cursor.getInt(6);
-                float reservation_rate = cursor.getFloat(7);
-                float audience_rating = cursor.getFloat(8);
-                int audience = cursor.getInt(9);
-                String synopsis = cursor.getString(10);
-                String director = cursor.getString(11);
-                String actor = cursor.getString(12);
-                int _like = cursor.getInt(13);
-                int _dislike = cursor.getInt(14);
-                int grade = cursor.getInt(15);
-
-                movieDetail = new MovieDetail(movie_index, image, title, date, genre, duration, reservation_grade, reservation_rate, audience_rating, audience, synopsis, director, actor, _like, _dislike, grade);
-                Log.e("selectData", image + " " + title + " " + reservation_grade + " " + reservation_rate + " " + grade);
-
-                setMovieData(movieDetail);
-
-            }
-
-        }
-    }
-
-    //댓글 조회
     public void selectCommentData() {
 
         if (database != null) {
 
-            String sql = "select id, movie_id, profile_img, writer, time, content, star_rate, recommend from " + "review WHERE movie_id=" + movieIndex;
+            String sql = "select "+COMMENTCOLUMN+" from " + "review WHERE movie_id=" + movieIndex;
 
             Cursor cursor = database.rawQuery(sql, null);
             Log.e("조회된 데이터 개수 : ", String.valueOf(cursor.getCount()));
