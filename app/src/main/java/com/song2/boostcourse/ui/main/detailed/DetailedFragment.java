@@ -2,7 +2,6 @@ package com.song2.boostcourse.ui.main.detailed;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -32,7 +31,8 @@ import com.song2.boostcourse.ui.moreReview.MoreReviewActivity;
 import com.song2.boostcourse.ui.upload.UploadReviewActivity;
 import com.song2.boostcourse.util.adapter.ReviewAdapter;
 import com.song2.boostcourse.util.db.DatabaseHelper;
-import com.song2.boostcourse.util.db.MovieInfoDB;
+import com.song2.boostcourse.util.db.MovieInfoTable;
+import com.song2.boostcourse.util.db.ReviewTable;
 import com.song2.boostcourse.util.network.AppHelper;
 import com.song2.boostcourse.util.network.NetworkStatus;
 
@@ -58,16 +58,13 @@ public class DetailedFragment extends Fragment {
     static final String MOVIEINDEX = "movieIndex";
     static final String WHEREFROM = "whereFrom";
 
-    //dbColumn
-    static final String COMMENTCOLUMN = "id, movie_id, profile_img, writer, time, content, star_rate, recommend";
-    static final String MOVIEINFOCOLUMN = "movie_index, image, title, date, genre, duration, reservation_grade, reservation_rate, audience_rating, audience, synopsis, director,actor, _like, _dislike, grade";
-
     //
-    MovieInfoDB movieInfoDB = new MovieInfoDB();
+    MovieInfoTable movieInfoTable;
+    ReviewTable reviewTable;
 
 
     FragmentDetailedBinding binding;
-    ArrayList<ReviewData> dataList = new ArrayList<>();
+    ArrayList<ReviewData> dataList ;
 
     public DetailedFragment() {
         // Required empty public constructor
@@ -82,8 +79,12 @@ public class DetailedFragment extends Fragment {
         helper = new DatabaseHelper(getContext());
         database = helper.getWritableDatabase();
 
+        movieInfoTable = new MovieInfoTable(getContext());
+        reviewTable = new ReviewTable(getContext());
+
         getActivity().setTitle("영화 상세");
 
+        dataList = new ArrayList<>();
 
         if (getArguments() != null) {
             movieIndex = getArguments().getInt(MOVIEINDEX); // 전달한 key 값
@@ -95,13 +96,14 @@ public class DetailedFragment extends Fragment {
             sendRequest("/movie/readCommentList", "?id=" + movieIndex + "&limit=2"); // 댓글
         } else {
             //selectData();
-            if(movieInfoDB.selectData(getContext(),movieIndex)!= null){
-                setMovieData(movieInfoDB.selectData(getContext(),movieIndex));
+            if (movieInfoTable.selectData(getContext(), movieIndex) != null) {
+                setMovieData(movieInfoTable.selectData(getContext(), movieIndex));
             }
 
-            selectCommentData();
+            dataList = reviewTable.selectCommentData(getContext(), movieIndex, dataList);
+            if (dataList != null)
+                setListView();
         }
-
 
         return binding.getRoot();
     }
@@ -118,14 +120,16 @@ public class DetailedFragment extends Fragment {
                 if (network) {
                     sendRequest("/movie/readCommentList", "?id=" + movieIndex + "&limit=2"); // 댓글
                 } else {
-                    selectCommentData();
+                    dataList = reviewTable.selectCommentData(getContext(), movieIndex, dataList);
                 }
 
                 Log.e("reviewDataList data = ", String.valueOf(dataList));
 
-                setListView();
+                if (dataList != null)
+                    setListView();
             }
         }
+
 
         if (requestCode == REQUEST_CODE_MORE_REVIEW_ACTIVITY) {
             if (resultCode == Activity.RESULT_OK) {
@@ -135,12 +139,13 @@ public class DetailedFragment extends Fragment {
                 if (network) {
                     sendRequest("/movie/readCommentList", "?id=" + movieIndex + "&limit=2"); // 댓글
                 } else {
-                    selectCommentData();
+                    dataList = reviewTable.selectCommentData(getContext(), movieIndex, dataList);
                 }
 
                 Log.e("reviewDataList data = ", String.valueOf(dataList));
 
-                setListView();
+                if (dataList != null)
+                    setListView();
             }
         }
     }
@@ -219,6 +224,7 @@ public class DetailedFragment extends Fragment {
         ListView reviewList = binding.listViewMainActReviewList;
 
         //adapter - ListView 뷰 연결
+
         final ReviewAdapter reviewAdapter = new ReviewAdapter(dataList);
         reviewList.setAdapter(reviewAdapter);
     }
@@ -287,7 +293,7 @@ public class DetailedFragment extends Fragment {
 
             setMovieData(movieDetailResult.result.get(0));
             //insertData("movie", movieDetailResult.result.get(0));
-            movieInfoDB.insertData(getContext(),movieIndex,movieDetailResult.result.get(0));
+            movieInfoTable.insertData(movieIndex, movieDetailResult.result.get(0));
 
         } else {
             Log.e("데이터 길이 : ", "null");
@@ -309,11 +315,10 @@ public class DetailedFragment extends Fragment {
                 Log.e("ReviewList : ", i + "번 쨰 댓글");
                 dataList.add(addReviewData("tmpImg", reviewResult.result.get(i).writer, reviewResult.result.get(i).time, reviewResult.result.get(i).contents, reviewResult.result.get(i).rating, reviewResult.result.get(i).recommend, reviewResult.result.get(i).id));
 
-                if(helper.searchReview(database, reviewResult.result.get(i).id)){
-                    insertCommentData("review", addReviewData("tmpImg", reviewResult.result.get(i).writer, reviewResult.result.get(i).time, reviewResult.result.get(i).contents, reviewResult.result.get(i).rating, reviewResult.result.get(i).recommend, reviewResult.result.get(i).id));
+                if (helper.searchReview(database, reviewResult.result.get(i).id)) {
+                    reviewTable.insertCommentData(movieIndex, addReviewData("tmpImg", reviewResult.result.get(i).writer, reviewResult.result.get(i).time, reviewResult.result.get(i).contents, reviewResult.result.get(i).rating, reviewResult.result.get(i).recommend, reviewResult.result.get(i).id));
                 }
             }
-
             setListView();
 
         } else {
@@ -399,58 +404,8 @@ public class DetailedFragment extends Fragment {
             Log.e("연결상태", "연결 안 됨");
             return false;
         }
-
         return true;
     }
 
-    public void insertCommentData(String tableName, ReviewData reviewData) {
-
-        Log.e("insertCommentData", "insertCommentData");
-
-        if (database != null) {
-            String sql = "insert into " + tableName + "("+COMMENTCOLUMN+") values(?,?,?,?,?,?,?,?)";
-            Object[] params = {reviewData.id, movieIndex, reviewData.profileImg, reviewData.userId, reviewData.date, reviewData.comment, reviewData.rate, reviewData.like};
-
-            database.execSQL(sql, params);
-
-            Log.e("insertCommentData", reviewData.toString());
-            Log.e("insertCommentData11", params.toString());
-        }
-    }
-
-    public void selectCommentData() {
-
-        if (database != null) {
-
-            String sql = "select "+COMMENTCOLUMN+" from " + "review WHERE movie_id=" + movieIndex;
-
-            Cursor cursor = database.rawQuery(sql, null);
-            Log.e("조회된 데이터 개수 : ", String.valueOf(cursor.getCount()));
-
-            if (cursor.getCount() == 0) {
-                Toast.makeText(getActivity(), "어플을 처음 실행 한 경우, 인터넷에 연결해야 데이터를 받아 올 수 있습니다.", Toast.LENGTH_SHORT).show();
-            } else {
-                dataList.clear();
-
-                for(int i = 0; i<2;i++){
-
-                    cursor.moveToNext();
-                    int id = cursor.getInt(0);
-                    //int movie_index = cursor.getInt(1);
-                    String image = cursor.getString(2);
-                    String writer = cursor.getString(3);
-                    String time = cursor.getString(4);
-                    String content = cursor.getString(5);
-                    float star_rate = cursor.getInt(6);
-                    int recommend = cursor.getInt(7);
-
-                    dataList.add(addReviewData(image, writer, time, content, star_rate, recommend,id));
-                    Log.e("selectData", image + " " + writer + " " + time + " " + content + " " + star_rate);
-                }
-                setListView();
-            }
-
-        }
-    }
 
 }

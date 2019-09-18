@@ -8,17 +8,20 @@ import android.widget.Toast;
 
 import com.song2.boostcourse.data.MovieDetail;
 
-public class MovieInfoDB {
+public class MovieInfoTable {
+
+    DatabaseHelper helper;
+    SQLiteDatabase database;
 
     static final String MOVIEINFOCOLUMN = "movie_index, image, title, date, genre, duration, reservation_grade, reservation_rate, audience_rating, audience, synopsis, director,actor, _like, _dislike, grade";
 
-    public MovieInfoDB(){
+    public MovieInfoTable(Context context){
+
+        helper = new DatabaseHelper(context);
+        database = helper.getWritableDatabase();
     }
 
-    public void insertData(Context context, int movieIndex , MovieDetail movieDetail) {
-
-        DatabaseHelper helper = new DatabaseHelper(context);
-        SQLiteDatabase database = helper.getWritableDatabase();
+    public void insertData(int movieIndex , MovieDetail movieDetail) {
 
         Log.e("insertData", "insertData호출");
 
@@ -34,10 +37,6 @@ public class MovieInfoDB {
     }
 
     public MovieDetail selectData(Context context, int movieIndex) {
-
-        DatabaseHelper helper = new DatabaseHelper(context);
-        SQLiteDatabase database = helper.getWritableDatabase();
-
 
         if (database != null) {
 

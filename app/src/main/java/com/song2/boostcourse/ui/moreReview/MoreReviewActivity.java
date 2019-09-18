@@ -2,7 +2,6 @@ package com.song2.boostcourse.ui.moreReview;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.databinding.DataBindingUtil;
 import android.support.annotation.Nullable;
@@ -28,6 +27,7 @@ import com.song2.boostcourse.ui.main.MainActivity;
 import com.song2.boostcourse.ui.upload.UploadReviewActivity;
 import com.song2.boostcourse.util.adapter.ReviewAdapter;
 import com.song2.boostcourse.util.db.DatabaseHelper;
+import com.song2.boostcourse.util.db.ReviewTable;
 import com.song2.boostcourse.util.network.AppHelper;
 import com.song2.boostcourse.util.network.NetworkStatus;
 
@@ -44,6 +44,7 @@ public class MoreReviewActivity extends AppCompatActivity {
     DatabaseHelper helper;
     Boolean network = false;
 
+    ReviewTable reviewTable ;
 
     int movieIndex = 0;
     int rating;
@@ -68,6 +69,7 @@ public class MoreReviewActivity extends AppCompatActivity {
         helper = new DatabaseHelper(getApplicationContext());
         database = helper.getWritableDatabase();
 
+        reviewTable = new ReviewTable(getApplicationContext());
 
         //main에서 넘어온 데이터 setting
         String title = getIntent().getStringExtra(MOVIETITLE);
@@ -83,7 +85,9 @@ public class MoreReviewActivity extends AppCompatActivity {
         if (network) {
             sendRequest("/movie/readCommentList", "?id=" + String.valueOf(movieIndex) + "&limit=all"); // 댓글
         } else {
-            selectCommentData();
+            reviewDataArrayList = reviewTable.selectCommentData(getApplicationContext(),movieIndex,reviewDataArrayList);
+            if (reviewDataArrayList != null)
+                setListView();
         }
         binding.tvMoreReviewActMovieTitle.setText(title);
     }
@@ -98,7 +102,7 @@ public class MoreReviewActivity extends AppCompatActivity {
 
                 Log.e("통신데이터 : ", "제대로 들어왔는지 확인");
                 reviewDataArrayList.clear();
-                sendRequest("/movie/readCommentList", "?id=" + String.valueOf(movieIndex) + "&limit=all"); // 댓글
+                sendRequest("/movie/readCommentList", "?id=" + movieIndex + "&limit=all"); // 댓글
 
                 setListView();
             }
@@ -213,7 +217,7 @@ public class MoreReviewActivity extends AppCompatActivity {
                 reviewDataArrayList.add(addReviewData("tmpImg", reviewResult.result.get(i).writer, reviewResult.result.get(i).time, reviewResult.result.get(i).contents, reviewResult.result.get(i).rating, reviewResult.result.get(i).recommend, reviewResult.result.get(i).id));
 
                 if(helper.searchReview(database, reviewResult.result.get(i).id)){
-                    insertCommentData("review", addReviewData("tmpImg", reviewResult.result.get(i).writer, reviewResult.result.get(i).time, reviewResult.result.get(i).contents, reviewResult.result.get(i).rating, reviewResult.result.get(i).recommend, reviewResult.result.get(i).id));
+                    reviewTable.insertCommentData(movieIndex, addReviewData("tmpImg", reviewResult.result.get(i).writer, reviewResult.result.get(i).time, reviewResult.result.get(i).contents, reviewResult.result.get(i).rating, reviewResult.result.get(i).recommend, reviewResult.result.get(i).id));
                 }
             }
 
@@ -251,55 +255,7 @@ public class MoreReviewActivity extends AppCompatActivity {
         }
     }
 
-    public void insertCommentData(String tableName, ReviewData reviewData) {
 
-        Log.e("insertCommentData", "insertCommentData");
-
-        if (database != null) {
-            String sql = "insert into " + tableName + "(id,movie_id, profile_img, writer, time, content, star_rate, recommend) values(?,?,?,?,?,?,?,?)";
-            Object[] params = {reviewData.id,movieIndex, reviewData.profileImg, reviewData.userId, reviewData.date, reviewData.comment, reviewData.rate, reviewData.like};
-
-            database.execSQL(sql, params);
-
-            Log.e("insertCommentData", reviewData.toString());
-            Log.e("insertCommentData11", params.toString());
-        }
-    }
-
-    //댓글 조회
-    public void selectCommentData() {
-
-        if (database != null) {
-
-            String sql = "select id,movie_id, profile_img, writer, time, content, star_rate, recommend from " + "review WHERE movie_id=" + movieIndex;
-
-            Cursor cursor = database.rawQuery(sql, null);
-            Log.e("조회된 데이터 개수 : ", String.valueOf(cursor.getCount()));
-
-            if (cursor.getCount() == 0) {
-                Toast.makeText(getApplicationContext(), "어플을 처음 실행 한 경우, 인터넷에 연결해야 데이터를 받아 올 수 있습니다.", Toast.LENGTH_SHORT).show();
-            } else {
-                reviewDataArrayList.clear();
-                for (int i = 0; i < cursor.getCount(); i++) {
-                    cursor.moveToNext();
-
-                    int id = cursor.getInt(0);
-                    //int movie_index = cursor.getInt(1);
-                    String image = cursor.getString(2);
-                    String writer = cursor.getString(3);
-                    String time = cursor.getString(4);
-                    String content = cursor.getString(5);
-                    float star_rate = cursor.getInt(6);
-                    int recommend = cursor.getInt(7);
-
-                    reviewDataArrayList.add(addReviewData(image, writer, time, content, star_rate, recommend,id));
-                    Log.e("selectData", image + " " + writer + " " + time + " " + content + " " + star_rate);
-                }
-                setListView();
-            }
-
-        }
-    }
 
     public boolean confirmNetwork() {
         int status = NetworkStatus.getConnectivityStatus(getApplicationContext());
