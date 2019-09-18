@@ -81,7 +81,7 @@ public class MoreReviewActivity extends AppCompatActivity {
 
         //통신데이터 보여주어야 함
 
-        network = confirmNetwork();
+        network = NetworkStatus.confirmNetwork(getApplicationContext());
         if (network) {
             sendRequest("/movie/readCommentList", "?id=" + String.valueOf(movieIndex) + "&limit=all"); // 댓글
         } else {
@@ -253,17 +253,5 @@ public class MoreReviewActivity extends AppCompatActivity {
                 binding.ivMoreReviewActMovieRatingAll.setVisibility(View.VISIBLE);
                 break;
         }
-    }
-
-
-
-    public boolean confirmNetwork() {
-        int status = NetworkStatus.getConnectivityStatus(getApplicationContext());
-
-        if (status == NetworkStatus.TYPE_NOT_CONNECTED) {
-            Log.e("연결상태", "연결 안 됨");
-            return false;
-        }
-        return true;
     }
 }

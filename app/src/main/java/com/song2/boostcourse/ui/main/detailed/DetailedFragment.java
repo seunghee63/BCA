@@ -89,7 +89,8 @@ public class DetailedFragment extends Fragment {
             movieIndex = getArguments().getInt(MOVIEINDEX); // 전달한 key 값
         }
 
-        network = confirmNetwork();
+        network = NetworkStatus.confirmNetwork(getContext());
+
         if (network) {
             sendRequest("/movie/readMovie", "?id=" + movieIndex); // 영화
             sendRequest("/movie/readCommentList", "?id=" + movieIndex + "&limit=2"); // 댓글
@@ -395,16 +396,4 @@ public class DetailedFragment extends Fragment {
                 break;
         }
     }
-
-    public boolean confirmNetwork() {
-        int status = NetworkStatus.getConnectivityStatus(getContext());
-
-        if (status == NetworkStatus.TYPE_NOT_CONNECTED) {
-            Log.e("연결상태", "연결 안 됨");
-            return false;
-        }
-        return true;
-    }
-
-
 }

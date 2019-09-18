@@ -1,6 +1,5 @@
 package com.song2.boostcourse.ui.main.movieList;
 
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -10,7 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -56,7 +54,7 @@ public class MovieListFragment extends Fragment {
 
         movieRankTable = new MovieRankTable(getContext());
 
-        network = confirmNetwork();
+        network = NetworkStatus.confirmNetwork(getContext());
         if(network){
             sendRequest("/movie/readMovieList");
         }else {
@@ -161,63 +159,4 @@ public class MovieListFragment extends Fragment {
             Log.e("데이터 길이 : ", "null");
         }
     }
-
-    public boolean confirmNetwork(){
-        int status = NetworkStatus.getConnectivityStatus(getContext());
-
-        if(status == NetworkStatus.TYPE_NOT_CONNECTED){
-            Log.e("연결상태", "연결 안 됨");
-            return false;
-        }
-
-        return true;
-    }
-/*
-    public void insertData(String tableName, String image, String title, String reservation_grade, String reservation_rate, String grade){
-
-        Log.e("insertData", "insertData호출");
-
-        if (database != null){
-            String sql = "insert into "+ tableName+"(image, title, reservation_grade, reservation_rate, grade) values(?,?,?,?,?)";
-            Object[] params = {image, title, reservation_grade, reservation_rate, grade};
-
-            database.execSQL(sql,params);
-
-            Log.e("insertData", "데이터 삽입 완료!");
-
-        }
-    }
-
-    public void selectData(){
-
-        if (database != null){
-            ArrayList<MovieRank> movieRankList = new ArrayList<MovieRank>();
-
-            String sql = "select image, title, reservation_grade, reservation_rate, grade from "+ "movieRank";
-
-            //sql에 ?를 넣고 null 대신 ?를 대체 할 파라미터를 넣는 방법도 가능!
-            Cursor cursor = database.rawQuery(sql, null);
-            Log.e("조회된 데이터 개수 : " , String.valueOf(cursor.getCount()));
-
-            if (cursor.getCount()==0){
-                Toast.makeText(getActivity(), "어플을 처음 실행 한 경우, 인터넷에 연결해야 데이터를 받아 올 수 있습니다.", Toast.LENGTH_SHORT).show();
-            }else{
-                for(int i = 0; i<cursor.getCount();i++){
-                    cursor.moveToNext();
-                    String image = cursor.getString(0);
-                    String title = cursor.getString(1);
-                    String reservation_grade = cursor.getString(2);
-                    String reservation_rate = cursor.getString(3);
-                    String grade = cursor.getString(4);
-
-                    MovieRank movieRank = new MovieRank(image, title, reservation_grade, reservation_rate, grade);
-                    movieRankList.add(i,movieRank);
-
-                    Log.e("selectData", image+ " "+ title + " "+  reservation_grade + " "+  reservation_rate + " "+ grade);
-                }
-                settingViewPager(cursor.getCount(), movieRankList);
-            }
-
-        }
-    }*/
 }

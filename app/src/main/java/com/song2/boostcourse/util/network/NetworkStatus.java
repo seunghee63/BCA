@@ -3,6 +3,7 @@ package com.song2.boostcourse.util.network;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.Log;
 
 public class NetworkStatus {
 
@@ -25,7 +26,16 @@ public class NetworkStatus {
                 return TYPE_WIFI;
             }
         }
-
         return TYPE_NOT_CONNECTED;
+    }
+
+    public static boolean confirmNetwork(Context context) {
+        int status = NetworkStatus.getConnectivityStatus(context);
+
+        if (status == NetworkStatus.TYPE_NOT_CONNECTED) {
+            Log.e("연결상태", "연결 안 됨");
+            return false;
+        }
+        return true;
     }
 }
