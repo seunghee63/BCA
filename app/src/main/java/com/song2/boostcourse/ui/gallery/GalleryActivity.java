@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.github.chrisbanes.photoview.PhotoView;
 import com.song2.boostcourse.R;
 
 public class GalleryActivity extends AppCompatActivity {
@@ -24,10 +25,10 @@ public class GalleryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery);
 
-        final ImageView iv = findViewById(R.id.iv_gallery_act_detailed_img);
+        final PhotoView pv = findViewById(R.id.photo_view_gallery_act_detailed_img); //터치리스너 이용시, 주석
         ImageView backBtn = findViewById(R.id.iv_gallery_act_back_btn);
 
-        Glide.with(getApplicationContext()).load(getIntent().getStringExtra(DETAILIMG)).into(iv);
+        Glide.with(getApplicationContext()).load(getIntent().getStringExtra(DETAILIMG)).into(pv); //터치리스너 이용시, 주석
 
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -36,8 +37,14 @@ public class GalleryActivity extends AppCompatActivity {
             }
         });
 
-        //아래 주석은 멀티터치를 위한 터치 리스너 구현 부분입니다.
-/*        iv.setScaleType(ImageView.ScaleType.MATRIX);
+        //아래 주석은 멀티터치를위한 터치 리스너 구현 부분입니다.
+/*
+        final ImageView iv = findViewById(R.id.photo_view_gallery_act_detailed_img);
+
+        Glide.with(getApplicationContext()).load(getIntent().getStringExtra(DETAILIMG)).into(pv);
+
+
+        iv.setScaleType(ImageView.ScaleType.MATRIX);
 
         iv.setOnTouchListener(new View.OnTouchListener() {
 

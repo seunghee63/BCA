@@ -35,8 +35,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/iv_gallery_act_detailed_img"
+        <com.github.chrisbanes.photoview.PhotoView
+            android:id="@+id/photo_view_gallery_act_detailed_img"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
