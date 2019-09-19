@@ -19,16 +19,15 @@ public class GalleryActivity extends AppCompatActivity {
     //new matrix 정보 저장 변수
     private Matrix matrix = new Matrix();
 
-    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery);
 
-        final PhotoView pv = findViewById(R.id.photo_view_gallery_act_detailed_img); //터치리스너 이용시, 주석
+        final PhotoView pv = findViewById(R.id.photo_view_gallery_act_detailed_img);
         ImageView backBtn = findViewById(R.id.iv_gallery_act_back_btn);
 
-        Glide.with(getApplicationContext()).load(getIntent().getStringExtra(DETAILIMG)).into(pv); //터치리스너 이용시, 주석
+        Glide.with(getApplicationContext()).load(getIntent().getStringExtra(DETAILIMG)).into(pv);
 
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -42,7 +41,6 @@ public class GalleryActivity extends AppCompatActivity {
         final ImageView iv = findViewById(R.id.photo_view_gallery_act_detailed_img);
 
         Glide.with(getApplicationContext()).load(getIntent().getStringExtra(DETAILIMG)).into(pv);
-
 
         iv.setScaleType(ImageView.ScaleType.MATRIX);
 
