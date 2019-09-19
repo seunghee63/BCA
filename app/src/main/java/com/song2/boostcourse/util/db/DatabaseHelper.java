@@ -19,7 +19,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String MOVIE =
             "CREATE TABLE IF NOT EXISTS movie (_id INTEGER PRIMARY KEY, " +
-                    "movie_index Int, " +
+                    "movie_index INTEGER, " +
                     "image TEXT, " +
                     "title TEXT, " +
                     "date TEXT, " +

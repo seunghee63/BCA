@@ -37,6 +37,8 @@ public class MovieListFragment extends Fragment {
 
     MovieRankTable movieRankTable;
 
+    final static String MOVIELIST_ROUTING = "/movie/readMovieList";
+
     public MovieListFragment() {
         // Required empty public constructor
     }
@@ -56,7 +58,7 @@ public class MovieListFragment extends Fragment {
 
         network = NetworkStatus.confirmNetwork(getContext());
         if(network){
-            sendRequest("/movie/readMovieList");
+            sendRequest(MOVIELIST_ROUTING);
         }else {
             ArrayList<MovieRank> movieRankList = new ArrayList<MovieRank>();
             movieRankList = movieRankTable.selectData();

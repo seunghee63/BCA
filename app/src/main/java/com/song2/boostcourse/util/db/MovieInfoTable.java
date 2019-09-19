@@ -80,4 +80,17 @@ public class MovieInfoTable {
         }
         return null;
     }
+
+    public boolean search(int movie_index) {
+
+        Log.e("search", "중복처리 " + movie_index);
+        Cursor cursor = database.rawQuery("SELECT movie_index FROM movie WHERE movie_index =" + movie_index + ";", null);
+
+        if (cursor == null) {
+            return true;
+        } else if (cursor.getCount() > 0) {
+            return false;
+        }
+        return true;
+    }
 }

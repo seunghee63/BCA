@@ -13,18 +13,23 @@ import com.android.volley.toolbox.Volley;
 import java.util.HashMap;
 import java.util.Map;
 
-public class NetworkManager{
+public class NetworkManager {
+
+
+    final static String MOVIEINFO_ROUTING = "/movie/readMovie";
+    final static String COMMENT_ROUTING = "/movie/readCommentList";
+    final static String MOVIELIST_ROUTING = "/movie/readMovieList";
 
     Context context;
+    String result = "";
 
-    public NetworkManager(Context context){
+    public NetworkManager(Context context) {
         this.context = context;
     }
 
     //GET
-    public void sendGetRequest(final String route, final String query) {
+    public String sendGetRequest(final String route, final String query) {
 
-        String result = "";
         String base = "http://boostcourse-appapi.connect.or.kr:10000";
         String url = base + route + query;
 
@@ -41,10 +46,14 @@ public class NetworkManager{
                     public void onResponse(String response) {
                         Log.e("응답 : ", "<" + route + "> ::" + response);
 
-                        if (route == "/movie/readMovie") {
-                            //movieDetailedProcessResponse(response);
-                        } else if (route == "/movie/readCommentList") {
-                            //reviewProcessResponse(response);
+                        result = response;
+
+                        if (route == MOVIEINFO_ROUTING) {
+
+                        } else if (route == COMMENT_ROUTING) {
+
+                        } else if (route == MOVIELIST_ROUTING) {
+
                         }
                     }
                 },
@@ -52,6 +61,8 @@ public class NetworkManager{
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.e("에러 : ", error.toString());
+
+                        //에러 케이스 나누기
                     }
                 }
         );
@@ -60,8 +71,9 @@ public class NetworkManager{
         AppHelper.requestQueue.add(request);
 
         Log.e("sendRequest", "요청보냄");
-    }
 
+        return result;
+    }
 
 
     //POST
@@ -91,7 +103,7 @@ public class NetworkManager{
                         Log.e("에러 : ", error.toString());
                     }
                 }
-        ){
+        ) {
             //request 객체 안에 메소드 재정의
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
@@ -113,7 +125,7 @@ public class NetworkManager{
         request.setShouldCache(false);
         AppHelper.requestQueue.add(request);
 
-        Log.e("sendRequest","댓글 작성 request!!!");
+        Log.e("sendRequest", "댓글 작성 request!!!");
 
     }
 }

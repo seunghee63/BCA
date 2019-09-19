@@ -62,7 +62,12 @@ public class DetailedFragment extends Fragment {
     static final String MOVIEINDEX = "movieIndex";
     static final String WHEREFROM = "whereFrom";
 
-    GalleryRecyclerViewAdapter gellaryRecyclerViewAdapter;
+    //routing
+    final static String MOVIEINFO_ROUTING = "/movie/readMovie";
+    final static String COMMENT_ROUTING = "/movie/readCommentList";
+
+
+    GalleryRecyclerViewAdapter galleryRecyclerViewAdapter;
 
     private ArrayList<GalleryData> galleryDataList = new ArrayList<>();
     private GalleryData itemData;
@@ -102,8 +107,8 @@ public class DetailedFragment extends Fragment {
         network = NetworkStatus.confirmNetwork(getContext());
 
         if (network) {
-            sendRequest("/movie/readMovie", "?id=" + movieIndex); // 영화
-            sendRequest("/movie/readCommentList", "?id=" + movieIndex + "&limit=2"); // 댓글
+            sendRequest(MOVIEINFO_ROUTING, "?id=" + movieIndex); // 영화
+            sendRequest(COMMENT_ROUTING, "?id=" + movieIndex + "&limit=2"); // 댓글
         } else {
 
             if (movieInfoTable.selectData(movieIndex) != null)
@@ -127,7 +132,7 @@ public class DetailedFragment extends Fragment {
                 dataList.clear();
 
                 if (network) {
-                    sendRequest("/movie/readCommentList", "?id=" + movieIndex + "&limit=2"); // 댓글
+                    sendRequest(COMMENT_ROUTING, "?id=" + movieIndex + "&limit=2"); // 댓글
                 } else {
                     dataList = reviewTable.selectCommentData(movieIndex, dataList);
                 }
@@ -146,7 +151,7 @@ public class DetailedFragment extends Fragment {
                 dataList.clear();
 
                 if (network) {
-                    sendRequest("/movie/readCommentList", "?id=" + movieIndex + "&limit=2"); // 댓글
+                    sendRequest(COMMENT_ROUTING, "?id=" + movieIndex + "&limit=2"); // 댓글
                 } else {
                     dataList = reviewTable.selectCommentData(movieIndex, dataList);
                 }
@@ -162,6 +167,9 @@ public class DetailedFragment extends Fragment {
     public void setRecyclerView(MovieDetail movieDetail) {
 
         int photoLength =0;
+
+        galleryDataList.clear();
+
 
         if(movieDetail.photos != null){
             String photoStr = movieDetail.photos;
@@ -196,8 +204,8 @@ public class DetailedFragment extends Fragment {
             LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false);
             mRecyclerView.setLayoutManager(mLinearLayoutManager);
 
-            gellaryRecyclerViewAdapter = new GalleryRecyclerViewAdapter(galleryDataList, getContext());
-            mRecyclerView.setAdapter(gellaryRecyclerViewAdapter);
+            galleryRecyclerViewAdapter = new GalleryRecyclerViewAdapter(galleryDataList, getContext());
+            mRecyclerView.setAdapter(galleryRecyclerViewAdapter);
 
         }else
             binding.llDetailedFragGalleryContainer.setVisibility(View.GONE);
@@ -312,9 +320,9 @@ public class DetailedFragment extends Fragment {
                     public void onResponse(String response) {
                         Log.e("응답 : ", "<" + route + "> ::" + response);
 
-                        if (route == "/movie/readMovie") {
+                        if (route == MOVIEINFO_ROUTING) {
                             movieDetailedProcessResponse(response);
-                        } else if (route == "/movie/readCommentList") {
+                        } else if (route == COMMENT_ROUTING) {
                             reviewProcessResponse(response);
                         }
 
@@ -348,8 +356,12 @@ public class DetailedFragment extends Fragment {
             Log.e("movieDetailResult : ", String.valueOf(movieDetailResult));
 
             setMovieData(movieDetailResult.result.get(0));
-            //insertData("movie", movieDetailResult.result.get(0));
-            movieInfoTable.insertData(movieIndex, movieDetailResult.result.get(0));
+
+            if (movieInfoTable.search(movieIndex)) {
+                Log.e("test - 중복확인", "movieDetail");
+
+                movieInfoTable.insertData(movieIndex, movieDetailResult.result.get(0));
+            }
 
         } else {
             Log.e("데이터 길이 : ", "null");
