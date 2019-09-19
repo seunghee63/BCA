@@ -1,7 +1,5 @@
 package com.song2.boostcourse.ui.main;
 
-import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -19,7 +17,6 @@ import android.support.v7.widget.Toolbar;
 import com.song2.boostcourse.R;
 import com.song2.boostcourse.ui.main.detailed.DetailedFragment;
 import com.song2.boostcourse.ui.main.movieList.MovieListFragment;
-import com.song2.boostcourse.util.network.NetworkStatus;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, MovieItemListener {
 
