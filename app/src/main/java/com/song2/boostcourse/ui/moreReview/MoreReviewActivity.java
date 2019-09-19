@@ -85,7 +85,7 @@ public class MoreReviewActivity extends AppCompatActivity {
         if (network) {
             sendRequest("/movie/readCommentList", "?id=" + String.valueOf(movieIndex) + "&limit=all"); // 댓글
         } else {
-            reviewDataArrayList = reviewTable.selectCommentData(getApplicationContext(),movieIndex,reviewDataArrayList);
+            reviewDataArrayList = reviewTable.selectCommentData(movieIndex,reviewDataArrayList);
             if (reviewDataArrayList != null)
                 setListView();
         }
@@ -216,7 +216,7 @@ public class MoreReviewActivity extends AppCompatActivity {
                 Log.e("ReviewList : ", i + "번 쨰 댓글");
                 reviewDataArrayList.add(addReviewData("tmpImg", reviewResult.result.get(i).writer, reviewResult.result.get(i).time, reviewResult.result.get(i).contents, reviewResult.result.get(i).rating, reviewResult.result.get(i).recommend, reviewResult.result.get(i).id));
 
-                if(helper.searchReview(database, reviewResult.result.get(i).id)){
+                if(reviewTable.search(reviewResult.result.get(i).id)){
                     reviewTable.insertCommentData(movieIndex, addReviewData("tmpImg", reviewResult.result.get(i).writer, reviewResult.result.get(i).time, reviewResult.result.get(i).contents, reviewResult.result.get(i).rating, reviewResult.result.get(i).recommend, reviewResult.result.get(i).id));
                 }
             }

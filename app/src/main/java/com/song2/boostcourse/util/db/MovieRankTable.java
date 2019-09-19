@@ -13,13 +13,14 @@ import java.util.ArrayList;
 
 public class MovieRankTable {
 
-    DatabaseHelper helper;
-    SQLiteDatabase database;
+    public Context context;
+    public DatabaseHelper helper;
+    public SQLiteDatabase database;
 
     static final String MOVIERANKCOLUMN = "image, title, reservation_grade, reservation_rate, grade";
 
     public MovieRankTable(Context context){
-
+        this.context = context;
         helper = new DatabaseHelper(context);
         database = helper.getWritableDatabase();
     }
@@ -40,7 +41,7 @@ public class MovieRankTable {
         }
     }
 
-    public ArrayList<MovieRank> selectData(Context context){
+    public ArrayList<MovieRank> selectData(){
 
         if (database != null){
             ArrayList<MovieRank> movieRankList = new ArrayList<MovieRank>();
@@ -72,5 +73,18 @@ public class MovieRankTable {
             }
         }
         return null;
+    }
+
+    public boolean search(String title) {
+
+        Log.e("search", "중복처리 " + title);
+        Cursor cursor = database.rawQuery("SELECT title FROM movieRank WHERE title ='" + title + "';", null);
+
+        if (cursor == null) {
+            return true;
+        } else if (cursor.getCount() > 0) {
+            return false;
+        }
+        return true;
     }
 }

@@ -10,13 +10,14 @@ import com.song2.boostcourse.data.MovieDetail;
 
 public class MovieInfoTable {
 
-    DatabaseHelper helper;
-    SQLiteDatabase database;
+    public Context context;
+    public DatabaseHelper helper;
+    public SQLiteDatabase database;
 
     static final String MOVIEINFOCOLUMN = "movie_index, image, title, date, genre, duration, reservation_grade, reservation_rate, audience_rating, audience, synopsis, director,actor, _like, _dislike, grade, photos, videos";
 
     public MovieInfoTable(Context context){
-
+        this.context = context;
         helper = new DatabaseHelper(context);
         database = helper.getWritableDatabase();
     }
@@ -26,7 +27,7 @@ public class MovieInfoTable {
         Log.e("insertData", "insertData호출");
 
         if (database != null) {
-            String sql = "insert into movie("+MOVIEINFOCOLUMN+") values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            String sql = "insert or replace into movie("+MOVIEINFOCOLUMN+") values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
             Object[] params = {movieIndex, movieDetail.image, movieDetail.title, movieDetail.date, movieDetail.genre, movieDetail.duration, movieDetail.reservation_grade, movieDetail.reservation_rate, movieDetail.audience_rating, movieDetail.audience, movieDetail.synopsis, movieDetail.director, movieDetail.actor, movieDetail.like, movieDetail.dislike, movieDetail.grade, movieDetail.photos, movieDetail.videos};
 
             database.execSQL(sql, params);
@@ -36,7 +37,7 @@ public class MovieInfoTable {
         }
     }
 
-    public MovieDetail selectData(Context context, int movieIndex) {
+    public MovieDetail selectData(int movieIndex) {
 
         if (database != null) {
 

@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.GalleryActivity"></activity>
+        <activity android:name=".ui.gallery.GalleryActivity"></activity>
         <activity
             android:name=".ui.main.MainActivity"
             android:label="@string/title_activity_main1"

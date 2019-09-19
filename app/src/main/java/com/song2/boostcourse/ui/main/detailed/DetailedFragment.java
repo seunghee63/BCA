@@ -106,10 +106,10 @@ public class DetailedFragment extends Fragment {
             sendRequest("/movie/readCommentList", "?id=" + movieIndex + "&limit=2"); // 댓글
         } else {
 
-            if (movieInfoTable.selectData(getContext(), movieIndex) != null)
-                setMovieData(movieInfoTable.selectData(getContext(), movieIndex));
+            if (movieInfoTable.selectData(movieIndex) != null)
+                setMovieData(movieInfoTable.selectData(movieIndex));
 
-            dataList = reviewTable.selectCommentData(getContext(), movieIndex, dataList);
+            dataList = reviewTable.selectCommentData(movieIndex, dataList);
             if (dataList != null)
                 setListView();
         }
@@ -129,7 +129,7 @@ public class DetailedFragment extends Fragment {
                 if (network) {
                     sendRequest("/movie/readCommentList", "?id=" + movieIndex + "&limit=2"); // 댓글
                 } else {
-                    dataList = reviewTable.selectCommentData(getContext(), movieIndex, dataList);
+                    dataList = reviewTable.selectCommentData(movieIndex, dataList);
                 }
 
                 Log.e("reviewDataList data = ", String.valueOf(dataList));
@@ -148,7 +148,7 @@ public class DetailedFragment extends Fragment {
                 if (network) {
                     sendRequest("/movie/readCommentList", "?id=" + movieIndex + "&limit=2"); // 댓글
                 } else {
-                    dataList = reviewTable.selectCommentData(getContext(), movieIndex, dataList);
+                    dataList = reviewTable.selectCommentData(movieIndex, dataList);
                 }
 
                 Log.e("reviewDataList data = ", String.valueOf(dataList));
@@ -371,7 +371,7 @@ public class DetailedFragment extends Fragment {
                 Log.e("ReviewList : ", i + "번 쨰 댓글");
                 dataList.add(addReviewData("tmpImg", reviewResult.result.get(i).writer, reviewResult.result.get(i).time, reviewResult.result.get(i).contents, reviewResult.result.get(i).rating, reviewResult.result.get(i).recommend, reviewResult.result.get(i).id));
 
-                if (helper.searchReview(database, reviewResult.result.get(i).id)) {
+                if (reviewTable.search(reviewResult.result.get(i).id)) {
                     reviewTable.insertCommentData(movieIndex, addReviewData("tmpImg", reviewResult.result.get(i).writer, reviewResult.result.get(i).time, reviewResult.result.get(i).contents, reviewResult.result.get(i).rating, reviewResult.result.get(i).recommend, reviewResult.result.get(i).id));
                 }
             }

@@ -64,32 +64,4 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int i, int i1) {
     }
-
-    public boolean search(SQLiteDatabase db, String title) {
-
-        Log.e("search", "중복처리 " + title);
-        Cursor cursor = db.rawQuery("SELECT title FROM movieRank WHERE title ='" + title + "';", null);
-
-        if (cursor == null) {
-            return true;
-        } else if (cursor.getCount() > 0) {
-            return false;
-        }
-        return true;
-    }
-
-    public boolean searchReview(SQLiteDatabase db, int id) {
-
-        Log.e("searchReview", "중복처리id : " + id);
-        Cursor cursor = db.rawQuery("SELECT id FROM review WHERE id =" + id + ";", null);
-
-        if (cursor == null) {
-            return true;
-        } else if (cursor.getCount() > 0) {
-            //cursor.moveToNext();
-            //Log.e("searchReview cursor.getInt : ", String.valueOf(cursor.getInt(0)));
-            return false;
-        }
-        return true;
-    }
 }

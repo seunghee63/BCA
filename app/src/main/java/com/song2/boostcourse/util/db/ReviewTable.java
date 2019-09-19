@@ -16,13 +16,14 @@ import java.util.ArrayList;
 
 public class ReviewTable {
 
-
-    DatabaseHelper helper;
-    SQLiteDatabase database;
+    public Context context;
+    public DatabaseHelper helper;
+    public SQLiteDatabase database;
 
     static final String COMMENTCOLUMN = "id, movie_id, profile_img, writer, time, content, star_rate, recommend";
 
     public ReviewTable(Context context){
+        this.context = context;
         helper = new DatabaseHelper(context);
         database = helper.getWritableDatabase();
     }
@@ -42,7 +43,7 @@ public class ReviewTable {
         }
     }
 
-    public ArrayList<ReviewData> selectCommentData(Context context, int movieIndex, ArrayList<ReviewData> dataList) {
+    public ArrayList<ReviewData> selectCommentData(int movieIndex, ArrayList<ReviewData> dataList) {
 
         if (database != null) {
 
@@ -88,5 +89,20 @@ public class ReviewTable {
 
         }
         return null;
+    }
+
+    public boolean search(int id) {
+
+        Log.e("searchReview", "중복처리id : " + id);
+        Cursor cursor = database.rawQuery("SELECT id FROM review WHERE id =" + id + ";", null);
+
+        if (cursor == null) {
+            return true;
+        } else if (cursor.getCount() > 0) {
+            //cursor.moveToNext();
+            //Log.e("searchReview cursor.getInt : ", String.valueOf(cursor.getInt(0)));
+            return false;
+        }
+        return true;
     }
 }

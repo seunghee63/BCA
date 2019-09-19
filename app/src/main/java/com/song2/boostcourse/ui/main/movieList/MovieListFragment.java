@@ -59,7 +59,7 @@ public class MovieListFragment extends Fragment {
             sendRequest("/movie/readMovieList");
         }else {
             ArrayList<MovieRank> movieRankList = new ArrayList<MovieRank>();
-            movieRankList = movieRankTable.selectData(getContext());
+            movieRankList = movieRankTable.selectData();
 
             if(movieRankList != null){
                 settingViewPager(movieRankList.size(),movieRankList);
@@ -88,8 +88,8 @@ public class MovieListFragment extends Fragment {
             //인터넷 연결 o 때만
             if(network){
                 //존재하지 않는 데이터 일 경우에만
-                Log.e("dataList.get(i).title",dataList.get(i).title+ " <title boolean>"+helper.search(database, dataList.get(i).title));
-                if(helper.search(database, dataList.get(i).title)){
+                Log.e("dataList.get(i).title",dataList.get(i).title+ " <title boolean>"+movieRankTable.search(dataList.get(i).title));
+                if(movieRankTable.search(dataList.get(i).title)){
                     movieRankTable.insertData(dataList.get(i).image, dataList.get(i).title, dataList.get(i).reservation_grade, dataList.get(i).reservation_rate, dataList.get(i).grade);
                 }
             }

@@ -15,13 +15,15 @@ import android.widget.RelativeLayout;
 import com.bumptech.glide.Glide;
 import com.song2.boostcourse.R;
 import com.song2.boostcourse.data.GalleryData;
-import com.song2.boostcourse.ui.GalleryActivity;
+import com.song2.boostcourse.ui.gallery.GalleryActivity;
 
 import java.util.ArrayList;
 
 public class GalleryRecyclerViewAdapter extends RecyclerView.Adapter<GalleryRecyclerViewAdapter.ViewHolder> {
 
+    static final String DETAILIMG = "DetailImg";
     Context context;
+
     private ArrayList<GalleryData> mData = null ;
 
 
@@ -66,8 +68,8 @@ public class GalleryRecyclerViewAdapter extends RecyclerView.Adapter<GalleryRecy
                     context.startActivity(intent);
                 }
             });
-
         }
+
         else if(!mData.get(position).isVideo){
 
             Glide.with(context).load(mData.get(position).thumb_img).into(holder.thumb);
@@ -78,7 +80,7 @@ public class GalleryRecyclerViewAdapter extends RecyclerView.Adapter<GalleryRecy
                 public void onClick(View v) {
 
                     Intent intent = new Intent(context, GalleryActivity.class);
-                    intent.putExtra("DetailImg",mData.get(position).thumb_img);
+                    intent.putExtra(DETAILIMG,mData.get(position).thumb_img);
                     context.startActivity(intent);
 
                 }
