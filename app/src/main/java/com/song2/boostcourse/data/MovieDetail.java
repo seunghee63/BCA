@@ -3,7 +3,7 @@ package com.song2.boostcourse.data;
 import java.util.ArrayList;
 
 public class MovieDetail {
-    public String title;
+    public String title ;
     public int id;
     public String date;
     public float user_rating;

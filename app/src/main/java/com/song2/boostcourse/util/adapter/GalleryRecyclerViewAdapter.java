@@ -82,7 +82,6 @@ public class GalleryRecyclerViewAdapter extends RecyclerView.Adapter<GalleryRecy
                     Intent intent = new Intent(context, GalleryActivity.class);
                     intent.putExtra(DETAILIMG,mData.get(position).thumb_img);
                     context.startActivity(intent);
-
                 }
             });
         }
